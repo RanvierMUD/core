@@ -160,4 +160,4 @@ const validate = (id, options, type, target) => {
   }
 }
 
-exports.Effect = Effect;
+module.exports = Effect;
