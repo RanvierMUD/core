@@ -4,8 +4,10 @@ const ChannelAudience = require('../ChannelAudience');
 
 /**
  * Audience class representing other players in the same group as the sender
+ * @memberof ChannelAudience
+ * @extends ChannelAudience
  */
-class Party extends ChannelAudience {
+class PartyAudience extends ChannelAudience {
   getBroadcastTargets() {
     if (!this.sender.party) {
       return [];
@@ -16,4 +18,4 @@ class Party extends ChannelAudience {
   }
 }
 
-module.exports = Party;
+module.exports = PartyAudience;

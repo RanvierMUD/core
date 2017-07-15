@@ -4,8 +4,10 @@ const ChannelAudience = require('../ChannelAudience');
 
 /**
  * Audience class representing other players in the same area as the sender
+ * @memberof ChannelAudience
+ * @extends ChannelAudience
  */
-class Area extends ChannelAudience {
+class AreaAudience extends ChannelAudience {
   getBroadcastTargets() {
     // It would be more elegant to just pass the area but that could be super inefficient. If an area has
     // lots of rooms, it would need to iterate over all the rooms to find all the players.
@@ -18,4 +20,4 @@ class Area extends ChannelAudience {
   }
 }
 
-module.exports = Area;
+module.exports = AreaAudience;
