@@ -8,7 +8,6 @@ winston.add(winston.transports.Console, {
   'timestamp':true
 });
 
-const logDir = __dirname + '/../log/';
 const logExt = '.log';
 
 /**
@@ -55,13 +54,12 @@ class Logger {
   }
 
   //TODO: Be able to set and deactivate file logging via a server command.
-  static setFileLogging(filename) {
-    filename = logDir + filename;
-    if (!filename.endsWith(logExt)) {
-      filename += logExt;
+  static setFileLogging(path) {
+    if (!path.endsWith(logExt)) {
+      path += logExt;
     }
-    console.log("Adding file logging at " + filename);
-    winston.add(winston.transports.File, { filename, timestamp: true });
+    console.log("Adding file logging at " + path);
+    winston.add(winston.transports.File, { path, timestamp: true });
   }
 
   static deactivateFileLogging() {
@@ -77,3 +75,4 @@ class Logger {
 }
 
 module.exports = Logger;
+

@@ -10,6 +10,8 @@ const fs = require('fs'),
     Item = require('./Item'),
     Npc = require('./Npc'),
     PlayerClass = require('./PlayerClass'),
+    QuestGoal = require('./QuestGoal'),
+    QuestReward = require('./QuestReward'),
     Room = require('./Room'),
     Skill = require('./Skill'),
     SkillType = require('./SkillType'),
@@ -18,8 +20,6 @@ const fs = require('fs'),
 ;
 
 const srcPath = __dirname + '/';
-const bundlesPath = srcPath + '../bundles/';
-
 /**
  * Handles loading/parsing/initializing all bundles. AKA where the magic happens
  */
@@ -27,8 +27,29 @@ class BundleManager {
   /**
    * @param {GameState} state
    */
-  constructor(state) {
+  constructor(path, state) {
+    if (!path || !fs.existsSync(path)) {
+      throw new Error('Invalid bundle path');
+    }
+
     this.state = state;
+    this.bundlesPath = path;
+  }
+
+  /**
+   * For a given bundle js file require check if it needs to be backwards compatibly loaded with a loader(srcPath)
+   * or can just be loaded on its own
+   * @private
+   * @param {function (string)|object|array} loader
+   * @return {loader}
+   */
+  _getLoader(loader, ...args) {
+    if (typeof loader === 'function') {
+      // backwards compatible for old module loader(srcPath)
+      return loader(...args);
+    }
+
+    return loader;
   }
 
   /**
@@ -37,9 +58,9 @@ class BundleManager {
   loadBundles(distribute = true) {
     Logger.verbose('LOAD: BUNDLES');
 
-    const bundles = fs.readdirSync(bundlesPath);
+    const bundles = fs.readdirSync(this.bundlesPath);
     for (const bundle of bundles) {
-      const bundlePath = bundlesPath + bundle;
+      const bundlePath = this.bundlesPath + bundle;
       if (fs.statSync(bundlePath).isFile() || bundle === '.' || bundle === '..') {
         continue;
       }
@@ -114,7 +135,7 @@ class BundleManager {
 
       const goalName = path.basename(goalFile, path.extname(goalFile));
       const loader = require(goalPath);
-      let goalImport = loader(srcPath);
+      let goalImport = QuestGoal.isPrototypeOf(loader) ? loader : loader(srcPath);
       Logger.verbose(`\t\t${goalName}`);
 
       this.state.QuestGoalManager.set(goalName, goalImport);
@@ -135,7 +156,7 @@ class BundleManager {
 
       const rewardName = path.basename(rewardFile, path.extname(rewardFile));
       const loader = require(rewardPath);
-      let rewardImport = loader(srcPath);
+      let rewardImport = QuestReward.isPrototypeOf(loader) ? loader : loader(srcPath);
       Logger.verbose(`\t\t${rewardName}`);
 
       this.state.QuestRewardManager.set(rewardName, rewardImport);
@@ -152,7 +173,8 @@ class BundleManager {
   loadPlayerEvents(bundle, eventsFile) {
     Logger.verbose(`\tLOAD: Player Events...`);
 
-    const playerListeners = require(eventsFile)(srcPath).listeners;
+    const loader = require(eventsFile);
+    const playerListeners = this._getLoader(loader, srcPath).listeners;
 
     for (const [eventName, listener] of Object.entries(playerListeners)) {
       Logger.verbose(`\t\tEvent: ${eventName}`);
@@ -319,7 +341,8 @@ class BundleManager {
    * @param {string} scriptPath
    */
   loadEntityScript(factory, entityRef, scriptPath) {
-    const scriptListeners = require(scriptPath)(srcPath).listeners;
+    const loader = require(scriptPath);
+    const scriptListeners = this._getLoader(loader, srcPath).listeners;
 
     for (const [eventName, listener] of Object.entries(scriptListeners)) {
       Logger.verbose(`\t\t\t\tEvent: ${eventName}`);
@@ -357,7 +380,8 @@ class BundleManager {
         // TODO: Maybe abstract this into its own method? Doesn't make much sense now
         // given that rooms are created only once so we can just attach the listeners
         // immediately
-        const scriptListeners = require(scriptPath)(srcPath).listeners;
+        const loader = require(scriptPath);
+        const scriptListeners = this._getLoader(loader, srcPath).listeners;
         for (const [eventName, listener] of Object.entries(scriptListeners)) {
           Logger.verbose(`\t\t\t\tEvent: ${eventName}`);
           room.on(eventName, listener(this.state));
@@ -416,7 +440,7 @@ class BundleManager {
    */
   createCommand(commandPath, commandName, bundle) {
     const loader = require(commandPath);
-    let cmdImport = loader(srcPath, bundlesPath);
+    let cmdImport = this._getLoader(loader, srcPath, this.bundlesPath);
     cmdImport.command = cmdImport.command(this.state);
 
 
@@ -436,7 +460,7 @@ class BundleManager {
     Logger.verbose(`\tLOAD: Channels...`);
 
     const loader = require(channelsFile);
-    let channels = loader(srcPath);
+    let channels = this._getLoader(loader, srcPath);
 
     if (!Array.isArray(channels)) {
       channels = [channels];
@@ -500,7 +524,8 @@ class BundleManager {
       }
 
       const eventName = path.basename(eventFile, path.extname(eventFile));
-      const eventImport = require(eventPath)(srcPath);
+      const loader = require(eventPath);
+      const eventImport = this._getLoader(loader, srcPath);
 
       this.state.InputEventManager.add(eventName, eventImport.event(this.state));
     }
@@ -515,7 +540,7 @@ class BundleManager {
   loadBehaviors(bundle, behaviorsDir) {
     Logger.verbose(`\tLOAD: Behaviors...`);
 
-    function loadEntityBehaviors(type, manager, state) {
+    const loadEntityBehaviors = (type, manager, state) => {
       let typeDir = behaviorsDir + type + '/';
 
       if (!fs.existsSync(typeDir)) {
@@ -533,13 +558,14 @@ class BundleManager {
 
         const behaviorName = path.basename(behaviorFile, path.extname(behaviorFile));
         Logger.verbose(`\t\t\tLOAD: BEHAVIORS [${type}] ${behaviorName}...`);
-        const behaviorListeners = require(behaviorPath)(srcPath).listeners;
+        const loader = require(behaviorPath);
+        const behaviorListeners = this._getLoader(loader, srcPath).listeners;
 
         for (const [eventName, listener] of Object.entries(behaviorListeners)) {
           manager.addListener(behaviorName, eventName, listener(state));
         }
       }
-    }
+    };
 
     loadEntityBehaviors('npc', this.state.MobBehaviorManager, this.state);
     loadEntityBehaviors('item', this.state.ItemBehaviorManager, this.state);
@@ -566,7 +592,7 @@ class BundleManager {
       const loader = require(effectPath);
 
       Logger.verbose(`\t\t${effectName}`);
-      this.state.EffectFactory.add(effectName, loader(srcPath));
+      this.state.EffectFactory.add(effectName, this._getLoader(loader, srcPath));
     }
 
     Logger.verbose(`\tENDLOAD: Effects...`);
@@ -588,7 +614,7 @@ class BundleManager {
 
       const skillName = path.basename(skillFile, path.extname(skillFile));
       const loader = require(skillPath);
-      let skillImport = loader(srcPath);
+      let skillImport = this._getLoader(loader, srcPath);
       if (skillImport.run) {
         skillImport.run = skillImport.run(this.state);
       }
@@ -622,7 +648,7 @@ class BundleManager {
 
       const className = path.basename(classFile, path.extname(classFile));
       const loader = require(classPath);
-      let classImport = loader(srcPath);
+      let classImport = this._getLoader(loader, srcPath);
 
       Logger.verbose(`\t\t${className}`);
       this.state.ClassManager.set(className, new PlayerClass(className, classImport));
@@ -647,7 +673,8 @@ class BundleManager {
 
       const eventsName = path.basename(eventsFile, path.extname(eventsFile));
       Logger.verbose(`\t\t\tLOAD: SERVER-EVENTS ${eventsName}...`);
-      const eventsListeners = require(eventsPath)(srcPath).listeners;
+      const loader = require(eventsPath);
+      const eventsListeners = this._getLoader(loader, srcPath).listeners;
 
       for (const [eventName, listener] of Object.entries(eventsListeners)) {
         this.state.ServerEventManager.add(eventName, listener(this.state));

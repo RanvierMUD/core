@@ -1,6 +1,6 @@
 'use strict';
 
-const ChannelAudience = require('../ChannelAudience');
+const ChannelAudience = require('./ChannelAudience');
 
 /**
  * Audience class representing other players in the same area as the sender

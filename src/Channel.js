@@ -1,9 +1,9 @@
 'use strict';
 
 const Broadcast = require('./Broadcast');
-const WorldAudience = require('./ChannelAudience/WorldAudience');
-const PrivateAudience = require('./ChannelAudience/PrivateAudience');
-const PartyAudience = require('./ChannelAudience/PartyAudience');
+const WorldAudience = require('./WorldAudience');
+const PrivateAudience = require('./PrivateAudience');
+const PartyAudience = require('./PartyAudience');
 
 /**
  * @property {ChannelAudience} audience People who receive messages from this channel

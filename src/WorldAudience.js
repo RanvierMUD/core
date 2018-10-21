@@ -1,6 +1,6 @@
 'use strict';
 
-const ChannelAudience = require('../ChannelAudience');
+const ChannelAudience = require('./ChannelAudience');
 
 /**
  * Audience class representing everyone in the game, except sender.

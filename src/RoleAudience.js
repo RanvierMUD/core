@@ -1,4 +1,6 @@
-const ChannelAudience = require('../ChannelAudience');
+'use strict';
+
+const ChannelAudience = require('./ChannelAudience');
 
 class RoleAudience extends ChannelAudience {
   constructor(options) {

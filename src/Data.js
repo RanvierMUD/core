@@ -4,12 +4,16 @@ const fs = require('fs');
 const path = require('path');
 const yaml = require('js-yaml');
 
-const dataPath = __dirname + '/../data/';
+let dataPath = null;
 
 /**
  * Class for loading/parsing data files from disk
  */
 class Data {
+  static setDataPath(path) {
+    dataPath = path;
+  }
+
   /**
    * Read in and parse a file. Current supports yaml and json
    * @param {string} filepath
