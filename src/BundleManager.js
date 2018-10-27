@@ -82,10 +82,14 @@ class BundleManager {
     // Distribution is done after all areas are loaded in case items use areas from each other
     this.state.AreaManager.distribute(this.state);
 
-    this.state.RoomManager.startingRoom = this.state.RoomManager.getRoom(this.state.Config.get('startingRoom'));
-    if (!this.state.RoomManager.startingRoom) {
-      throw new Error('You must define a valid starting room in ranvier.json.');
+    let startingRoom = this.state.Config.get('startingRoom');
+    startingRoom = startingRoom && this.state.RoomManager.getRoom(startingRoom);
+
+    if (!startingRoom) {
+      throw new Error('Invalid or no startingRoom defined in ranvier.json. This is usually caused by not having any area bundles enabled.');
     }
+
+    this.state.RoomManager.startingRoom = this.state.RoomManager.getRoom();
     Logger.verbose(`CONFIG: Starting Room [${this.state.RoomManager.startingRoom.entityReference}]`);
   }
 
