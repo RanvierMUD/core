@@ -89,7 +89,7 @@ class BundleManager {
       throw new Error('Invalid or no startingRoom defined in ranvier.json. This is usually caused by not having any area bundles enabled.');
     }
 
-    this.state.RoomManager.startingRoom = this.state.RoomManager.getRoom();
+    this.state.RoomManager.startingRoom = startingRoom;
     Logger.verbose(`CONFIG: Starting Room [${this.state.RoomManager.startingRoom.entityReference}]`);
   }
 
