@@ -177,7 +177,7 @@ class EffectList {
       attrValue = effect.modifyAttribute(attrName, attrValue);
     }
 
-    return Math.max(attrValue, 0) || 0;
+    return attrValue;
   }
 
   /**
@@ -192,6 +192,8 @@ class EffectList {
       currentAmount = effect.modifyIncomingDamage(damage, currentAmount);
     }
 
+    // Don't allow a modifier to make damage go negative, it would cause weird
+    // behavior where damage raises an attribute
     return Math.max(currentAmount, 0) || 0;
   }
 
@@ -207,6 +209,7 @@ class EffectList {
       currentAmount = effect.modifyOutgoingDamage(damage, currentAmount);
     }
 
+    // Same thing, mutatis mutandis, for outgoing damage
     return Math.max(currentAmount, 0) || 0;
   }
 
