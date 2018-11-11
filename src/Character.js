@@ -37,7 +37,7 @@ class Character extends Metadatable(EventEmitter) {
     this.combatData = {};
     this.level = data.level || 1;
     this.room = data.room || null;
-    this.attributes = new Attributes(data.attributes || null);
+    this.attributes = data.attributes || new Attributes();
 
     this.followers = new Set();
     this.following = null;
@@ -75,18 +75,31 @@ class Character extends Metadatable(EventEmitter) {
    * @return {number}
    */
   getMaxAttribute(attr) {
-    if (this.hasAttribute(attr)) {
-      const attribute = this.attributes.get(attr);
-      return this.effects.evaluateAttribute(attribute);
+    if (!this.hasAttribute(attr)) {
+      throw new RangeError(`Character does not have attribute [${attr}]`);
     }
-    return null;
+
+    const attribute = this.attributes.get(attr);
+    const currentVal = this.effects.evaluateAttribute(attribute);
+
+    if (!attribute.formula) {
+      return currentVal;
+    }
+
+    const { formula } = attribute;
+
+    const requiredValues = formula.requires.map(
+      reqAttr => this.getMaxAttribute(reqAttr)
+    );
+
+    return formula.evaluate.apply(formula, [attribute, this, currentVal, ...requiredValues]);
   }
 
   /**
    * @see {@link Attributes#add}
    */
-  addAttribute(name, base, delta = 0) {
-    this.attributes.add(name, base, delta);
+  addAttribute(attribute) {
+    this.attributes.add(attribute);
   }
 
   /**
@@ -95,10 +108,11 @@ class Character extends Metadatable(EventEmitter) {
    * @return {number}
   */
   getAttribute(attr) {
-    if (this.hasAttribute(attr)) {
-      return this.getMaxAttribute(attr) + this.attributes.get(attr).delta;
+    if (!this.hasAttribute(attr)) {
+      throw new RangeError(`Character does not have attribute [${attr}]`);
     }
-    return null;
+
+    return this.getMaxAttribute(attr) + this.attributes.get(attr).delta;
   }
 
   /**
@@ -116,6 +130,10 @@ class Character extends Metadatable(EventEmitter) {
    * @param {string} attr
   */
   setAttributeToMax(attr) {
+    if (!this.hasAttribute(attr)) {
+      throw new Error(`Invalid attribute ${attr}`);
+    }
+
     this.attributes.get(attr).setDelta(0);
     this.emit('attributeUpdate', attr, this.getAttribute(attr));
   }
@@ -127,6 +145,10 @@ class Character extends Metadatable(EventEmitter) {
    * @see {@link Attributes#raise}
   */
   raiseAttribute(attr, amount) {
+    if (!this.hasAttribute(attr)) {
+      throw new Error(`Invalid attribute ${attr}`);
+    }
+
     this.attributes.get(attr).raise(amount);
     this.emit('attributeUpdate', attr, this.getAttribute(attr));
   }
@@ -138,6 +160,10 @@ class Character extends Metadatable(EventEmitter) {
    * @see {@link Attributes#lower}
   */
   lowerAttribute(attr, amount) {
+    if (!this.hasAttribute(attr)) {
+      throw new Error(`Invalid attribute ${attr}`);
+    }
+
     this.attributes.get(attr).lower(amount);
     this.emit('attributeUpdate', attr, this.getAttribute(attr));
   }
@@ -155,6 +181,10 @@ class Character extends Metadatable(EventEmitter) {
    * @param {number} newBase New base value
    */
   setAttributeBase(attr, newBase) {
+    if (!this.hasAttribute(attr)) {
+      throw new Error(`Invalid attribute ${attr}`);
+    }
+
     this.attributes.get(attr).setBase(newBase);
     this.emit('attributeUpdate', attr, this.getAttribute(attr));
   }
@@ -449,8 +479,29 @@ class Character extends Metadatable(EventEmitter) {
    * @param {GameState} state
    */
   hydrate(state) {
-    this.effects.hydrate(state);
+    if (!(this.attributes instanceof Attributes)) {
+      const attributes = this.attributes;
+      this.attributes = new Attributes();
 
+      for (const attr in attributes) {
+        let attrConfig = attributes[attr];
+        if (typeof attrConfig === 'number') {
+          attrConfig = { base: attrConfig };
+        }
+
+        if (typeof attrConfig !== 'object' || !('base' in attrConfig)) {
+          throw new Error('Invalid base value given to attributes.\n' + JSON.stringify(attributes, null, 2));
+        }
+
+        if (!state.AttributeFactory.has(attr)) {
+          throw new Error(`Entity trying to hydrate with invalid attribute ${attr}`);
+        }
+
+        this.addAttribute(state.AttributeFactory.create(attr, attrConfig.base, attrConfig.delta || 0));
+      }
+    }
+
+    this.effects.hydrate(state);
     // inventory is hydrated in the subclasses because npc and players hydrate their inventories differently
   }
 
