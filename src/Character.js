@@ -37,7 +37,7 @@ class Character extends Metadatable(EventEmitter) {
     this.combatData = {};
     this.level = data.level || 1;
     this.room = data.room || null;
-    this.attributes = new Attributes(data.attributes || null);
+    this.attributes = data.attributes || new Attributes();
 
     this.followers = new Set();
     this.following = null;
@@ -75,18 +75,29 @@ class Character extends Metadatable(EventEmitter) {
    * @return {number}
    */
   getMaxAttribute(attr) {
-    if (this.hasAttribute(attr)) {
-      const attribute = this.attributes.get(attr);
-      return this.effects.evaluateAttribute(attribute);
+    if (!this.hasAttribute(attr)) {
+      throw new RangeError(`Character does not have attribute [${attr}]`);
     }
-    return null;
+
+    const attribute = this.attributes.get(attr);
+    const currentVal = this.effects.evaluateAttribute(attribute);
+
+    if (!attribute.formula) {
+      return currentVal;
+    }
+
+    const requiredValues = attribute.formula.requires.map(
+      reqAttr => this.getMaxAttribute(reqAttr)
+    );
+
+    return attribute.formula.apply(this, [currentVal, ...requiredValues]);
   }
 
   /**
    * @see {@link Attributes#add}
    */
-  addAttribute(name, base, delta = 0) {
-    this.attributes.add(name, base, delta);
+  addAttribute(attribute) {
+    this.attributes.add(attribute);
   }
 
   /**
@@ -95,10 +106,11 @@ class Character extends Metadatable(EventEmitter) {
    * @return {number}
   */
   getAttribute(attr) {
-    if (this.hasAttribute(attr)) {
-      return this.getMaxAttribute(attr) + this.attributes.get(attr).delta;
+    if (!this.hasAttribute(attr)) {
+      throw new RangeError(`Character does not have attribute [${attr}]`);
     }
-    return null;
+
+    return this.getMaxAttribute(attr) + this.attributes.get(attr).delta;
   }
 
   /**
@@ -449,6 +461,28 @@ class Character extends Metadatable(EventEmitter) {
    * @param {GameState} state
    */
   hydrate(state) {
+    if (!(this.attributes instanceof Attributes)) {
+      for (const attr in this.attributes) {
+        const attrConfig = this.attributes[attr];
+        if (typeof attrConfig === 'number') {
+          this.attributes[attr] = { base: attrConfig };
+        }
+
+        if (typeof this.attributes[attr] !== 'object' || !('base' in this.attributes[attr])) {
+          throw new Error('Invalid base value given to attributes.\n' + JSON.stringify(this.attributes, null, 2));
+        }
+      }
+
+      const list = new Attributes();
+
+      for (let [statName, values] of Object.entries(baseStats)) {
+        const attr = state.AttributeFactory.create(statName, values.base, values.delta || 0);
+        list.add(attr);
+      }
+
+      this.attributes = list;
+    }
+
     this.effects.hydrate(state);
 
     // inventory is hydrated in the subclasses because npc and players hydrate their inventories differently

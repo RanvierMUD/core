@@ -10,23 +10,30 @@
  * @property {string} name
  * @property {number} base
  * @property {number} delta Current difference from the base
+ * @property {AttributeFormula} formula
  */
 class Attribute {
   /**
    * @param {string} name
    * @param {number} base
    * @param {number} delta=0
+   * @param {AttributeFormula} formula=null
    */
-  constructor(name, base, delta = 0) {
+  constructor(name, base, delta = 0, formula = null) {
     if (isNaN(base)) { 
       throw new TypeError(`Base attribute must be a number, got ${base}.`); 
     }
     if (isNaN(delta)) {
       throw new TypeError(`Attribute delta must be a number, got ${delta}.`);
     }
+    if (computed && !(computed instanceof AttributeFormula)) {
+      throw new TypeError('Attribute formula must be instance of AttributeFormula');
+    }
+
     this.name = name;
     this.base = base;
     this.delta = delta;
+    this.formula = formula;
   }
 
   /**
@@ -68,4 +75,31 @@ class Attribute {
   }
 }
 
-module.exports = Attribute;
+/**
+ * @property {Array<string>} requires Array of attributes required for this formula to run
+ * @property {function (...number) : number} formula
+ */
+class AttributeFormula
+{
+  constructor(requires, fn) {
+    if (!Array.isArray(requires)) {
+      throw new TypeError('requires not an array');
+    }
+
+    if (typeof fn !== 'function') {
+      throw new TypeError('Formula function is not a function');
+    }
+
+    this.requires = requires;
+    this.formula = formula;
+  }
+
+  evaluate(...args) {
+    return this.formula(...args);
+  }
+}
+
+module.exports = {
+    Attribute,
+    AttributeFormula,
+};
