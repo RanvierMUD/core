@@ -75,7 +75,12 @@ class BundleManager {
         this.loadBundle(bundle, bundlePath);
     }
 
-    this.validateAttributes();
+    try {
+      this.state.AttributeFactory.validateAttributes();
+    } catch (err) {
+      Logger.error(err.message);
+      process.exit(0);
+    }
 
     Logger.verbose('ENDLOAD: BUNDLES');
 
@@ -216,32 +221,6 @@ class BundleManager {
     }
 
     Logger.verbose(`\tENDLOAD: Attributes...`);
-  }
-
-  /**
-   * Make sure there are no circular dependencies between attributes
-   */
-  validateAttributes() {
-    const { attributes } = this.state.AttributeFactory;
-    const references = [...attributes].reduce((acc, [ attrName, { formula } ]) => {
-      if (!formula) {
-        return acc;
-      }
-
-      acc[attrName] = formula.requires;
-
-      return acc;
-    }, {});
-
-    for (const attrName in references) {
-      const requires = references[attrName];
-      for (const req of requires) {
-        if (req in references && references[req].includes(attrName)) {
-          Logger.error(`Attribute formula for [${attrName}] has circular dependency with [${req}]`);
-          process.exit(1);
-        }
-      }
-    }
   }
 
   /**

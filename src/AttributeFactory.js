@@ -56,6 +56,31 @@ class AttributeFactory {
     const def = this.attributes.get(name);
     return new Attribute(name, base || def.base, delta, def.formula);
   }
+
+  /**
+   * Make sure there are no circular dependencies between attributes
+   * @throws Error
+   */
+  validateAttributes() {
+    const references = [...this.attributes].reduce((acc, [ attrName, { formula } ]) => {
+      if (!formula) {
+        return acc;
+      }
+
+      acc[attrName] = formula.requires;
+
+      return acc;
+    }, {});
+
+    for (const attrName in references) {
+      const requires = references[attrName];
+      for (const req of requires) {
+        if (req in references && references[req].includes(attrName)) {
+          throw new Error(`Attribute formula for [${attrName}] has circular dependency with [${req}]`);
+        }
+      }
+    }
+  }
 }
 
 module.exports = AttributeFactory;
