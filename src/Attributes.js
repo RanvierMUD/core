@@ -15,6 +15,10 @@ class Attributes extends Map
    * @param {Attribute} attribute
    */
   add(attribute) {
+    if (!(attribute instanceof Attribute)) {
+      throw new TypeError(`${attribute} not an Attribute`);
+    }
+
     this.set(attribute.name, attribute);
   }
 

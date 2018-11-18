@@ -87,8 +87,6 @@ class Npc extends Character {
     super.hydrate(state);
     state.MobManager.addMob(this);
 
-    this.setAttributeToMax('health');
-
     this.defaultItems.forEach(defaultItemId => {
       if (parseInt(defaultItemId, 10)) {
         defaultItemId = this.area.name + ':' + defaultItemId;

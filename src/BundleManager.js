@@ -19,6 +19,8 @@ const fs = require('fs'),
     Logger = require('./Logger')
 ;
 
+const { AttributeFormula } = require('./Attribute');
+
 const srcPath = __dirname + '/';
 /**
  * Handles loading/parsing/initializing all bundles. AKA where the magic happens
@@ -82,6 +84,7 @@ class BundleManager {
     // Distribution is done after all areas are loaded in case items use areas from each other
     this.state.AreaManager.distribute(this.state);
 
+    // FIXME: this is really weird to have default starting room stuff here, why does the engine care?
     let startingRoom = this.state.Config.get('startingRoom');
     startingRoom = startingRoom && this.state.RoomManager.getRoom(startingRoom);
 
@@ -102,6 +105,8 @@ class BundleManager {
       // quest goals/rewards have to be loaded before areas that have quests which use those goals
       { path: 'quest-goals/', fn: 'loadQuestGoals' },
       { path: 'quest-rewards/', fn: 'loadQuestRewards' },
+
+      { path: 'attributes.js', fn: 'loadAttributes' },
 
       { path: 'areas/', fn: 'loadAreas' },
       { path: 'behaviors/', fn: 'loadBehaviors' },
@@ -167,6 +172,48 @@ class BundleManager {
     }
 
     Logger.verbose(`\tENDLOAD: Quest Rewards...`);
+  }
+
+  /**
+   * Load attribute definitions
+   * @param {string} bundle
+   * @param {string} attributesFile
+   */
+  loadAttributes(bundle, attributesFile) {
+    Logger.verbose(`\tLOAD: Attributes...`);
+
+    const attributes = require(attributesFile);
+    let error = `\tAttributes file [${attributesFile}] from bundle [${bundle}]`;
+    if (!Array.isArray(attributes)) {
+      Logger.error(`${error} does not define an array of attributes`);
+      return;
+    }
+
+    for (const attribute of attributes) {
+      if (typeof attribute !== 'object') {
+        Logger.error(`${error} not an object`);
+        continue;
+      }
+
+      if (!('name' in attribute) || !('base' in attribute)) {
+        Logger.error(`${error} does not include required properties name and base`);
+        continue;
+      }
+
+      let formula = null;
+      if (attribute.formula) {
+        formula = new AttributeFormula(
+          attribute.formula.requires,
+          attribute.formula.fn(this.state),
+        );
+      }
+
+      Logger.verbose(`\t\t-> ${attribute.name}`);
+
+      this.state.AttributeFactory.add(attribute.name, attribute.base, formula);
+    }
+
+    Logger.verbose(`\tENDLOAD: Attributes...`);
   }
 
   /**

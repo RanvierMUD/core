@@ -1,6 +1,6 @@
 'use strict';
 
-const Attribute = require('./Attribute');
+const { Attribute, AttributeFormula } = require('./Attribute');
 
 /**
  * @property {Map} attributes
@@ -10,11 +10,28 @@ class AttributeFactory {
     this.attributes = new Map();
   }
 
-  add(name, formula = null) {
+  /**
+   * @param {string} name
+   * @param {number} base
+   * @param {AttributeFormula} formula
+   */
+  add(name, base, formula = null) {
+    if (formula && !(formula instanceof AttributeFormula)) {
+      throw new TypeError('Formula not instance of AttributeFormula');
+    }
+
     this.attributes.set(name, {
       name,
+      base,
       formula,
     });
+  }
+
+  /**
+   * @see Map#has
+   */
+  has(name) {
+    return this.attributes.has(name);
   }
 
   /**
@@ -27,22 +44,17 @@ class AttributeFactory {
   }
 
   /**
-   * @param {GameState} GameState
    * @param {string} name
    * @param {number} delta
    * @return {Attribute}
    */
-  create(GameState, name, delta = 0) {
+  create(name, base = null, delta = 0) {
     if (!this.has(name)) {
       throw new RangeError(`No attribute definition found for [${name}]`);
     }
 
     const def = this.attributes.get(name);
-    if (def.formula && !(def.formula instanceof AttributeFormula)) {
-      def.formula = new AttributeFormula(def.formula);
-    }
-
-    return new Attribute(name, base, delta, def.formula);
+    return new Attribute(name, base || def.base, delta, def.formula);
   }
 }
 

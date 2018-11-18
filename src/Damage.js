@@ -1,7 +1,5 @@
 'use strict';
 
-const Random = require('./RandomUtil');
-
 /**
  * @property {string} attribute Attribute the damage is going to apply to
  * @property {number} amount Initial amount of damage to be done
@@ -9,6 +7,7 @@ const Random = require('./RandomUtil');
  * @property {?string} type Damage type e.g., physical, fire, etc.
  * @property {?string} source A damage source identifier. e.g., "skill:kick", "weapon", etc.
  * @property {number} finalAmount Amount of damage to be done after attacker/defender effects
+ * @property {boolean} critical whether this damage is a critical hit or not
  */
 class Damage {
   /**
@@ -29,7 +28,6 @@ class Damage {
       source = null,
       hidden = false,
       critical = false,
-      criticalMultiplier = 1.5
     } = config;
 
     if (amount === null) {
@@ -47,7 +45,6 @@ class Damage {
     this.attacker = attacker;
     this.hidden = hidden;
     this.critical = critical;
-    this.criticalMultiplier = criticalMultiplier;
   }
 
   /**
@@ -59,11 +56,6 @@ class Damage {
     let amount = this.amount;
 
     if (this.attacker) {
-      const critChance = Math.max(this.attacker.getMaxAttribute('critical') || 0, 0);
-      this.critical = Random.probability(critChance);
-      if (this.critical) {
-        amount = Math.ceil(amount * this.criticalMultiplier);
-      }
       amount = this.attacker.evaluateOutgoingDamage(this, amount);
     }
 

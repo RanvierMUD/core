@@ -26,7 +26,7 @@ class Attribute {
     if (isNaN(delta)) {
       throw new TypeError(`Attribute delta must be a number, got ${delta}.`);
     }
-    if (computed && !(computed instanceof AttributeFormula)) {
+    if (formula && !(formula instanceof AttributeFormula)) {
       throw new TypeError('Attribute formula must be instance of AttributeFormula');
     }
 
@@ -91,11 +91,16 @@ class AttributeFormula
     }
 
     this.requires = requires;
-    this.formula = formula;
+    this.formula = fn;
   }
 
-  evaluate(...args) {
-    return this.formula(...args);
+  evaluate(attribute, ...args) {
+    if (typeof this.formula !== 'function') {
+      throw new Error(`Formula is not callable ${this.formula}`);
+      return;
+    }
+
+    return this.formula.bind(attribute)(...args);
   }
 }
 

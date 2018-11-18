@@ -299,7 +299,11 @@ class Room extends Metadatable(EventEmitter) {
       }
 
       if (RandomUtil.probability(defaultNpc.respawnChance)) {
-        this.spawnNpc(state, defaultNpc.id);
+        try {
+          this.spawnNpc(state, defaultNpc.id);
+        } catch (err) {
+          Logger.error(err.message);
+        }
       }
     });
 
@@ -397,7 +401,11 @@ class Room extends Metadatable(EventEmitter) {
         defaultNpc = { id: defaultNpc };
       }
 
-      this.spawnNpc(state, defaultNpc.id);
+      try {
+        this.spawnNpc(state, defaultNpc.id);
+      } catch (err) {
+        Logger.error(err);
+      }
     });
 
     for (let [behaviorName, config] of this.behaviors) {
