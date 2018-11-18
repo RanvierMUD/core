@@ -59,7 +59,7 @@ class AttributeFactory {
 
   /**
    * Make sure there are no circular dependencies between attributes
-   * @throws Error
+   * @throws
    */
   validateAttributes() {
     const references = [...this.attributes].reduce((acc, [ attrName, { formula } ]) => {
@@ -73,13 +73,40 @@ class AttributeFactory {
     }, {});
 
     for (const attrName in references) {
-      const requires = references[attrName];
-      for (const req of requires) {
-        if (req in references && references[req].includes(attrName)) {
-          throw new Error(`Attribute formula for [${attrName}] has circular dependency with [${req}]`);
-        }
+      const check = this._checkReferences(attrName, references);
+      if (Array.isArray(check)) {
+        const path = check.concat(attrName).join(' -> ');
+        throw new Error(`Attribute formula for [${attrName}] has circular dependency [${path}]`);
       }
     }
+  }
+
+  /**
+   * @param {string} attr attribute name to check for circular ref
+   * @param {Object.<string, Array<string>>} references
+   * @param {Array<string>} stack
+   * @return bool
+   * @throws
+   */
+  _checkReferences(attr, references, stack = []) {
+    if (stack.includes(attr)) {
+      return stack;
+    }
+
+    const requires = references[attr];
+
+    if (!requires || !requires.length) {
+      return true;
+    }
+
+    for (const reqAttr of requires) {
+      const check = this._checkReferences(reqAttr, references, stack.concat(attr));
+      if (Array.isArray(check)) {
+        return check;
+      }
+    }
+
+    return true;
   }
 }
 
