@@ -1,5 +1,7 @@
 'use strict';
 
+const BehaviorManager = require('./BehaviorManager');
+
 /**
  * Stores references to, and handles distribution of, active areas
  * @property {Map<string,Area>} areas
@@ -7,6 +9,7 @@
 class AreaManager {
   constructor() {
     this.areas = new Map();
+    this.scripts = new BehaviorManager();
   }
 
   /**
@@ -47,18 +50,6 @@ class AreaManager {
   tickAll(state) {
     for (const [ name, area ] of this.areas) {
       area.emit('updateTick', state);
-    }
-  }
-
-  /**
-   * Hydrate all rooms in all areas
-   * @param {GameState} state
-   */
-  distribute(state) {
-    for (const [ name, area ] of this.areas) {
-      for (const [ roomId, room ] of area.rooms) {
-        room.hydrate(state);
-      }
     }
   }
 }

@@ -36,6 +36,7 @@ class BundleManager {
 
     this.state = state;
     this.bundlesPath = path;
+    this.areas = [];
   }
 
   /**
@@ -72,7 +73,7 @@ class BundleManager {
         continue;
       }
 
-        this.loadBundle(bundle, bundlePath);
+      this.loadBundle(bundle, bundlePath);
     }
 
     try {
@@ -89,7 +90,11 @@ class BundleManager {
     }
 
     // Distribution is done after all areas are loaded in case items use areas from each other
-    this.state.AreaManager.distribute(this.state);
+    for (const areaRef of this.areas) {
+      const area = this.state.AreaFactory.create(areaRef);
+      area.hydrate(this.state);
+      this.state.AreaManager.addArea(area);
+    }
 
     // FIXME: this is really weird to have default starting room stuff here, why does the engine care?
     let startingRoom = this.state.Config.get('startingRoom');
@@ -115,8 +120,10 @@ class BundleManager {
 
       { path: 'attributes.js', fn: 'loadAttributes' },
 
-      { path: 'areas/', fn: 'loadAreas' },
+      // any entity in an area, including the area itself, can have behaviors so load them first
       { path: 'behaviors/', fn: 'loadBehaviors' },
+
+      { path: 'areas/', fn: 'loadAreas' },
       { path: 'channels.js', fn: 'loadChannels' },
       { path: 'classes/', fn: 'loadClasses' },
       { path: 'commands/', fn: 'loadCommands' },
@@ -258,8 +265,8 @@ class BundleManager {
 
       const areaPath = areasDir + areaDir;
       const areaName = path.basename(areaDir);
-      let area = this.loadArea(bundle, areaName, areaPath);
-      this.state.AreaManager.addArea(area);
+      this.loadArea(bundle, areaName, areaPath);
+      this.areas.push(areaName);
     }
 
     Logger.verbose(`\tENDLOAD: Areas`);
@@ -280,91 +287,52 @@ class BundleManager {
     };
 
     const manifest = Data.parseFile(paths.manifest);
+    const definition = {
+      bundle,
+      manifest,
+      quests: [],
+      items: [],
+      npcs: [],
+      rooms: [],
+    };
 
-    const area = new Area(bundle, areaName, manifest);
+    if (manifest.script) {
+      const scriptPath = `${areaPath}/scripts/${area.script}.js`;
+      if (!fs.existsSync(scriptPath)) {
+        Logger.warn(`\t\t\t[${areaName}] has non-existent script "${area.script}"`);
+      }
+
+      Logger.verbose(`\t\t\tLoading Item Script [${entityRef}] ${item.script}`);
+      this.loadEntityScript(this.state.AreaFactory, entityRef, scriptPath);
+    }
 
     // Quests have to be loaded first so items/rooms/npcs that are questors have the quest defs available
     // TODO: I _think_ this currently means that an NPC can only give out a quest from their own area but
     // I may be mistaken
     if (fs.existsSync(paths.quests)) {
-      const rooms = this.loadQuests(area, paths.quests);
+      Logger.verbose(`\t\tLOAD: Quests...`);
+      definition.quests = this.loadQuests(areaName, paths.quests);
+      Logger.verbose(`\t\tENDLOAD: Quests...`);
     }
 
     // load items
     if (fs.existsSync(paths.items)) {
-      this.loadItems(area, paths.items);
+      Logger.verbose(`\t\tLOAD: Items...`);
+      definition.items = this.loadEntities(areaName, 'items', this.state.ItemFactory, paths.items);
+      Logger.verbose(`\t\tENDLOAD: Items...`);
     }
 
     // load npcs
     if (fs.existsSync(paths.npcs)) {
-      this.loadNpcs(area, paths.npcs);
-    }
-
-    // load rooms
-    if (fs.existsSync(paths.rooms)) {
-      this.loadRooms(area, paths.rooms);
-    }
-
-    return area;
-  }
-
-  /**
-   * Load all items from a given area.
-   * @param {Area} area
-   * @param {string} itemsFile File containing items to load
-   */
-  loadItems(area, itemsFile) {
-    Logger.verbose(`\t\tLOAD: Items...`);
-
-    // parse the item files
-    let items = Data.parseFile(itemsFile);
-
-    if (!items || !items.length) {
-      return;
-    }
-
-    // set the item definitions onto the factory
-    items.forEach(item => {
-      const entityRef = this.state.ItemFactory.createEntityRef(area.name, item.id);
-      this.state.ItemFactory.setDefinition(entityRef, item);
-      area.addDefaultItem(entityRef);
-      if (item.script) {
-        const scriptPath = path.dirname(itemsFile) + '/scripts/items/' + item.script + '.js';
-        if (!fs.existsSync(scriptPath)) {
-          Logger.warn(`\t\t\t[${entityRef}] has non-existent script "${item.script}"`);
-          return;
+      Logger.verbose(`\t\tLOAD: NPCs...`);
+      definition.npcs = this.loadEntities(areaName, 'npcs', this.state.MobFactory, paths.npcs);
+      Logger.verbose(`\t\tENDLOAD: NPCs...`);
+      for (const npcRef of definition.npcs) {
+        const npc = this.state.MobFactory.getDefinition(npcRef);
+        if (!npc.quests) {
+          continue;
         }
 
-        Logger.verbose(`\t\t\tLoading Item Script [${entityRef}] ${item.script}`);
-        this.loadEntityScript(this.state.ItemFactory, entityRef, scriptPath);
-      }
-    });
-
-    Logger.verbose(`\t\tENDLOAD: Items`);
-  }
-
-  /**
-   * Load all npcs from a given area.
-   * @param {Area} area
-   * @param {string} npcsFile File containing npcs to load
-   */
-  loadNpcs(area, npcsFile) {
-    Logger.verbose(`\t\tLOAD: Npcs...`);
-
-    // parse the npc files
-    let npcs = Data.parseFile(npcsFile);
-
-    if (!npcs || !npcs.length) {
-      return;
-    }
-
-    // create and load the npcs
-    npcs = npcs.map(npc => {
-      const entityRef = this.state.MobFactory.createEntityRef(area.name, npc.id);
-      this.state.MobFactory.setDefinition(entityRef, npc);
-      area.addDefaultNpc(entityRef);
-
-      if (npc.quests) {
         // Update quest definitions with their questor
         // TODO: This currently means a given quest can only have a single questor, perhaps not optimal
         for (const qid of npc.quests) {
@@ -373,24 +341,52 @@ class BundleManager {
             Logger.error(`\t\t\tError: NPC is questor for non-existent quest [${qid}]`);
             continue;
           }
-          quest.npc = entityRef;
+          quest.npc = npcRef;
           this.state.QuestFactory.set(qid, quest);
         }
       }
+    }
 
-      if (npc.script) {
-        const scriptPath = path.dirname(npcsFile) + '/scripts/npcs/' + npc.script + '.js';
+    // load rooms
+    if (fs.existsSync(paths.rooms)) {
+      Logger.verbose(`\t\tLOAD: Rooms...`);
+      definition.rooms = this.loadEntities(areaName, 'rooms', this.state.RoomFactory, paths.rooms);
+      Logger.verbose(`\t\tENDLOAD: Rooms...`);
+    }
+
+    this.state.AreaFactory.setDefinition(areaName, definition);
+  }
+
+  /**
+   * Load an entity (item/npc/room) from file
+   * @param {string} areaName
+   * @param {string} type
+   * @param {EntityFactory} factory
+   * @param {string} entitiesFile
+   * @return {Array<entityReference>}
+   */
+  loadEntities(areaName, type, factory, entitiesFile) {
+    const entities = Data.parseFile(entitiesFile);
+
+    if (!entities || !entities.length) {
+      return [];
+    }
+
+    return entities.map(entity => {
+      const entityRef = factory.createEntityRef(areaName, entity.id);
+      factory.setDefinition(entityRef, entity);
+      if (entity.script) {
+        const scriptPath = `${path.dirname(entitiesFile)}/scripts/${type}/${entity.script}.js`;
         if (!fs.existsSync(scriptPath)) {
-          Logger.warn(`\t\t\t[${entityRef}] has non-existent script "${npc.script}"`);
-          return;
+          Logger.warn(`\t\t\t[${entityRef}] has non-existent script "${entity.script}"`);
+        } else {
+          Logger.verbose(`\t\t\tLoading Script [${entityRef}] ${entity.script}`);
+          this.loadEntityScript(factory, entityRef, scriptPath);
         }
-
-        Logger.verbose(`\t\t\tLoading NPC Script [${entityRef}] ${npc.script}`);
-        this.loadEntityScript(this.state.MobFactory, entityRef, scriptPath);
       }
-    });
 
-    Logger.verbose(`\t\tENDLOAD: Npcs`);
+      return entityRef;
+    });
   }
 
   /**
@@ -409,63 +405,18 @@ class BundleManager {
   }
 
   /**
-   * @param {Area} area
-   * @param {string} roomsFile
-   */
-  loadRooms(area, roomsFile) {
-    Logger.verbose(`\t\tLOAD: Rooms...`);
-
-    // parse the room files
-    let rooms = Data.parseFile(roomsFile);
-
-    if (!rooms || !rooms.length) {
-      return;
-    }
-
-    // create and load the rooms
-    rooms = rooms.map(room => new Room(area, room));
-    rooms.forEach(room => {
-      area.addRoom(room);
-      this.state.RoomManager.addRoom(room);
-      if (room.script) {
-        const scriptPath = path.dirname(roomsFile) + '/scripts/rooms/' + room.script + '.js';
-        if (!fs.existsSync(scriptPath)) {
-          Logger.warn(`\t\t\t[${entityRef}] has non-existent script "${room.script}"`);
-          return;
-        }
-
-        Logger.verbose(`\t\t\tLoading Room Script [${area.name}:${room.id}] ${room.script}`);
-        // TODO: Maybe abstract this into its own method? Doesn't make much sense now
-        // given that rooms are created only once so we can just attach the listeners
-        // immediately
-        const loader = require(scriptPath);
-        const scriptListeners = this._getLoader(loader, srcPath).listeners;
-        for (const [eventName, listener] of Object.entries(scriptListeners)) {
-          Logger.verbose(`\t\t\t\tEvent: ${eventName}`);
-          room.on(eventName, listener(this.state));
-        }
-      }
-    });
-
-    Logger.verbose(`\t\tENDLOAD: Rooms`);
-  }
-
-  /**
-   * @param {Area} area
+   * @param {string} areaName
    * @param {string} questsFile
+   * @return {Array<entityReference>}
    */
-  loadQuests(area, questsFile) {
-    Logger.verbose(`\t\tLOAD: Quests...`);
+  loadQuests(areaName, questsFile) {
+    const quests = Data.parseFile(questsFile);
 
-    let quests = Data.parseFile(questsFile);
-
-    for (const quest of quests) {
-      Logger.verbose(`\t\t\tLoading Quest [${area.name}:${quest.id}]`);
-      this.state.QuestFactory.add(area.name, quest.id, quest);
-      area.addDefaultQuest(this.state.QuestFactory.makeQuestKey(area.name, quest.id));
-    }
-
-    Logger.verbose(`\t\tENDLOAD: Quests...`);
+    return quests.map(quest => {
+      Logger.verbose(`\t\t\tLoading Quest [${areaName}:${quest.id}]`);
+      this.state.QuestFactory.add(areaName, quest.id, quest);
+      return this.state.QuestFactory.makeQuestKey(areaName, quest.id);
+    });
   }
 
   /**
@@ -625,6 +576,7 @@ class BundleManager {
       }
     };
 
+    loadEntityBehaviors('area', this.state.AreaBehaviorManager, this.state);
     loadEntityBehaviors('npc', this.state.MobBehaviorManager, this.state);
     loadEntityBehaviors('item', this.state.ItemBehaviorManager, this.state);
     loadEntityBehaviors('room', this.state.RoomBehaviorManager, this.state);
