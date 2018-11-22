@@ -5,14 +5,16 @@ const Attributes = require('./Attributes');
 const Character = require('./Character');
 const Config = require('./Config');
 const Logger = require('./Logger');
+const Scriptable = require('./Scriptable');
 
 /**
  * @property {number} id   Area-relative id (vnum)
  * @property {Area}   area Area npc belongs to (not necessarily the area they're currently in)
  * @property {Map} behaviors
  * @extends Character
+ * @mixes Scriptable
  */
-class Npc extends Character {
+class Npc extends Scriptable(Character) {
   constructor(area, data) {
     super(data);
     const validate = ['keywords', 'name', 'id'];
@@ -24,6 +26,7 @@ class Npc extends Character {
     }
 
     this.area = data.area;
+    this.script = data.script;
     this.behaviors = new Map(Object.entries(data.behaviors || {}));
     this.damage = data.damage;
     this.defaultEquipment = data.equipment || [];
@@ -35,23 +38,6 @@ class Npc extends Character {
     this.pacifist = data.pacifist || false;
     this.quests = data.quests || [];
     this.uuid = data.uuid || uuid();
-  }
-
-
-  /**
-   * @param {string} name
-   * @return {boolean}
-   */
-  hasBehavior(name) {
-    return this.behaviors.has(name);
-  }
-
-  /**
-   * @param {string} name
-   * @return {*}
-   */
-  getBehavior(name) {
-    return this.behaviors.get(name);
   }
 
   /**
@@ -86,6 +72,8 @@ class Npc extends Character {
   hydrate(state) {
     super.hydrate(state);
     state.MobManager.addMob(this);
+
+    this.setupBehaviors(state.MobBehaviorManager);
 
     this.defaultItems.forEach(defaultItemId => {
       if (parseInt(defaultItemId, 10)) {

@@ -1,6 +1,6 @@
 'use strict';
 
-const EventEmitter = require('events');
+const GameEntity = require('./GameEntity');
 const AreaFloor = require('./AreaFloor');
 
 /**
@@ -18,24 +18,21 @@ const AreaFloor = require('./AreaFloor');
  *   _originate_ from this area. An NPC may not actually be in this area at any given moment.
  * @property {Object} info Area configuration
  * @property {Number} lastRespawnTick milliseconds since last respawn tick. See {@link Area#update}
+ *
+ * @extends GameEntity
  */
-class Area extends EventEmitter {
+class Area extends GameEntity {
   constructor(bundle, name, manifest) {
     super();
     this.bundle = bundle;
     this.name = name;
     this.title = manifest.title;
-    this.script = manifest.script;
+    this.metadata = manifest.metadata || {};
     this.rooms = new Map();
     this.npcs = new Set();
-    this.info = Object.assign({
-      // respawn interval in seconds
-      respawnInterval: 60
-    }, manifest.info || {});
-
     this.map = new Map();
-
-    this.lastRespawnTick = -Infinity;
+    this.script = manifest.script;
+    this.behaviors = new Map(Object.entries(manifest.behaviors || {}));
 
     this.on('updateTick', state => {
       this.update(state);
@@ -57,6 +54,7 @@ class Area extends EventEmitter {
   get floors() {
     return [...this.map.keys()].sort();
   }
+
 
   /**
    * @param {string} id Room id
@@ -139,9 +137,6 @@ class Area extends EventEmitter {
    * This method is automatically called every N milliseconds where N is defined in the
    * `setInterval` call to `GameState.AreaMAnager.tickAll` in the `ranvier` executable. It, in turn,
    * will fire the `updateTick` event on all its rooms.
-   *
-   * Also handles firing the `respawnTick` event on rooms to trigger respawn.
-   * @see {@link Room.respawnTick}
    * 
    * @param {GameState} state
    */
@@ -153,24 +148,18 @@ class Area extends EventEmitter {
     for (const npc of this.npcs) {
       npc.emit('updateTick');
     }
-
-    // handle respawn
-    const sinceLastTick = Date.now() - this.lastRespawnTick;
-    if (sinceLastTick >= this.info.respawnInterval * 1000) {
-      this.lastRespawnTick = Date.now();
-      for (const [id, room] of this.rooms) {
-        room.emit('respawnTick', state);
-      }
-    }
   }
 
   hydrate(state) {
+    this.setupBehaviors(state.AreaBehaviorManager);
     const { rooms } = state.AreaFactory.getDefinition(this.name);
     for (const roomRef of rooms) {
       const room = state.RoomFactory.create(this, roomRef);
       this.addRoom(room);
       state.RoomManager.addRoom(room);
       room.hydrate(state);
+
+      this.emit('roomAdded', room);
     }
   }
 }

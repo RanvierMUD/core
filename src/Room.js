@@ -1,9 +1,7 @@
 'use strict';
 
-const EventEmitter = require('events');
-const RandomUtil = require('./RandomUtil');
+const GameEntity = require('./GameEntity');
 const Logger = require('./Logger');
-const Metadatable = require('./Metadatable');
 
 /**
  * @property {Area}          area         Area room is in
@@ -20,11 +18,9 @@ const Metadatable = require('./Metadatable');
  * @property {string}        title        Title shown on look/scan
  * @property {object}        doors        Doors restricting access to this room. See documentation for format
  *
- * @extends EventEmitter
- * @mixes Metadatable
- * @listens Room#updateTick
+ * @extends GameEntity
  */
-class Room extends Metadatable(EventEmitter) {
+class Room extends GameEntity {
   constructor(area, def) {
     super();
     const required = ['title', 'description', 'id'];
@@ -38,6 +34,8 @@ class Room extends Metadatable(EventEmitter) {
     this.area = area;
     this.defaultItems = def.items || [];
     this.defaultNpcs  = def.npcs || [];
+    this.metadata = def.metadata || {};
+    this.script = def.script;
     this.behaviors = new Map(Object.entries(def.behaviors || {}));
     this.coordinates = Array.isArray(def.coordinates) && def.coordinates.length === 3 ? {
       x: def.coordinates[0],
@@ -48,7 +46,6 @@ class Room extends Metadatable(EventEmitter) {
     this.entityReference = this.area.name + ':' + def.id;
     this.exits = def.exits || [];
     this.id = def.id;
-    this.script = def.script;
     this.title = def.title;
     // create by-val copies of the doors config so the lock/unlock don't accidentally modify the original definition
     this.doors = new Map(Object.entries(JSON.parse(JSON.stringify(def.doors || {}))));
@@ -58,18 +55,12 @@ class Room extends Metadatable(EventEmitter) {
     this.npcs = new Set();
     this.players = new Set();
 
-    // Arbitrary data bundles are free to shove whatever they want in
-    // WARNING: values must be JSON.stringify-able
-    this.metadata = def.metadata || {};
-
     /**
      * spawnedNpcs keeps track of NPCs even when they leave the room for the purposes of respawn. So if we spawn NPC A
      * into the room and it walks away we don't want to respawn the NPC until it's killed or otherwise removed from the
      * area
      */
     this.spawnedNpcs = new Set();
-
-    this.on('respawnTick', this.respawnTick);
   }
 
   /**
@@ -92,22 +83,6 @@ class Room extends Metadatable(EventEmitter) {
         entity.emit(eventName, ...args);
       }
     }
-  }
-
-  /**
-   * @param {string} name
-   * @return {boolean}
-   */
-  hasBehavior(name) {
-    return this.behaviors.has(name);
-  }
-
-  /**
-   * @param {string} name
-   * @return {*}
-   */
-  getBehavior(name) {
-    return this.behaviors.get(name);
   }
 
   /**
@@ -275,71 +250,6 @@ class Room extends Metadatable(EventEmitter) {
 
   /**
    * @param {GameState} state
-   */
-  respawnTick(state) {
-    // relock/close doors
-    this.doors = new Map(Object.entries(JSON.parse(JSON.stringify(this.defaultDoors || {}))));
-
-    this.defaultNpcs.forEach(defaultNpc => {
-      if (typeof defaultNpc === 'string') {
-        defaultNpc = { id: defaultNpc };
-      }
-
-      defaultNpc = Object.assign({
-        respawnChance: 100,
-        maxLoad: 1,
-        replaceOnRespawn: false
-      }, defaultNpc);
-
-      const npcCount = [...this.spawnedNpcs].filter(npc => npc.entityReference === defaultNpc.id).length;
-      const needsRespawn = npcCount < defaultNpc.maxLoad;
-
-      if (!needsRespawn) {
-        return;
-      }
-
-      if (RandomUtil.probability(defaultNpc.respawnChance)) {
-        try {
-          this.spawnNpc(state, defaultNpc.id);
-        } catch (err) {
-          Logger.error(err.message);
-        }
-      }
-    });
-
-    this.defaultItems.forEach(defaultItem => {
-      if (typeof defaultItem === 'string') {
-        defaultItem = { id: defaultItem };
-      }
-
-      defaultItem = Object.assign({
-        respawnChance: 100,
-        maxLoad: 1,
-        replaceOnRespawn: false
-      }, defaultItem);
-
-      const itemCount = [...this.items].filter(item => item.entityReference === defaultItem.id).length;
-      const needsRespawn = itemCount < defaultItem.maxLoad;
-
-      if (!needsRespawn && !defaultItem.replaceOnRespawn) {
-        return;
-      }
-
-      if (RandomUtil.probability(defaultItem.respawnChance)) {
-        if (defaultItem.replaceOnRespawn) {
-          this.items.forEach(item => {
-            if (item.entityReference === defaultItem.id) {
-              state.ItemManager.remove(item);
-            }
-          });
-        }
-        this.spawnItem(state, defaultItem.id);
-      }
-    });
-  }
-
-  /**
-   * @param {GameState} state
    * @param {string} entityRef
    */
   spawnItem(state, entityRef) {
@@ -382,6 +292,8 @@ class Room extends Metadatable(EventEmitter) {
   }
 
   hydrate(state) {
+    this.setupBehaviors(state.RoomBehaviorManager);
+
     this.items = new Set();
 
     // NOTE: This method effectively defines the fact that items/npcs do not
@@ -407,18 +319,6 @@ class Room extends Metadatable(EventEmitter) {
         Logger.error(err);
       }
     });
-
-    for (let [behaviorName, config] of this.behaviors) {
-      let behavior = state.RoomBehaviorManager.get(behaviorName);
-      if (!behavior) {
-        Logger.warn(`No script found for item behavior ${behaviorName}`);
-        continue;
-      }
-
-      // behavior may be a boolean in which case it will be `behaviorName: true`
-      config = config === true ? {} : config;
-      behavior.attach(this, config);
-    }
   }
 
   /**
