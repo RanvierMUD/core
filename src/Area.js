@@ -11,6 +11,7 @@ const AreaFloor = require('./AreaFloor');
  * @property {string} bundle Bundle this area comes from
  * @property {string} name
  * @property {string} title
+ * @property {string} script A custom script for this item
  * @property {Map}    map a Map object keyed by the floor z-index, each floor is an array with [x][y] indexes for coordinates.
  * @property {Map<string, Room>} rooms Map of room id to Room
  * @property {Set<Npc>} npcs Active NPCs that originate from this area. Note: this is NPCs that
@@ -24,6 +25,7 @@ class Area extends EventEmitter {
     this.bundle = bundle;
     this.name = name;
     this.title = manifest.title;
+    this.script = manifest.script;
     this.rooms = new Map();
     this.npcs = new Set();
     this.info = Object.assign({
@@ -32,14 +34,6 @@ class Area extends EventEmitter {
     }, manifest.info || {});
 
     this.map = new Map();
-
-    // List of entityReferences of items/npcs that come from this area
-    // Note: Only entityReferences, not instances of the items
-    this.defaultEntities = {
-      items: new Set(),
-      npcs: new Set(),
-      quests: new Set(),
-    };
 
     this.lastRespawnTick = -Infinity;
 
@@ -70,18 +64,6 @@ class Area extends EventEmitter {
    */
   getRoomById(id) {
     return this.rooms.get(id);
-  }
-
-  addDefaultItem(entityRef) {
-    this.defaultEntities.items.add(entityRef);
-  }
-
-  addDefaultNpc(entityRef) {
-    this.defaultEntities.npcs.add(entityRef);
-  }
-
-  addDefaultQuest(entityRef) {
-    this.defaultEntities.quests.add(entityRef);
   }
 
   /**
@@ -179,6 +161,16 @@ class Area extends EventEmitter {
       for (const [id, room] of this.rooms) {
         room.emit('respawnTick', state);
       }
+    }
+  }
+
+  hydrate(state) {
+    const { rooms } = state.AreaFactory.getDefinition(this.name);
+    for (const roomRef of rooms) {
+      const room = state.RoomFactory.create(this, roomRef);
+      this.addRoom(room);
+      state.RoomManager.addRoom(room);
+      room.hydrate(state);
     }
   }
 }

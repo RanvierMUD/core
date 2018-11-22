@@ -79,10 +79,9 @@ class EntityFactory {
   }
 
   /**
-   * Clone an existing item. Resulting item will not be held or equipped and will _not_ have its default contents
-   * If you want it to also populate its default contents you must manually call `item.hydrate(state)`
-   * @param {Item} item
-   * @return {Item}
+   * Clone an existing entity.
+   * @param {Item|Npc|Room|Area} entity
+   * @return {Item|Npc|Room|Area}
    */
   clone(entity) {
     return this.create(entity.area, entity.entityReference);
