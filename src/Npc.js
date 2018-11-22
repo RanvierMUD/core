@@ -28,6 +28,7 @@ class Npc extends Scriptable(Character) {
     this.area = data.area;
     this.script = data.script;
     this.behaviors = new Map(Object.entries(data.behaviors || {}));
+    // FIXME: What is this? Why is it here?
     this.damage = data.damage;
     this.defaultEquipment = data.equipment || [];
     this.defaultItems = data.items || [];
@@ -60,6 +61,9 @@ class Npc extends Scriptable(Character) {
     this.emit('enterRoom', nextRoom);
   }
 
+  /**
+   * FIXME: Why does the core have a damage stat for Npc, what the heck is it doing in here?
+   */
   serialize() {
     return Object.assign(super.serialize(), { damage: this.damage });
   }
