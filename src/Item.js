@@ -1,8 +1,8 @@
 'use strict';
 
-const EventEmitter = require('events');
 const uuid = require('uuid/v4');
 
+const GameEntity = require('./GameEntity');
 const ItemType = require('./ItemType');
 const Logger = require('./Logger');
 const Metadatable = require('./Metadatable');
@@ -29,10 +29,9 @@ const { Inventory, InventoryFullError } = require('./Inventory');
  * @property {boolean} locked      Whether this item is locked
  * @property {entityReference} lockedBy Item that locks/unlocks this item
  *
- * @extends EventEmitter
- * @mixes Metadatable
+ * @extends GameEntity
  */
-class Item extends Metadatable(EventEmitter) {
+class Item extends GameEntity {
   constructor (area, item) {
     super();
     const validate = ['keywords', 'name', 'id'];
@@ -45,7 +44,7 @@ class Item extends Metadatable(EventEmitter) {
 
     this.area = area;
     this.metadata  = item.metadata || {};
-    this.behaviors = item.behaviors || {};
+    this.behaviors = new Map(Object.entries(item.behaviors || {}));
     this.defaultItems = item.items || [];
     this.description = item.description || 'Nothing special.';
     this.entityReference = item.entityReference; // EntityFactory key
@@ -83,28 +82,6 @@ class Item extends Metadatable(EventEmitter) {
 
   hasKeyword(keyword) {
     return this.keywords.indexOf(keyword) !== -1;
-  }
-
-  /**
-   * @param {string} name
-   * @return {boolean}
-   */
-  hasBehavior(name) {
-    if (!(this.behaviors instanceof Map)) {
-        throw new Error("Item has not been hydrated. Cannot access behaviors.");
-    }
-    return this.behaviors.has(name);
-  }
-
-  /**
-   * @param {string} name
-   * @return {*}
-   */
-  getBehavior(name) {
-    if (!(this.behaviors instanceof Map)) {
-        throw new Error("Item has not been hydrated. Cannot access behaviors.");
-    }
-    return this.behaviors.get(name);
   }
 
   /**
@@ -234,6 +211,12 @@ class Item extends Metadatable(EventEmitter) {
   }
 
   hydrate(state, serialized = {}) {
+    // perform deep copy if behaviors is set to prevent sharing of the object between
+    // item instances
+    const behaviors = JSON.parse(JSON.stringify(serialized.behaviors || this.behaviors));
+    this.behaviors = new Map(Object.entries(behaviors));
+    this.setupBehaviors(state.ItemBehaviorManager);
+
     this.metadata = JSON.parse(JSON.stringify(serialized.metadata || this.metadata));
     this.closed = 'closed' in serialized ? serialized.closed : this.closed;
     this.locked = 'locked' in serialized ? serialized.locked : this.locked;
@@ -256,22 +239,6 @@ class Item extends Metadatable(EventEmitter) {
       });
     }
 
-    // perform deep copy if behaviors is set to prevent sharing of the object between
-    // item instances
-    const behaviors = JSON.parse(JSON.stringify(serialized.behaviors || this.behaviors));
-    this.behaviors = new Map(Object.entries(behaviors));
-
-    for (let [behaviorName, config] of this.behaviors) {
-      let behavior = state.ItemBehaviorManager.get(behaviorName);
-      if (!behavior) {
-        Logger.warn(`No script found for item behavior ${behaviorName}`);
-        continue;
-      }
-
-      // behavior may be a boolean in which case it will be `behaviorName: true`
-      config = config === true ? {} : config;
-      behavior.attach(this, config);
-    }
   }
 
   serialize() {
