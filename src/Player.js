@@ -30,7 +30,7 @@ class Player extends Character {
     this.extraPrompts = new Map();
     this.password  = data.password;
     this.playerClass = null;
-    this.prompt = data.prompt || '[ %health.current%/%health.max% <bold>hp</bold> ]';
+    this.prompt = data.prompt || '> ';
     this.socket = data.socket || null;
     const questData = Object.assign({
       completed: [],
