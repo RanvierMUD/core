@@ -73,6 +73,8 @@ class Area extends GameEntity {
     if (room.coordinates) {
       this.addRoomToMap(room);
     }
+
+    this.emit('roomAdded', room);
   }
 
   /**
@@ -80,6 +82,8 @@ class Area extends GameEntity {
    */
   removeRoom(room) {
     this.rooms.delete(room.id);
+
+    this.emit('roomRemoved', room.id);
   }
 
   /**
@@ -158,8 +162,6 @@ class Area extends GameEntity {
       this.addRoom(room);
       state.RoomManager.addRoom(room);
       room.hydrate(state);
-
-      this.emit('roomAdded', room);
     }
   }
 }
