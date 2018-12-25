@@ -7,6 +7,17 @@ const Logger = require('./Logger');
  * @mixin
  */
 const Scriptable = parentClass => class extends parentClass {
+  emit(name, ...args) {
+    // Squelch events on a pruned entity. Attempts to prevent the case where an entity has been effectively removed
+    // from the game but somehow still triggered a listener. Set by respective entity Manager class
+    if (this.__pruned) {
+      this.removeAllListeners();
+      return;
+    }
+
+    super.emit(name, ...args);
+  }
+
   /**
    * @param {string} name
    * @return {boolean}

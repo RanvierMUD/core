@@ -125,15 +125,10 @@ class Area extends GameEntity {
   }
 
   /**
-   * Removes an NPC from the game and frees its place in its originating room to allow it to respawn
+   * Removes an NPC from the area. NOTE: This must manually remove the NPC from its room as well
    * @param {Npc} npc
    */
   removeNpc(npc) {
-    if (npc.room) {
-      npc.room.removeNpc(npc);
-      npc.sourceRoom.removeSpawnedNpc(npc);
-    }
-
     this.npcs.delete(npc);
   }
 

@@ -16,9 +16,18 @@ class MobManager {
   }
 
   /**
+   * Completely obliterate a mob from the game, nuclear option
    * @param {Mob} mob
    */
   removeMob(mob) {
+    mob.effects.clear();
+    const room = mob.room;
+    if (room) {
+      room.area.removeNpc(mob);
+      room.removeNpc(mob);
+    }
+    mob.__pruned = true;
+    mob.removeAllListeners();
     this.mobs.delete(mob.uuid);
   }
 }

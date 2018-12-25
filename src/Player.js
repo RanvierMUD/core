@@ -61,6 +61,11 @@ class Player extends Character {
    * @param {...*}   args
    */
   emit(event, ...args) {
+    if (this.__pruned) {
+      // pruned by PlayerManager, squelch events
+      return;
+    }
+
     super.emit(event, ...args);
 
     this.questTracker.emit(event, ...args);

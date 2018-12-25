@@ -27,6 +27,8 @@ class ItemManager {
       item.inventory.forEach(childItem => this.remove(childItem));
     }
 
+    item.__pruned = true;
+    item.removeAllListeners();
     this.items.delete(item);
   }
 

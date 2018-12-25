@@ -148,6 +148,13 @@ class EffectList {
   }
 
   /**
+   * Remove all effects, bypassing all deactivate and remove events
+   */
+  clear() {
+    this.effects = new Set();
+  }
+
+  /**
    * Ensure effects are still current and if not remove them
    */
   validateEffects() {
