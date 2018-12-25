@@ -1,6 +1,3 @@
 node_modules
 *.swp
 *.sublime-*
-
-# ignore mkdocs build target
-site/

@@ -23,7 +23,7 @@ class Attributes extends Map
   }
 
   /**
-   * @return {Array<[string, Attribute]>} see {@link Map#entries}
+   * @return {Iterator} see {@link Map#entries}
    */
   getAttributes() {
     return this.entries();

@@ -59,7 +59,7 @@ class AttributeFactory {
 
   /**
    * Make sure there are no circular dependencies between attributes
-   * @throws
+   * @throws Error
    */
   validateAttributes() {
     const references = [...this.attributes].reduce((acc, [ attrName, { formula } ]) => {
@@ -82,11 +82,11 @@ class AttributeFactory {
   }
 
   /**
+   * @private
    * @param {string} attr attribute name to check for circular ref
    * @param {Object.<string, Array<string>>} references
    * @param {Array<string>} stack
    * @return bool
-   * @throws
    */
   _checkReferences(attr, references, stack = []) {
     if (stack.includes(attr)) {
