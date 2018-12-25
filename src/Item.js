@@ -213,8 +213,11 @@ class Item extends GameEntity {
   hydrate(state, serialized = {}) {
     // perform deep copy if behaviors is set to prevent sharing of the object between
     // item instances
-    const behaviors = JSON.parse(JSON.stringify(serialized.behaviors || this.behaviors));
-    this.behaviors = new Map(Object.entries(behaviors));
+    if (serialized.behaviors) {
+      const behaviors = JSON.parse(JSON.stringify(serialized.behaviors));
+      this.behaviors = new Map(Object.entries(behaviors));
+    }
+
     this.setupBehaviors(state.ItemBehaviorManager);
 
     this.metadata = JSON.parse(JSON.stringify(serialized.metadata || this.metadata));
