@@ -110,14 +110,12 @@ class Room extends GameEntity {
 
   /**
    * @param {Npc} npc
+   * @param {boolean} removeSpawn 
    */
-  removeNpc(npc) {
+  removeNpc(npc, removeSpawn = true) {
     this.npcs.delete(npc);
-    // NOTE: It is _very_ important that the NPC's room is set to null before the Area.removeNpc call
-    // otherwise the area will also remove it from its originating room spawn list and will try
-    // to respawn it. Not good
+    this.spawnedNpcs.delete(npc);
     npc.room = null;
-    this.area.removeNpc(npc);
   }
 
   /**
@@ -284,13 +282,6 @@ class Room extends GameEntity {
      */
     newNpc.emit('spawn');
     return newNpc;
-  }
-
-  /**
-   * @param {Npc} npc
-   */
-  removeSpawnedNpc(npc) {
-    this.spawnedNpcs.delete(npc);
   }
 
   hydrate(state) {

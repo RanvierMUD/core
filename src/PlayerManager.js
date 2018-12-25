@@ -39,6 +39,8 @@ class PlayerManager extends EventEmitter {
   }
 
   /**
+   * Remove the player from the game. WARNING: You must manually save the player first
+   * as this will remove its effects for pruning purposes
    * @param {Player} player
    * @param {boolean} killSocket true to also force close the player's socket
    */
@@ -47,6 +49,9 @@ class PlayerManager extends EventEmitter {
       player.socket.end();
     }
 
+    player.effects.clear();
+    player.removeAllListeners();
+    player.__pruned = true;
     this.players.delete(this.keyify(player));
   }
 
