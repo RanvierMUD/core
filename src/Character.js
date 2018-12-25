@@ -479,6 +479,11 @@ class Character extends Metadatable(EventEmitter) {
    * @param {GameState} state
    */
   hydrate(state) {
+    if (this.__hydrated) {
+      Logger.warn('Attempted to hydrate already hydrated character.');
+      return false;
+    }
+
     if (!(this.attributes instanceof Attributes)) {
       const attributes = this.attributes;
       this.attributes = new Attributes();
@@ -502,7 +507,10 @@ class Character extends Metadatable(EventEmitter) {
     }
 
     this.effects.hydrate(state);
+
     // inventory is hydrated in the subclasses because npc and players hydrate their inventories differently
+
+    this.__hydrated = true;
   }
 
   /**
