@@ -211,6 +211,11 @@ class Item extends GameEntity {
   }
 
   hydrate(state, serialized = {}) {
+    if (this.__hydrated) {
+      Logger.warn('Attempted to hydrate already hydrated item.');
+      return false;
+    }
+
     // perform deep copy if behaviors is set to prevent sharing of the object between
     // item instances
     if (serialized.behaviors) {
@@ -242,6 +247,7 @@ class Item extends GameEntity {
       });
     }
 
+    this.__hydrated = true;
   }
 
   serialize() {
