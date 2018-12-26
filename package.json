@@ -11,7 +11,8 @@
     "node": ">= 10.12.0"
   },
   "scripts": {
-    "test": "mocha --recursive"
+    "test": "nyc --reporter=html --reporter=text mocha --recursive",
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "main": "index.js",
   "dependencies": {
@@ -27,6 +28,8 @@
     "wrap-ansi": "^2.0.0"
   },
   "devDependencies": {
-    "mocha": "^5.2.0"
+    "coveralls": "^3.0.2",
+    "mocha": "^5.2.0",
+    "nyc": "^13.1.0"
   }
 }
