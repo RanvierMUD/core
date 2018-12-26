@@ -11,7 +11,7 @@
     "node": ">= 10.12.0"
   },
   "scripts": {
-    "test": "nyc --reporter=html --reporter=text mocha --recursive",
+    "test": "nyc --reporter=html --reporter=text --include=src --all mocha --recursive",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "main": "index.js",
