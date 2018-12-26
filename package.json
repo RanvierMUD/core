@@ -10,9 +10,6 @@
   "engines": {
     "node": ">= 10.12.0"
   },
-  "scripts": {
-    "build-docs": "jsdoc -c jsdoc.conf"
-  },
   "main": "index.js",
   "dependencies": {
     "bcryptjs": "^2.4.0",
@@ -25,9 +22,5 @@
     "uuid": "^3.3.2",
     "winston": "^2.4.4",
     "wrap-ansi": "^2.0.0"
-  },
-  "devDependencies": {
-    "jsdoc": "^3.5.5",
-    "tui-jsdoc-template": "^1.2.2"
   }
 }
