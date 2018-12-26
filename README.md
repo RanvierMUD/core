@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/RanvierMUD/core.svg?branch=master)](https://travis-ci.com/RanvierMUD/core)
+
 # Warning
 
 This is an experimental repo! DO NOT USE... yet
