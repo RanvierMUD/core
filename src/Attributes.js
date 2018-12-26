@@ -4,9 +4,6 @@ const { Attribute, AttributeFormula } = require('./Attribute');
 /**
  * Container for a list of attributes for a {@link Character}
  *
- * Note: this currently defines the default list of attributes for Characters and should probably
- * be refactored to allow for bundles to define this list instead
- *
  * @extends Map
  */
 class Attributes extends Map
