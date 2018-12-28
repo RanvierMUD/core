@@ -26,7 +26,7 @@ class Npc extends Character {
     this.area = data.area;
     this.behaviors = new Map(Object.entries(data.behaviors || {}));
     this.damage = data.damage;
-    this.defaultEquipment = data.equipment || [];
+    this.defaultEquipment = data.defaultEquipment || [];
     this.defaultItems = data.items || [];
     this.description = data.description;
     this.entityReference = data.entityReference; 
@@ -98,6 +98,27 @@ class Npc extends Character {
       state.ItemManager.add(newItem);
       this.addItem(newItem);
     });
+
+    // Hydrate equipment
+    if (this.defaultEquipment.length > 0 && !(this.defaultEquipment instanceof Map)) {
+      const eqDefs = this.defaultEquipment;
+      this.defaultEquipment = new Map();
+      for (const slot in eqDefs) {
+        const itemDef = eqDefs[slot];
+        try {
+          let newItem = state.ItemFactory.create(state.AreaManager.getAreaByReference(itemDef), itemDef);
+          newItem.initializeInventory(itemDef.inventory);
+          newItem.hydrate(state);
+          state.ItemManager.add(newItem);
+          newItem.isEquipped = true;
+          this.equip(newItem, newItem.metadata.slot);
+        } catch (e) {
+          Logger.error(e.message);
+        }
+      }
+    } else {
+      this.defaultEquipment = new Map();
+    }
 
     for (const [behaviorName, config] of this.behaviors) {
       let behavior = state.MobBehaviorManager.get(behaviorName);
