@@ -21,6 +21,10 @@ class EntityLoader {
     this.config.bundle = name;
   }
 
+  hasData() {
+    return this.dataSource.hasData(this.config);
+  }
+
   fetchAll() {
     if (!('fetchAll' in this.dataSource)) {
       throw new Error(`fetchAll not supported by ${this.dataSource.name}`);

@@ -37,28 +37,13 @@ class BundleManager {
     this.state = state;
     this.bundlesPath = path;
     this.areas = [];
-  }
-
-  /**
-   * For a given bundle js file require check if it needs to be backwards compatibly loaded with a loader(srcPath)
-   * or can just be loaded on its own
-   * @private
-   * @param {function (string)|object|array} loader
-   * @return {loader}
-   */
-  _getLoader(loader, ...args) {
-    if (typeof loader === 'function') {
-      // backwards compatible for old module loader(srcPath)
-      return loader(...args);
-    }
-
-    return loader;
+    this.loaderRegistry = this.state.EntityLoaderRegistry;
   }
 
   /**
    * Load in all bundles
    */
-  loadBundles(distribute = true) {
+  async loadBundles(distribute = true) {
     Logger.verbose('LOAD: BUNDLES');
 
     const bundles = fs.readdirSync(this.bundlesPath);
@@ -73,7 +58,7 @@ class BundleManager {
         continue;
       }
 
-      this.loadBundle(bundle, bundlePath);
+      await this.loadBundle(bundle, bundlePath);
     }
 
     try {
@@ -92,7 +77,12 @@ class BundleManager {
     // Distribution is done after all areas are loaded in case items use areas from each other
     for (const areaRef of this.areas) {
       const area = this.state.AreaFactory.create(areaRef);
-      area.hydrate(this.state);
+      try {
+        area.hydrate(this.state);
+      } catch (err) {
+        Logger.error(err.message);
+        process.exit(0);
+      }
       this.state.AreaManager.addArea(area);
     }
 
@@ -112,7 +102,7 @@ class BundleManager {
    * @param {string} bundle Bundle name
    * @param {string} bundlePath Path to bundle directory
    */
-  loadBundle(bundle, bundlePath) {
+  async loadBundle(bundle, bundlePath) {
     const features = [
       // quest goals/rewards have to be loaded before areas that have quests which use those goals
       { path: 'quest-goals/', fn: 'loadQuestGoals' },
@@ -123,12 +113,11 @@ class BundleManager {
       // any entity in an area, including the area itself, can have behaviors so load them first
       { path: 'behaviors/', fn: 'loadBehaviors' },
 
-      { path: 'areas/', fn: 'loadAreas' },
       { path: 'channels.js', fn: 'loadChannels' },
       { path: 'classes/', fn: 'loadClasses' },
       { path: 'commands/', fn: 'loadCommands' },
       { path: 'effects/', fn: 'loadEffects' },
-      { path: 'help/', fn: 'loadHelp' },
+      //{ path: 'help/', fn: 'loadHelp' },
       { path: 'input-events/', fn: 'loadInputEvents' },
       { path: 'server-events/', fn: 'loadServerEvents' },
       { path: 'player-events.js', fn: 'loadPlayerEvents' },
@@ -142,6 +131,8 @@ class BundleManager {
         this[feature.fn](bundle, path);
       }
     }
+
+    await this.loadAreas(bundle);
 
     Logger.verbose(`ENDLOAD: BUNDLE [\x1B[1;32m${bundle}\x1B[0m]`);
   }
@@ -251,22 +242,24 @@ class BundleManager {
 
   /**
   * @param {string} bundle
-  * @param {string} areasDir
   */
-  loadAreas(bundle, areasDir) {
+  async loadAreas(bundle) {
     Logger.verbose(`\tLOAD: Areas...`);
 
-    const dirs = fs.readdirSync(areasDir);
+    const areaLoader = this.loaderRegistry.get('areas');
+    areaLoader.setBundle(bundle);
+    let areas = [];
 
-    for (const areaDir of dirs) {
-      if (fs.statSync(areasDir + areaDir).isFile()) {
-        continue;
-      }
+    if (!areaLoader.hasData()) {
+      return areas;
+    }
 
-      const areaPath = areasDir + areaDir;
-      const areaName = path.basename(areaDir);
-      this.loadArea(bundle, areaName, areaPath);
-      this.areas.push(areaName);
+    areas = await areaLoader.fetchAll();
+
+    for (const name in areas) {
+      const manifest = areas[name];
+      this.areas.push(name);
+      await this.loadArea(bundle, name, manifest);
     }
 
     Logger.verbose(`\tENDLOAD: Areas`);
@@ -277,16 +270,7 @@ class BundleManager {
    * @param {string} areaName
    * @param {string} areaPath
    */
-  loadArea(bundle, areaName, areaPath) {
-    const paths = {
-      manifest: areaPath + '/manifest.yml',
-      rooms: areaPath + '/rooms.yml',
-      items: areaPath + '/items.yml',
-      npcs: areaPath + '/npcs.yml',
-      quests: areaPath + '/quests.yml',
-    };
-
-    const manifest = Data.parseFile(paths.manifest);
+  async loadArea(bundle, areaName, manifest) {
     const definition = {
       bundle,
       manifest,
@@ -296,8 +280,10 @@ class BundleManager {
       rooms: [],
     };
 
+    const scriptPath = this._getAreaScriptPath(bundle, areaName);
+
     if (manifest.script) {
-      const scriptPath = `${areaPath}/scripts/${area.script}.js`;
+      const scriptPath = `${scriptPath}/${area.script}.js`;
       if (!fs.existsSync(scriptPath)) {
         Logger.warn(`\t\t\t[${areaName}] has non-existent script "${area.script}"`);
       }
@@ -306,52 +292,33 @@ class BundleManager {
       this.loadEntityScript(this.state.AreaFactory, entityRef, scriptPath);
     }
 
-    // Quests have to be loaded first so items/rooms/npcs that are questors have the quest defs available
-    // TODO: I _think_ this currently means that an NPC can only give out a quest from their own area but
-    // I may be mistaken
-    if (fs.existsSync(paths.quests)) {
-      Logger.verbose(`\t\tLOAD: Quests...`);
-      definition.quests = this.loadQuests(areaName, paths.quests);
-      Logger.verbose(`\t\tENDLOAD: Quests...`);
-    }
+    Logger.verbose(`\t\tLOAD: Quests...`);
+    definition.quests = await this.loadQuests(bundle, areaName);
+    Logger.verbose(`\t\tLOAD: Items...`);
+    definition.items  = await this.loadEntities(bundle, areaName, 'items', this.state.ItemFactory);
+    Logger.verbose(`\t\tLOAD: NPCs...`);
+    definition.npcs   = await this.loadEntities(bundle, areaName, 'npcs', this.state.MobFactory);
+    Logger.verbose(`\t\tLOAD: Rooms...`);
+    definition.rooms  = await this.loadEntities(bundle, areaName, 'rooms', this.state.RoomFactory);
+    Logger.verbose('\t\tDone.');
 
-    // load items
-    if (fs.existsSync(paths.items)) {
-      Logger.verbose(`\t\tLOAD: Items...`);
-      definition.items = this.loadEntities(areaName, 'items', this.state.ItemFactory, paths.items);
-      Logger.verbose(`\t\tENDLOAD: Items...`);
-    }
+    for (const npcRef of definition.npcs) {
+      const npc = this.state.MobFactory.getDefinition(npcRef);
+      if (!npc.quests) {
+        continue;
+      }
 
-    // load npcs
-    if (fs.existsSync(paths.npcs)) {
-      Logger.verbose(`\t\tLOAD: NPCs...`);
-      definition.npcs = this.loadEntities(areaName, 'npcs', this.state.MobFactory, paths.npcs);
-      Logger.verbose(`\t\tENDLOAD: NPCs...`);
-      for (const npcRef of definition.npcs) {
-        const npc = this.state.MobFactory.getDefinition(npcRef);
-        if (!npc.quests) {
+      // Update quest definitions with their questor
+      // TODO: This currently means a given quest can only have a single questor, perhaps not optimal
+      for (const qid of npc.quests) {
+        const quest = this.state.QuestFactory.get(qid);
+        if (!quest) {
+          Logger.error(`\t\t\tError: NPC is questor for non-existent quest [${qid}]`);
           continue;
         }
-
-        // Update quest definitions with their questor
-        // TODO: This currently means a given quest can only have a single questor, perhaps not optimal
-        for (const qid of npc.quests) {
-          const quest = this.state.QuestFactory.get(qid);
-          if (!quest) {
-            Logger.error(`\t\t\tError: NPC is questor for non-existent quest [${qid}]`);
-            continue;
-          }
-          quest.npc = npcRef;
-          this.state.QuestFactory.set(qid, quest);
-        }
+        quest.npc = npcRef;
+        this.state.QuestFactory.set(qid, quest);
       }
-    }
-
-    // load rooms
-    if (fs.existsSync(paths.rooms)) {
-      Logger.verbose(`\t\tLOAD: Rooms...`);
-      definition.rooms = this.loadEntities(areaName, 'rooms', this.state.RoomFactory, paths.rooms);
-      Logger.verbose(`\t\tENDLOAD: Rooms...`);
     }
 
     this.state.AreaFactory.setDefinition(areaName, definition);
@@ -359,29 +326,39 @@ class BundleManager {
 
   /**
    * Load an entity (item/npc/room) from file
+   * @param {string} bundle
    * @param {string} areaName
    * @param {string} type
    * @param {EntityFactory} factory
-   * @param {string} entitiesFile
    * @return {Array<entityReference>}
    */
-  loadEntities(areaName, type, factory, entitiesFile) {
-    const entities = Data.parseFile(entitiesFile);
+  async loadEntities(bundle, areaName, type, factory) {
+    const loader = this.loaderRegistry.get(type);
+    loader.setBundle(bundle);
+    loader.setArea(areaName);
 
-    if (!entities || !entities.length) {
+    if (!loader.hasData()) {
       return [];
     }
+
+    const entities = await loader.fetchAll();
+    if (!entities) {
+      Logger.warn(`\t\t\t${type} has an invalid value [${entities}]`);
+      return [];
+    }
+
+    const scriptPath = this._getAreaScriptPath(bundle, areaName);
 
     return entities.map(entity => {
       const entityRef = factory.createEntityRef(areaName, entity.id);
       factory.setDefinition(entityRef, entity);
       if (entity.script) {
-        const scriptPath = `${path.dirname(entitiesFile)}/scripts/${type}/${entity.script}.js`;
-        if (!fs.existsSync(scriptPath)) {
+        const entityScript = `${scriptPath}/${type}/${entity.script}.js`;
+        if (!fs.existsSync(entityScript)) {
           Logger.warn(`\t\t\t[${entityRef}] has non-existent script "${entity.script}"`);
         } else {
           Logger.verbose(`\t\t\tLoading Script [${entityRef}] ${entity.script}`);
-          this.loadEntityScript(factory, entityRef, scriptPath);
+          this.loadEntityScript(factory, entityRef, entityScript);
         }
       }
 
@@ -407,10 +384,16 @@ class BundleManager {
   /**
    * @param {string} areaName
    * @param {string} questsFile
-   * @return {Array<entityReference>}
+   * @return {Promise<Array<entityReference>>}
    */
-  loadQuests(areaName, questsFile) {
-    const quests = Data.parseFile(questsFile);
+  async loadQuests(bundle, areaName) {
+    const loader = this.loaderRegistry.get('quests');
+    loader.setBundle(bundle);
+    loader.setArea(areaName);
+    let quests = [];
+    try {
+       quests = await loader.fetchAll();
+    } catch (err) {}
 
     return quests.map(quest => {
       Logger.verbose(`\t\t\tLoading Quest [${areaName}:${quest.id}]`);
@@ -692,6 +675,32 @@ class BundleManager {
     }
 
     Logger.verbose(`\tENDLOAD: Server Events...`);
+  }
+
+  /**
+   * For a given bundle js file require check if it needs to be backwards compatibly loaded with a loader(srcPath)
+   * or can just be loaded on its own
+   * @private
+   * @param {function (string)|object|array} loader
+   * @return {loader}
+   */
+  _getLoader(loader, ...args) {
+    if (typeof loader === 'function') {
+      // backwards compatible for old module loader(srcPath)
+      return loader(...args);
+    }
+
+    return loader;
+  }
+
+  /**
+   * @private
+   * @param {string} bundle
+   * @param {string} areaName
+   * @return {string}
+   */
+  _getAreaScriptPath(bundle, areaName) {
+    return `${this.bundlesPath}/${bundle}/areas/${areaName}/scripts`;
   }
 }
 

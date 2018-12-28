@@ -34,6 +34,9 @@ class DataSourceRegistry extends Map {
       }
 
       const instance = new loader(sourceConfig, rootPath);
+      if (!('hasData' in instance)) {
+        throw new Error(`Data Source ${name} requires at minimum a 'hasData(config): boolean' method`);
+      }
       instance.name = name;
 
       this.set(name, instance);
