@@ -111,7 +111,7 @@ class Npc extends Character {
           newItem.hydrate(state);
           state.ItemManager.add(newItem);
           newItem.isEquipped = true;
-          this.equip(newItem, newItem.metadata.slot);
+          this.equip(newItem, slot);
         } catch (e) {
           Logger.error(e.message);
         }
