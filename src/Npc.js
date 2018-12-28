@@ -26,7 +26,7 @@ class Npc extends Character {
     this.area = data.area;
     this.behaviors = new Map(Object.entries(data.behaviors || {}));
     this.damage = data.damage;
-    this.defaultEquipment = data.defaultEquipment || [];
+    this.defaultEquipment = data.equipment || {};
     this.defaultItems = data.items || [];
     this.description = data.description;
     this.entityReference = data.entityReference; 
