@@ -117,7 +117,7 @@ class Npc extends Character {
         }
       }
     } else {
-      this.defaultEquipment = new Map();
+      this.equipment = new Map();
     }
 
     for (const [behaviorName, config] of this.behaviors) {
