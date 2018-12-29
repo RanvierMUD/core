@@ -117,7 +117,6 @@ class BundleManager {
       { path: 'classes/', fn: 'loadClasses' },
       { path: 'commands/', fn: 'loadCommands' },
       { path: 'effects/', fn: 'loadEffects' },
-      //{ path: 'help/', fn: 'loadHelp' },
       { path: 'input-events/', fn: 'loadInputEvents' },
       { path: 'server-events/', fn: 'loadServerEvents' },
       { path: 'player-events.js', fn: 'loadPlayerEvents' },
@@ -133,6 +132,7 @@ class BundleManager {
     }
 
     await this.loadAreas(bundle);
+    await this.loadHelp(bundle);
 
     Logger.verbose(`ENDLOAD: BUNDLE [\x1B[1;32m${bundle}\x1B[0m]`);
   }
@@ -470,32 +470,29 @@ class BundleManager {
    * @param {string} bundle
    * @param {string} helpDir
    */
-  loadHelp(bundle, helpDir) {
+  async loadHelp(bundle) {
     Logger.verbose(`\tLOAD: Help...`);
-    const files = fs.readdirSync(helpDir);
+    const loader = this.loaderRegistry.get('help');
+    loader.setBundle(bundle);
 
-    for (const helpFile of files) {
-      const helpPath = helpDir + helpFile;
-      if (!fs.statSync(helpPath).isFile()) {
-        continue;
-      }
+    if (!loader.hasData()) {
+      return;
+    }
 
-      const helpName = path.basename(helpFile, path.extname(helpFile));
-      const def = Data.parseFile(helpPath);
-
-      let hfile = null;
+    const records = await loader.fetchAll();
+    for (const helpName in records) {
       try {
-        hfile = new Helpfile(
+        const hfile = new Helpfile(
           bundle,
           helpName,
-          def
+          records[helpName]
         );
+
+        this.state.HelpManager.add(hfile);
       } catch (e) {
         Logger.warn(`\t\t${e.message}`);
         continue;
       }
-
-      this.state.HelpManager.add(hfile);
     }
 
     Logger.verbose(`\tENDLOAD: Help...`);

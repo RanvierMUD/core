@@ -1,15 +1,24 @@
 'use strict';
 
-const Data = require('./Data');
 const Account = require('./Account');
 
 /**
  * Creates/loads {@linkplain Account|Accounts}
  * @property {Map<string,Account>} accounts
+ * @property {EntityLoader} loader
  */
 class AccountManager {
   constructor() {
     this.accounts = new Map();
+    this.loader = null;
+  }
+
+  /**
+   * Set the entity loader from which accounts are loaded
+   * @param {EntityLoader}
+   */
+  setLoader(loader) {
+    this.loader = loader;
   }
 
   /**
@@ -31,16 +40,16 @@ class AccountManager {
    * @param {string} username
    * @param {boolean} force Force reload data from disk
    */
-  loadAccount(username, force) {
+  async loadAccount(username, force) {
     if (this.accounts.has(username) && !force) {
       return this.getAccount(username);
     }
 
-    if (!Data.exists('account', username)) {
-      throw new Error(`Account [${username}] doesn't exist`);
+    if (!this.loader) {
+      throw new Error('No entity loader configured for accounts');
     }
 
-    const data = Data.load('account', username);
+    const data = await this.loader.fetch(username);
 
     let account = new Account(data);
     this.addAccount(account);

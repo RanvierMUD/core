@@ -10,6 +10,7 @@ const EventManager = require('./EventManager');
  * @extends EventEmitter
  * @property {Map} players
  * @property {EventManager} events Player events
+ * @property {EntityLoader} loader
  * @listens PlayerManager#save
  * @listens PlayerManager#updateTick
  * @implements Broadcastable
@@ -19,8 +20,16 @@ class PlayerManager extends EventEmitter {
     super();
     this.players = new Map();
     this.events = new EventManager();
-    this.on('save', this.saveAll);
+    this.loader = null;
     this.on('updateTick', this.tickAll);
+  }
+
+  /**
+   * Set the entity loader from which players are loaded
+   * @param {EntityLoader}
+   */
+  setLoader(loader) {
+    this.loader = loader;
   }
 
   /**
@@ -90,18 +99,21 @@ class PlayerManager extends EventEmitter {
    * @param {boolean} force true to force reload from storage
    * @return {Player}
    */
-  loadPlayer(state, account, username, force) {
+  async loadPlayer(state, account, username, force) {
     if (this.players.has(username) && !force) {
       return this.getPlayer(username);
     }
 
-    const data = Data.load('player', username);
+    if (!this.loader) {
+      throw new Error('No entity loader configured for players');
+    }
+
+    const data = await this.loader.fetch(username);
     data.name = username;
 
     let player = new Player(data);
     player.account = account;
 
-    // TODO: Load scripts
     this.events.attach(player);
 
     this.addPlayer(player);
@@ -126,16 +138,32 @@ class PlayerManager extends EventEmitter {
   }
 
   /**
-   * @param {function} playerCallback callback after save of each player
+   * Save a player
    * @fires Player#save
    */
-  saveAll(playerCallback) {
+  async save(player) {
+    if (!this.loader) {
+      throw new Error('No entity loader configured for players');
+    }
+
+    await this.loader.update(player.name, player.serialize());
+
+    /**
+     * @event Player#saved
+     */
+    player.emit('saved');
+  }
+
+  /**
+   * @fires Player#saved
+   */
+  async saveAll() {
     for (const [ name, player ] of this.players.entries()) {
+      await this.save(player);
       /**
        * @event Player#save
-       * @param {function} playerCallback
        */
-      player.emit('save', playerCallback);
+      player.emit('saved', playerCallback);
     }
   }
 
