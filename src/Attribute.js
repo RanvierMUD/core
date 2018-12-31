@@ -11,6 +11,7 @@
  * @property {number} base
  * @property {number} delta Current difference from the base
  * @property {AttributeFormula} formula
+ * @property {object} metadata any custom info for this attribute
  */
 class Attribute {
   /**
@@ -18,8 +19,9 @@ class Attribute {
    * @param {number} base
    * @param {number} delta=0
    * @param {AttributeFormula} formula=null
+   * @param {object} metadata={}
    */
-  constructor(name, base, delta = 0, formula = null) {
+  constructor(name, base, delta = 0, formula = null, metadata = {}) {
     if (isNaN(base)) { 
       throw new TypeError(`Base attribute must be a number, got ${base}.`); 
     }
@@ -34,6 +36,7 @@ class Attribute {
     this.base = base;
     this.delta = delta;
     this.formula = formula;
+    this.metadata = metadata;
   }
 
   /**

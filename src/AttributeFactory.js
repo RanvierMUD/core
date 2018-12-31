@@ -15,7 +15,7 @@ class AttributeFactory {
    * @param {number} base
    * @param {AttributeFormula} formula
    */
-  add(name, base, formula = null) {
+  add(name, base, formula = null, metadata = {}) {
     if (formula && !(formula instanceof AttributeFormula)) {
       throw new TypeError('Formula not instance of AttributeFormula');
     }
@@ -24,6 +24,7 @@ class AttributeFactory {
       name,
       base,
       formula,
+      metadata,
     });
   }
 
@@ -54,7 +55,7 @@ class AttributeFactory {
     }
 
     const def = this.attributes.get(name);
-    return new Attribute(name, base || def.base, delta, def.formula);
+    return new Attribute(name, base || def.base, delta, def.formula, def.metadata);
   }
 
   /**

@@ -215,7 +215,7 @@ class BundleManager {
 
       Logger.verbose(`\t\t-> ${attribute.name}`);
 
-      this.state.AttributeFactory.add(attribute.name, attribute.base, formula);
+      this.state.AttributeFactory.add(attribute.name, attribute.base, formula, attribute.metadata);
     }
 
     Logger.verbose(`\tENDLOAD: Attributes...`);
