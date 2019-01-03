@@ -149,38 +149,28 @@ class Item extends GameEntity {
 
   /**
    * Open a container-like object
-   *
-   * @fires Item#opened
    */
   open() {
     if (!this.closed) {
       return;
     }
 
-    /**
-     * @event Item#opened
-     */
-    this.emit('opened');
     this.closed = false;
   }
 
   /**
-   * @fires Item#closed
+   * Close a container-like object
    */
   close() {
     if (this.closed || !this.closeable) {
       return;
     }
 
-    /**
-     * @event Item#closed
-     */
-    this.emit('closed');
     this.closed = true;
   }
 
   /**
-   * @fires Item#locked
+   * Lock a container-like object
    */
   lock() {
     if (this.locked || !this.closeable) {
@@ -188,25 +178,17 @@ class Item extends GameEntity {
     }
 
     this.close();
-    /**
-     * @event Item#locked
-     */
-    this.emit('locked');
     this.locked = true;
   }
 
   /**
-   * @fires Item#unlocked
+   * Unlock a container-like object
    */
   unlock() {
     if (!this.locked) {
       return;
     }
 
-    /**
-     * @event Item#unlocked
-     */
-    this.emit('unlocked');
     this.locked = false;
   }
 
