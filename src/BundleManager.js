@@ -250,7 +250,7 @@ class BundleManager {
     areaLoader.setBundle(bundle);
     let areas = [];
 
-    if (!areaLoader.hasData()) {
+    if (!await areaLoader.hasData()) {
       return areas;
     }
 
@@ -337,7 +337,7 @@ class BundleManager {
     loader.setBundle(bundle);
     loader.setArea(areaName);
 
-    if (!loader.hasData()) {
+    if (!await loader.hasData()) {
       return [];
     }
 
@@ -475,7 +475,7 @@ class BundleManager {
     const loader = this.loaderRegistry.get('help');
     loader.setBundle(bundle);
 
-    if (!loader.hasData()) {
+    if (!await loader.hasData()) {
       return;
     }
 
