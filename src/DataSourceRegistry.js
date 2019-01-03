@@ -6,10 +6,11 @@
  */
 class DataSourceRegistry extends Map {
   /**
+   * @param {Function} requireFn used to require() the loader
    * @param {string} rootPath project root
    * @param {object} config configuration to load
    */
-  load(rootPath, config = {}) {
+  load(requireFn, rootPath, config = {}) {
     for (const [name, settings] of Object.entries(config)) {
       if (!settings.hasOwnProperty('require')) {
         throw new Error(`DataSource [${name}] does not specify a 'require'`);
@@ -30,7 +31,7 @@ class DataSourceRegistry extends Map {
         loader = require(settings.require);
       } else {
         const [moduleName, exportName] = settings.require.split('.');
-        loader = require(moduleName)[exportName];
+        loader = requireFn(moduleName)[exportName];
       }
 
       const instance = new loader(sourceConfig, rootPath);
