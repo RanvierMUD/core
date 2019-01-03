@@ -85,17 +85,6 @@ class BundleManager {
       }
       this.state.AreaManager.addArea(area);
     }
-
-    // FIXME: this is really weird to have default starting room stuff here, why does the engine care?
-    let startingRoom = this.state.Config.get('startingRoom');
-    startingRoom = startingRoom && this.state.RoomManager.getRoom(startingRoom);
-
-    if (!startingRoom) {
-      throw new Error('Invalid or no startingRoom defined in ranvier.json. This is usually caused by not having any area bundles enabled.');
-    }
-
-    this.state.RoomManager.startingRoom = startingRoom;
-    Logger.verbose(`CONFIG: Starting Room [${this.state.RoomManager.startingRoom.entityReference}]`);
   }
 
   /**

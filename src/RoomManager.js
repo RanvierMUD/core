@@ -4,12 +4,10 @@ const Room = require('./Room');
 
 /**
  * Keeps track of all the individual rooms in the game
- * @property {string} startingRoom EntityReference of the room players should spawn in when created
  */
 class RoomManager {
   constructor() {
     this.rooms = new Map();
-    this.startingRoom = null;
   }
 
   /**

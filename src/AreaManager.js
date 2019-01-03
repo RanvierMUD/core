@@ -52,6 +52,32 @@ class AreaManager {
       area.emit('updateTick', state);
     }
   }
+
+  /**
+   * Get the placeholder area used to house players who were loaded into
+   * an invalid room
+   *
+   * @return {Area}
+   */
+  getPlaceholderArea() {
+    if (this._placeholder) {
+      return this._placeholder;
+    }
+
+    this._placeholder = new Area(null, 'placeholder', {
+      title: 'Placeholder'
+    });
+
+    const placeholderRoom = new Room(this._placeholder, {
+      id: 'placeholder',
+      title: 'Placeholder',
+      description: 'You are not in a valid room. Please contact an administrator.',
+    });
+
+    this._placeholder.addRoom(placeholderRoom);
+
+    return this._placeholder;
+  }
 }
 
 module.exports = AreaManager;
