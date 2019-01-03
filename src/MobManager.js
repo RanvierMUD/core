@@ -24,7 +24,7 @@ class MobManager {
     const room = mob.room;
     if (room) {
       room.area.removeNpc(mob);
-      room.removeNpc(mob);
+      room.removeNpc(mob, true);
     }
     mob.__pruned = true;
     mob.removeAllListeners();

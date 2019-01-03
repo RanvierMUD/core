@@ -112,7 +112,7 @@ class Room extends GameEntity {
    * @param {Npc} npc
    * @param {boolean} removeSpawn 
    */
-  removeNpc(npc, removeSpawn = true) {
+  removeNpc(npc, removeSpawn = false) {
     this.npcs.delete(npc);
     this.spawnedNpcs.delete(npc);
     npc.room = null;
