@@ -1,10 +1,7 @@
 'use strict';
 
 /**
- * This is an _example_ implementation of a base player class. This, along with
- * CommandParser is one of the few core classes Ranvier encourages you to
- * modify if you want more functionality. Almost all other features can be
- * overridden in bundles.
+ * Base player class
  */
 class PlayerClass {
   /**

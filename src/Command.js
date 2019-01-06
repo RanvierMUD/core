@@ -12,6 +12,7 @@ const PlayerRoles = require('./PlayerRoles');
  * @property {Array<string>} aliases
  * @property {string} usage
  * @property {PlayerRoles} requiredRole
+ * @property {Object} metadata General use configuration object
  */
 class Command {
   /**
@@ -34,6 +35,7 @@ class Command {
     this.usage = def.usage || this.name;
     this.requiredRole = def.requiredRole || PlayerRoles.PLAYER;
     this.file = file;
+    this.metadata = def.metadata || {};
   }
 
   /**

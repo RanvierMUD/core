@@ -146,34 +146,6 @@ class Player extends Character {
     this.emit('enterRoom', nextRoom);
   }
 
-  /**
-   * Determine if a player can leave the current room to a given direction
-   * TODO: This shouldn't be here but there's not better place at the moment
-   * @param {string} direction
-   * @return {boolean}
-   */
-  canGo(direction) {
-    if (!this.room) {
-      return false;
-    }
-
-    const exits = Array.from(this.room.exits).filter(e => e.direction.indexOf(direction) === 0);
-
-    if (!exits.length) {
-      return false;
-    }
-
-    if (exits.length > 1) {
-      return false;
-    }
-
-    if (this.isInCombat()) {
-      return false;
-    }
-
-    return true;
-  }
-
   save(callback) {
     this.emit('save', callback);
   }

@@ -9,7 +9,7 @@ const Logger = require('./Logger');
  * @property {Array<number>} defaultItems Default list of item ids that should load in this room
  * @property {Array<number>} defaultNpcs  Default list of npc ids that should load in this room
  * @property {string}        description  Room description seen on 'look'
- * @property {Array<object>} exits        Exits out of this room { id: number, direction: string, leaveMessage: string }
+ * @property {Array<object>} exits        Exits out of this room { id: number, direction: string }
  * @property {number}        id           Area-relative id (vnum)
  * @property {Set}           items        Items currently in the room
  * @property {Set}           npcs         Npcs currently in the room
@@ -132,6 +132,51 @@ class Room extends GameEntity {
   removeItem(item) {
     this.items.delete(item);
     item.room = null;
+  }
+
+  /**
+   * Get exits for a room. Both inferred from coordinates and  defined in the
+   * 'exits' property.
+   *
+   * @return {Array<{ id: string, direction: string, inferred: boolean, room: Room= }>}
+   */
+  getExits() {
+    const exits = JSON.parse(JSON.stringify(this.exits)).map(exit => {
+      exit.inferred = false;
+      return exit;
+    });
+
+    if (!this.area || !this.coordinates) {
+      return exits;
+    }
+
+    const adjacents = [
+      { dir: 'west', coord: [-1, 0, 0] },
+      { dir: 'east', coord: [1, 0, 0] },
+      { dir: 'north', coord: [0, 1, 0] },
+      { dir: 'south', coord: [0, -1, 0] },
+      { dir: 'up', coord: [0, 0, 1] },
+      { dir: 'down', coord: [0, 0, -1] },
+      { dir: 'northeast', coord: [1, 1, 0] },
+      { dir: 'northwest', coord: [-1, 1, 0] },
+      { dir: 'southeast', coord: [1, -1, 0] },
+      { dir: 'southwest', coord: [-1, -1, 0] },
+    ];
+
+    for (const adj of adjacents) {
+      const [x, y, z] = adj.coord;
+      const room = this.area.getRoomAtCoordinates(
+        this.coordinates.x + x,
+        this.coordinates.y + y,
+        this.coordinates.z + z
+      );
+
+      if (room && !exits.find(ex => ex.direction === adj.dir)) {
+        exits.push({ roomId: room.entityReference, direction: adj.dir, inferred: true });
+      }
+    }
+
+    return exits;
   }
 
   /**
