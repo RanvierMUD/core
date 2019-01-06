@@ -180,6 +180,23 @@ class Room extends GameEntity {
   }
 
   /**
+   * Get the exit definition of a room's exit by searching the exit name
+   * @param {string} exitName exit name search
+   * @return {false|Object}
+   */
+  findExit(exitName) {
+    const exits = this.getExits();
+
+    if (!exits.length) {
+      return false;
+    }
+
+    const roomExit = exits.find(ex => ex.direction.indexOf(exitName) === 0);
+
+    return roomExit || false;
+  }
+
+  /**
    * Check to see if this room has a door preventing movement from `fromRoom` to here
    * @param {Room} fromRoom
    * @return {boolean}
