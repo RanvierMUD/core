@@ -4,16 +4,18 @@
  * @property {string} attribute Attribute the damage is going to apply to
  * @property {number} amount Initial amount of damage to be done
  * @property {?Character} attacker Character causing the damage
- * @property {Object} metadata Extra info about the damage: type, source, etc.
+ * @property {*} source Where the damage came from: skill, item, room, etc.
+ * @property {Object} metadata Extra info about the damage: type, hidden, critical, etc.
  */
 class Damage {
   /**
    * @param {string} attribute Attribute the damage is going to apply to
    * @param {number} amount
    * @param {Character} [attacker=null] Character causing the damage
-   * @param {Object} [metadata={}] Object to store extra info
+   * @param {*} [source=null] Where the damage came from: skill, item, room, etc.
+   * @property {Object} metadata Extra info about the damage: type, hidden, critical, etc.
    */
-  constructor(attribute, amount, attacker = null, metadata = {}) {
+  constructor(attribute, amount, attacker = null, source = null, metadata = {}) {
     if (!Number.isFinite(amount)) {
       throw new TypeError("Damage amount must be a finite Number");
     }
@@ -25,6 +27,7 @@ class Damage {
     this.attacker = attacker;
     this.attribute = attribute;
     this.amount = amount;
+    this.source = source;
     this.metadata = metadata;
   }
 
