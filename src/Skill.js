@@ -119,12 +119,9 @@ class Skill {
 
   // Helper to pay a single resource cost.
   payResourceCost(player, resource) {
-
-    // Resource cost is calculated as damage so effects could potentially reduce resource costs
-    const damage = new Damage({
-      attribute: resource.attribute,
-      amount: resource.cost,
-      attacker: null,
+    // Resource cost is calculated as the player damaging themself so effects
+    // could potentially reduce resource costs
+    const damage = new Damage(resource.attribute, resource.cost, player, {
       hidden: true,
       source: this
     });
@@ -143,7 +140,7 @@ class Skill {
     }
 
 
-    let effect = this.state.EffectFactory.create(this.effect, player, { description: this.info(player) });
+    let effect = this.state.EffectFactory.create(this.effect, { description: this.info(player) });
     effect = this.configureEffect(effect);
     effect.skill = this;
     player.addEffect(effect);
@@ -176,7 +173,6 @@ class Skill {
 
     const effect = this.state.EffectFactory.create(
       'cooldown',
-      character,
       { name: "Cooldown: " + this.name, duration: this.cooldownLength * 1000 },
       { cooldownId: this.getCooldownId() }
     );

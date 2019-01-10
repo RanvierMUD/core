@@ -4,47 +4,28 @@
  * @property {string} attribute Attribute the damage is going to apply to
  * @property {number} amount Initial amount of damage to be done
  * @property {?Character} attacker Character causing the damage
- * @property {?string} type Damage type e.g., physical, fire, etc.
- * @property {?string} source A damage source identifier. e.g., "skill:kick", "weapon", etc.
- * @property {number} finalAmount Amount of damage to be done after attacker/defender effects
- * @property {boolean} critical whether this damage is a critical hit or not
+ * @property {Object} metadata Extra info about the damage: type, source, etc.
  */
 class Damage {
   /**
-   * @param {Object} config
-   * @param {string} config.attribute Attribute the damage is going to apply to
-   * @param {number} [config.amount=null]
-   * @param {Character} [config.attacker=null] Character causing the damage
-   * @param {string} [config.type="physical"] Damage type e.g., physical, fire, etc.
-   * @param {string} [config.source=null] A damage source identifier. e.g., "skill:kick", "weapon", etc.
-   * @param {boolean} [config.hidden=false]
+   * @param {string} attribute Attribute the damage is going to apply to
+   * @param {number} amount
+   * @param {Character} [attacker=null] Character causing the damage
+   * @param {Object} [metadata={}] Object to store extra info
    */
-  constructor(config) {
-    const {
-      attribute,
-      amount = null,
-      attacker = null,
-      type = "physical",
-      source = null,
-      hidden = false,
-      critical = false,
-    } = config;
-
-    if (amount === null) {
-      throw new TypeError("Damage amount null");
+  constructor(attribute, amount, attacker = null, metadata = {}) {
+    if (!Number.isFinite(amount)) {
+      throw new TypeError("Damage amount must be a finite Number");
     }
 
-    if (attribute === null) {
-      throw new TypeError("Damage attribute null");
+    if (typeof attribute !== 'string') {
+      throw new TypeError("Damage attribute name must be a string");
     }
 
-    this.attribute = attribute;
-    this.type = type;
-    this.amount = this.finalAmount = amount;
-    this.source = source;
     this.attacker = attacker;
-    this.hidden = hidden;
-    this.critical = critical;
+    this.attribute = attribute;
+    this.amount = amount;
+    this.metadata = metadata;
   }
 
   /**
@@ -69,21 +50,24 @@ class Damage {
    * @fires Character#damaged
    */
   commit(target) {
-    this.finalAmount = this.evaluate(target);
-    target.lowerAttribute(this.attribute, this.finalAmount);
+    const finalAmount = this.evaluate(target);
+    target.lowerAttribute(this.attribute, finalAmount);
+
     if (this.attacker) {
       /**
        * @event Character#hit
        * @param {Damage} damage
        * @param {Character} target
+       * @param {Number} finalAmount
        */
-      this.attacker.emit('hit', this, target);
+      this.attacker.emit('hit', this, target, finalAmount);
     }
       /**
        * @event Character#damaged
        * @param {Damage} damage
+       * @param {Number} finalAmount
        */
-    target.emit('damaged', this);
+    target.emit('damaged', this, finalAmount);
   }
 }
 

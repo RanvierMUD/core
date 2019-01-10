@@ -14,21 +14,24 @@ class Heal extends Damage {
    * @fires Character#healed
    */
   commit(target) {
-    this.finalAmount = this.evaluate(target);
-    target.raiseAttribute(this.attribute, this.finalAmount);
+    const finalAmount = this.evaluate(target);
+    target.raiseAttribute(this.attribute, finalAmount);
+
     if (this.attacker) {
       /**
        * @event Character#heal
        * @param {Heal} heal
        * @param {Character} target
+       * @param {number} finalAmount
        */
-      this.attacker.emit('heal', this, target);
+      this.attacker.emit('heal', this, target, finalAmount);
     }
     /**
      * @event Character#healed
      * @param {Heal} heal
+     * @param {number} finalAmount
      */
-    target.emit('healed', this);
+    target.emit('healed', this, finalAmount);
   }
 }
 
