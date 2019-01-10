@@ -4,6 +4,7 @@ const SkillFlag = require('./SkillFlag');
 const SkillType = require('./SkillType');
 const SkillErrors = require('./SkillErrors');
 const Damage = require('./Damage');
+const Broadcast = require('./Broadcast');
 
 /**
  * @property {function (Effect)} configureEffect modify the skill's effect before adding to player
@@ -182,6 +183,40 @@ class Skill {
 
   getCooldownId() {
     return this.cooldownGroup ? "skillgroup:" + this.cooldownGroup : "skill:" + this.id;
+  }
+
+  createCooldownEffect() {
+    if (!this.state.EffectFactory.has('cooldown')) {
+      this.state.EffectFactory.add('cooldown', this.getDefaultCooldownConfig());
+    }
+
+    const effect = this.state.EffectFactory.create(
+      'cooldown',
+      { name: "Cooldown: " + this.name, duration: this.cooldownLength * 1000 },
+      { cooldownId: this.getCooldownId() }
+    );
+    effect.skill = this;
+
+    return effect;
+  }
+
+  getDefaultCooldownConfig() {
+    return {
+      config: {
+        name: 'Cooldown',
+        description: 'Cannot use ability while on cooldown.',
+        unique: false,
+        type: 'cooldown',
+      },
+      state: {
+        cooldownId: null
+      },
+      listeners: {
+        effectDeactivated: function () {
+          Broadcast.sayAt(this.target, `You may now use <bold>${this.skill.name}</bold> again.`);
+        }
+      }
+    };
   }
 
   /**
