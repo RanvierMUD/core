@@ -121,9 +121,8 @@ class Skill {
   payResourceCost(player, resource) {
     // Resource cost is calculated as the player damaging themself so effects
     // could potentially reduce resource costs
-    const damage = new Damage(resource.attribute, resource.cost, player, {
+    const damage = new Damage(resource.attribute, resource.cost, player, this, {
       hidden: true,
-      source: this
     });
 
     damage.commit(player);
