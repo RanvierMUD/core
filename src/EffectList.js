@@ -87,6 +87,10 @@ class EffectList {
    * @fires Effect#effectAdded
    */
   add(effect) {
+    if (effect.target) {
+      throw new Error('Cannot add effect, already has a target.');
+    }
+
     for (const activeEffect of this.effects) {
       if (effect.config.type === activeEffect.config.type) {
         if (activeEffect.config.maxStacks && activeEffect.state.stacks < activeEffect.config.maxStacks) {
@@ -116,6 +120,7 @@ class EffectList {
     }
 
     this.effects.add(effect);
+    effect.target = this.target;
 
     /**
      * @event Effect#effectAdded
@@ -238,7 +243,7 @@ class EffectList {
     const effects = this.effects;
     this.effects = new Set();
     for (const newEffect of effects) {
-      const effect = state.EffectFactory.create(newEffect.id, this.target);
+      const effect = state.EffectFactory.create(newEffect.id);
       effect.hydrate(state, newEffect);
       this.add(effect);
     }

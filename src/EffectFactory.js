@@ -46,17 +46,16 @@ class EffectFactory {
 
   /**
    * @param {string}  id      effect id
-   * @param {Character}  target
    * @param {?object} config  Effect.config override
    * @param {?object} state   Effect.state override
    * @return {Effect}
    */
-  create(id, target, config = {}, state = {}) {
+  create(id, config = {}, state = {}) {
     const entry = this.effects.get(id);
     let def = Object.assign({}, entry.definition);
     def.config = Object.assign(def.config, config);
     def.state = Object.assign(def.state || {}, state);
-    const effect = new Effect(id, def, target);
+    const effect = new Effect(id, def);
     entry.eventManager.attach(effect);
 
     return effect;
