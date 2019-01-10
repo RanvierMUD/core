@@ -20,7 +20,6 @@
     "js-yaml": "^3.12.0",
     "longjohn": "^0.2.11",
     "pretty-error": "^2.0.2",
-    "rando-js": "^0.1.1",
     "require-dir": "^1.1.0",
     "sty": "",
     "uuid": "^3.3.2",
