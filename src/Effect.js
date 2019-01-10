@@ -33,7 +33,7 @@ var EffectModifiers;
  * @listens Effect#effectAdded
  */
 class Effect extends EventEmitter {
-  constructor(id, def, target) {
+  constructor(id, def) {
     super();
 
     this.id = id;
@@ -52,7 +52,6 @@ class Effect extends EventEmitter {
       unique: true,
     }, def.config);
 
-    this.target = target;
     this.startedAt = 0;
     this.paused = 0;
     this.modifiers = Object.assign({
@@ -138,6 +137,10 @@ class Effect extends EventEmitter {
    * @fires Effect#effectActivated
    */
   activate() {
+    if (!this.target) {
+      throw new Error('Cannot activate an effect without a target');
+    }
+
     if (this.active) {
       return;
     }
