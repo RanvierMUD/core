@@ -1,18 +1,14 @@
 'use strict';
 
-;
-
-/** @module CommandType */
+/**
+ * @module ItemType
+ * @enum {Symbol}
+ */
 module.exports = {
-  /**
-   * @enum {Symbol}
-   */
-  ItemType: {
-    ARMOR: Symbol("ARMOR"),
-    CONTAINER: Symbol("CONTAINER"),
-    OBJECT: Symbol("OBJECT"),
-    POTION: Symbol("POTION"),
-    WEAPON: Symbol("WEAPON"),
-    RESOURCE: Symbol("RESOURCE"),
-  }
+  ARMOR: Symbol("ARMOR"),
+  CONTAINER: Symbol("CONTAINER"),
+  OBJECT: Symbol("OBJECT"),
+  POTION: Symbol("POTION"),
+  WEAPON: Symbol("WEAPON"),
+  RESOURCE: Symbol("RESOURCE"),
 };

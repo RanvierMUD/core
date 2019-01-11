@@ -1,12 +1,10 @@
 'use strict';
 
-/** @module EffectFlag */
+/**
+ * @module EffectFlag
+ * @enum {Symbol}
+ */
 module.exports = {
-  /**
-   * @enum {Symbol}
-   */
-  EffectFlag: {
-    BUFF: Symbol("BUFF"),
-    DEBUFF: Symbol("DEBUFF"),
-  }
+  BUFF: Symbol("BUFF"),
+  DEBUFF: Symbol("DEBUFF"),
 };
