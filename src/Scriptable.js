@@ -4,7 +4,7 @@ const Logger = require('./Logger');
 
 /**
  * Mixin for entities that can have behaviors attached from a BehaviorManager
- * @mixin
+ * @mixin Scriptable
  */
 const Scriptable = parentClass => class extends parentClass {
   emit(name, ...args) {
