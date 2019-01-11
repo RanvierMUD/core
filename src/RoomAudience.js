@@ -13,7 +13,7 @@ const ChannelAudience = require('./ChannelAudience');
 class RoomAudience extends ChannelAudience {
   getBroadcastTargets() {
     return this.sender.room.getBroadcastTargets()
-      .filter(player => player !== this.sender);
+      .filter(target => target !== this.sender);
   }
 }
 

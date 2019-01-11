@@ -47,6 +47,7 @@ class Channel {
    * @param {GameState} state
    * @param {Player}    sender
    * @param {string}    message
+   * @fires GameEntity#channelReceive
    */
   send(state, sender, message) {
 
@@ -83,6 +84,22 @@ class Channel {
     Broadcast.sayAtFormatted(this.audience, message, (target, message) => {
       return this.formatter.target(sender, target, message, this.colorify.bind(this));
     });
+
+    // strip color tags
+    const rawMessage = message.replace(/\<\/?\w+?\>/gm, '');
+
+    for (const target of targets) {
+      /**
+       * Docs limit this to be for GameEntity (Area/Room/Item) but also applies
+       * to NPC and Player
+       *
+       * @event GameEntity#channelReceive
+       * @param {Channel} channel
+       * @param {Character} sender
+       * @param {string} rawMessage
+       */
+      target.emit('channelReceive', this, sender, rawMessage);
+    }
   }
 
   describeSelf(sender) {
