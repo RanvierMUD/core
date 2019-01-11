@@ -52,7 +52,7 @@ class Channel {
 
     // If they don't include a message, explain how to use the channel.
     if (!message.length) {
-      return this.describeSelf(sender);
+      throw new NoMessageError();
     }
 
     if (!this.audience) {
@@ -63,8 +63,7 @@ class Channel {
     const targets = this.audience.getBroadcastTargets();
 
     if (this.audience instanceof PartyAudience && !targets.length) {
-      // TODO: create ChannelError.NoPartyError
-      return Broadcast.sayAt(sender, "You aren't in a group.");
+      throw new NoPartyError();
     }
 
     // Allow audience to change message e.g., strip target name.
@@ -73,8 +72,7 @@ class Channel {
     // Private channels also send the target player to the formatter
     if (this.audience instanceof PrivateAudience) {
       if (!targets.length) {
-        // TODO: create ChannelError.NoRecipientError
-        return Broadcast.sayAt(sender, "With no one to hear your message it disappears in the wind.");
+        throw new NoRecipientError();
       }
       Broadcast.sayAt(sender, this.formatter.sender(sender, targets[0], message, this.colorify.bind(this)));
     } else {
@@ -142,6 +140,13 @@ class Channel {
   }
 }
 
-module.exports = Channel;
+class NoPartyError extends Error {}
+class NoRecipientError extends Error {}
+class NoMessageError extends Error {}
 
-
+module.exports = {
+  Channel,
+  NoPartyError,
+  NoRecipientError,
+  NoMessageError,
+};
