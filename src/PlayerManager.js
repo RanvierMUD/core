@@ -13,7 +13,6 @@ const EventManager = require('./EventManager');
  * @property {EntityLoader} loader
  * @listens PlayerManager#save
  * @listens PlayerManager#updateTick
- * @implements Broadcastable
  */
 class PlayerManager extends EventEmitter {
   constructor() {

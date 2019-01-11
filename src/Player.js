@@ -228,14 +228,6 @@ class Player extends Character {
 
     return data;
   }
-
-  /**
-   * Used by Broadcaster
-   * @return {Array<Character>}
-   */
-  getBroadcastTargets() {
-    return [this];
-  }
 }
 
 module.exports = Player;

@@ -3,8 +3,9 @@
 const ansi = require('sty');
 ansi.enable(); // force ansi on even when there isn't a tty for the server
 const wrap = require('wrap-ansi');
-const TypeUtil = require('./TypeUtil');
-const Broadcastable = require('./Broadcastable');
+
+/** @typedef {{getBroadcastTargets: function(): Array}} */
+var Broadcastable;
 
 /**
  * Class used for sending text to the player. All output to the player should happen through this
@@ -20,27 +21,29 @@ class Broadcast {
    *   message to each target
    */
   static at(source, message = '', wrapWidth = false, useColor = true, formatter = null) {
+    if (!Broadcast.isBroadcastable(source)) {
+      throw new Error(`Tried to broadcast message to non-broadcastable object: MESSAGE [${message}]`);
+    }
+
     useColor = typeof useColor === 'boolean' ? useColor : true;
     formatter = formatter || ((target, message) => message);
 
-    if (!TypeUtil.is(source, Broadcastable)) {
-      throw new Error(`Tried to broadcast message not non-broadcastable object: MESSAGE [${message}]`);
-    }
-
     message = Broadcast._fixNewlines(message);
 
-    const targets = source.getBroadcastTargets();
-    targets.forEach(target => {
-      if (target.socket && target.socket.writable) {
-        if (target.socket._prompted) {
-          target.socket.write('\r\n');
-          target.socket._prompted = false;
-        }
-        let targetMessage = formatter(target, message);
-        targetMessage = wrapWidth ? Broadcast.wrap(targetMessage, wrapWidth) : ansi.parse(targetMessage);
-        target.socket.write(targetMessage);
+    for (const target of source.getBroadcastTargets()) {
+      if (!target.socket || !target.socket.writable) {
+        continue;
       }
-    });
+
+      if (target.socket._prompted) {
+        target.socket.write('\r\n');
+        target.socket._prompted = false;
+      }
+
+      let targetMessage = formatter(target, message);
+      targetMessage = wrapWidth ? Broadcast.wrap(targetMessage, wrapWidth) : ansi.parse(targetMessage);
+      target.socket.write(targetMessage);
+    }
   }
 
   /**
@@ -54,9 +57,8 @@ class Broadcast {
    * @param {function} formatter
    */
   static atExcept(source, message, excludes, wrapWidth, useColor, formatter) {
-
-    if (!TypeUtil.is(source, Broadcastable)) {
-      throw new Error(`Tried to broadcast message not non-broadcastable object: MESSAGE [${message}]`);
+    if (!Broadcast.isBroadcastable(source)) {
+      throw new Error(`Tried to broadcast message to non-broadcastable object: MESSAGE [${message}]`);
     }
 
     // Could be an array or a single target.
@@ -74,13 +76,13 @@ class Broadcast {
 
   /**
    * Helper wrapper around Broadcast.at to be used when you're using a formatter
-  * @see {@link Broadcast#at}
-  * @param {Broadcastable} source
-  * @param {string} message
-  * @param {function} formatter
-  * @param {number|boolean} wrapWidth
-  * @param {boolean} useColor
-  */
+   * @see {@link Broadcast#at}
+   * @param {Broadcastable} source
+   * @param {string} message
+   * @param {function} formatter
+   * @param {number|boolean} wrapWidth
+   * @param {boolean} useColor
+   */
   static atFormatted(source, message, formatter, wrapWidth, useColor) {
     Broadcast.at(source, message, wrapWidth, useColor, formatter);
   }
@@ -251,6 +253,10 @@ class Broadcast {
     message = message.join('\r\n').replace(/<NEWLINE>/g, '\r\n');
     // fix sty's incredibly stupid default of always appending ^[[0m
     return message.replace(/\x1B\[0m$/, '');
+  }
+
+  static isBroadcastable(source) {
+    return source && typeof source.getBroadcastTargets === 'function';
   }
 }
 

@@ -21,7 +21,6 @@ const { Inventory, InventoryFullError } = require('./Inventory');
  * @property {EffectList} effects    List of current effects applied to the character
  * @property {Room}       room       Room the character is currently in
  *
- * @implements {Broadcastable}
  * @extends EventEmitter
  * @mixes Metadatable
  */
@@ -527,11 +526,10 @@ class Character extends Metadatable(EventEmitter) {
   }
 
   /**
-   * @see {@link Broadcastable}
    * @see {@link Broadcast}
    */
   getBroadcastTargets() {
-    return [];
+    return [this];
   }
 
   /**

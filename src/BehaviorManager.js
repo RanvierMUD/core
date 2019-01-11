@@ -1,6 +1,5 @@
 'use strict';
 
-const TypeUtil = require('./TypeUtil');
 const EventManager = require('./EventManager');
 
 /**
