@@ -1,16 +1,24 @@
+'use strict';
+
+/**
+ * @ignore
+ * @exports MetadatableFn
+ * @param {*} parentClass
+ * @return {module:MetadatableFn~Metadatable}
+ */
+const Metadatable = parentClass =>
+
 /**
  * Mixin for objects which have a `metadata` property
  * @mixin
+ * @alias module:MetadatableFn~Metadatable
  */
-const Metadatable = parentClass => class extends parentClass {
+class extends parentClass {
   /**
    * Set a metadata value.
    * Warning: Does _not_ autovivify, you will need to create the parent objects if they don't exist
    * @param {string} key   Key to set. Supports dot notation e.g., `"foo.bar"`
    * @param {*}      value Value must be JSON.stringify-able
-   *
-   * @memberof Metadatable
-   * @instance
    * @throws Error
    * @throws RangeError
    */
@@ -39,9 +47,6 @@ const Metadatable = parentClass => class extends parentClass {
    * Warning: This method is _very_ permissive and will not error on a non-existent key. Rather, it will return false.
    * @param {string} key Key to fetch. Supports dot notation e.g., `"foo.bar"`
    * @return {*}
-   *
-   * @memberof Metadatable
-   * @instance
    * @throws Error
    */
   getMeta(key) {

@@ -3,10 +3,19 @@
 const Logger = require('./Logger');
 
 /**
- * Mixin for entities that can have behaviors attached from a BehaviorManager
- * @mixin Scriptable
+ * @ignore
+ * @exports ScriptableFn
+ * @param {*} parentClass
+ * @return {module:ScriptableFn~Scriptable}
  */
-const Scriptable = parentClass => class extends parentClass {
+const Scriptable = parentClass =>
+
+/**
+ * Mixin for entities that can have behaviors attached from a BehaviorManager
+ * @mixin
+ * @alias module:ScriptableFn~Scriptable
+ */
+class extends parentClass {
   emit(name, ...args) {
     // Squelch events on a pruned entity. Attempts to prevent the case where an entity has been effectively removed
     // from the game but somehow still triggered a listener. Set by respective entity Manager class
