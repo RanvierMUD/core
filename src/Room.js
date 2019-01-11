@@ -114,7 +114,9 @@ class Room extends GameEntity {
    */
   removeNpc(npc, removeSpawn = false) {
     this.npcs.delete(npc);
-    this.spawnedNpcs.delete(npc);
+    if (removeSpawn) {
+      this.spawnedNpcs.delete(npc);
+    }
     npc.room = null;
   }
 
@@ -352,7 +354,7 @@ class Room extends GameEntity {
    * @return {Array<Character>}
    */
   getBroadcastTargets() {
-    return Array.from(this.players.values());
+    return [this, ...this.players, ...this.npcs];
   }
 }
 
