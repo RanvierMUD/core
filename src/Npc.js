@@ -89,17 +89,6 @@ class Npc extends Scriptable(Character) {
       state.ItemManager.add(newItem);
       this.addItem(newItem);
     });
-
-    for (const [behaviorName, config] of this.behaviors) {
-      let behavior = state.MobBehaviorManager.get(behaviorName);
-      if (!behavior) {
-        Logger.warn(`No script found for NPC behavior ${behaviorName}`);
-        continue;
-      }
-
-      // behavior may be a boolean in which case it will be `behaviorName: true`
-      behavior.attach(this, config === true ? {} : config);
-    }
   }
 
   get isNpc() {
