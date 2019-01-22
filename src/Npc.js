@@ -28,9 +28,8 @@ class Npc extends Scriptable(Character) {
     this.area = data.area;
     this.script = data.script;
     this.behaviors = new Map(Object.entries(data.behaviors || {}));
-    // FIXME: What is this? Why is it here?
-    this.damage = data.damage;
-    this.defaultEquipment = data.equipment || [];
+    this.equipment = new Map();
+    this.defaultEquipment = data.equipment || {};
     this.defaultItems = data.items || [];
     this.description = data.description;
     this.entityReference = data.entityReference; 
@@ -60,35 +59,27 @@ class Npc extends Scriptable(Character) {
     this.emit('enterRoom', nextRoom);
   }
 
-  /**
-   * FIXME: Why does the core have a damage stat for Npc, what the heck is it doing in here?
-   */
-  serialize() {
-    return Object.assign(super.serialize(), { damage: this.damage });
-  }
-
-  getDamage() {
-    const range = this.damage.split('-');
-    return { min: range[0], max: range[1] };
-  }
-
   hydrate(state) {
     super.hydrate(state);
     state.MobManager.addMob(this);
 
     this.setupBehaviors(state.MobBehaviorManager);
 
-    this.defaultItems.forEach(defaultItemId => {
-      if (parseInt(defaultItemId, 10)) {
-        defaultItemId = this.area.name + ':' + defaultItemId;
-      }
-
+    for (let defaultItemId of this.defaultItems) {
       Logger.verbose(`\tDIST: Adding item [${defaultItemId}] to npc [${this.name}]`);
       const newItem = state.ItemFactory.create(this.area, defaultItemId);
       newItem.hydrate(state);
       state.ItemManager.add(newItem);
       this.addItem(newItem);
-    });
+    }
+
+    for (let [slot, defaultEqId] of Object.entries(this.defaultEquipment)) {
+      Logger.verbose(`\tDIST: Equipping item [${defaultEqId}] to npc [${this.name}] in slot [${slot}]`);
+      const newItem = state.ItemFactory.create(this.area, defaultEqId);
+      newItem.hydrate(state);
+      state.ItemManager.add(newItem);
+      this.equip(newItem, slot);
+    }
   }
 
   get isNpc() {
