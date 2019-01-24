@@ -13,13 +13,14 @@ const { Inventory, InventoryFullError } = require('./Inventory');
  * @property {Area}    area        Area the item belongs to (warning: this is not the area is currently in but the
  *                                 area it belongs to on a fresh load)
  * @property {object}  metadata    Essentially a blob of whatever attrs the item designer wanted to add
- * @property {array|string}  behaviors Single or list of behaviors this object uses
+ * @property {Array}   behaviors   list of behaviors this object uses
  * @property {string}  description Long description seen when looking at it
  * @property {number}  id          vnum
  * @property {boolean} isEquipped  Whether or not item is currently equipped
+ * @property {?Character} equippedBy Entity that has this equipped
  * @property {Map}     inventory   Current items this item contains
  * @property {string}  name        Name shown in inventory and when equipped
- * @property {Room}    room        Room the item is currently in
+ * @property {?Room}   room        Room the item is currently in
  * @property {string}  roomDesc    Description shown when item is seen in a room
  * @property {string}  script      A custom script for this item
  * @property {ItemType|string} type
@@ -27,7 +28,8 @@ const { Inventory, InventoryFullError } = require('./Inventory');
  * @property {boolean} closeable   Whether this item can be closed (Default: false, true if closed or locked is true)
  * @property {boolean} closed      Whether this item is closed
  * @property {boolean} locked      Whether this item is locked
- * @property {entityReference} lockedBy Item that locks/unlocks this item
+ * @property {?entityReference} lockedBy Item that locks/unlocks this item
+ * @property {?(Character|Item)} carriedBy Entity that has this in its Inventory
  *
  * @extends GameEntity
  */
@@ -65,6 +67,9 @@ class Item extends GameEntity {
     this.closed      = item.closed || false;
     this.locked      = item.locked || false;
     this.lockedBy    = item.lockedBy || null;
+
+    this.carriedBy = null;
+    this.equippedBy = null;
   }
 
   /**
@@ -91,7 +96,7 @@ class Item extends GameEntity {
   addItem(item) {
     this._setupInventory();
     this.inventory.addItem(item);
-    item.belongsTo = this;
+    item.carriedBy = this;
   }
 
   /**
@@ -108,7 +113,7 @@ class Item extends GameEntity {
     if (!this.inventory.size) {
       this.inventory = null;
     }
-    item.belongsTo = null;
+    item.carriedBy = null;
   }
 
   /**
@@ -129,22 +134,22 @@ class Item extends GameEntity {
   }
 
   /**
-   * For finding the player who has the item in their possession.
-   * @return {Player|null} owner
+   * Helper to find the game entity that ultimately has this item in their
+   * Inventory in the case of nested containers. Could be an item, player, or
+   * @return {Character|Item|null} owner
    */
-  findOwner() {
-    let found = null;
-    let owner = this.belongsTo;
+  findCarrier() {
+    let owner = this.carriedBy;
+
     while (owner) {
-      if (owner instanceof Player) {
-        found = owner;
-        break;
+      if (!owner.carriedBy) {
+        return owner;
       }
 
-      owner = owner.belongsTo;
+      owner = owner.carriedBy;
     }
 
-    return found;
+    return null;
   }
 
   /**

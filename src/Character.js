@@ -3,7 +3,7 @@
 const Attributes = require('./Attributes');
 const Config = require('./Config');
 const EffectList = require('./EffectList');
-const EquipSlotTakenError = require('./EquipErrors').EquipSlotTakenError;
+const { EquipSlotTakenError, EquipAlreadyEquippedError } = require('./EquipErrors');
 const EventEmitter = require('events');
 const Heal = require('./Heal');
 const Metadatable = require('./Metadatable');
@@ -325,13 +325,17 @@ class Character extends Metadatable(EventEmitter) {
       throw new EquipSlotTakenError();
     }
 
+    if (item.isEquipped) {
+      throw new EquipAlreadyEquippedError();
+    }
+
     if (this.inventory) {
       this.removeItem(item);
     }
 
     this.equipment.set(slot, item);
     item.isEquipped = true;
-    item.belongsTo = this;
+    item.equippedBy = this;
     item.emit('equip', this);
     this.emit('equip', slot, item);
   }
@@ -349,6 +353,7 @@ class Character extends Metadatable(EventEmitter) {
 
     const item = this.equipment.get(slot);
     item.isEquipped = false;
+    item.equippedBy = null;
     this.equipment.delete(slot);
     item.emit('unequip', this);
     this.emit('unequip', slot, item);
@@ -362,7 +367,7 @@ class Character extends Metadatable(EventEmitter) {
   addItem(item) {
     this._setupInventory();
     this.inventory.addItem(item);
-    item.belongsTo = this;
+    item.carriedBy = this;
   }
 
   /**
@@ -381,7 +386,7 @@ class Character extends Metadatable(EventEmitter) {
     if (!this.inventory.size) {
       this.inventory = null;
     }
-    item.belongsTo = null;
+    item.carriedBy = null;
   }
 
   /**
