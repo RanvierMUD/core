@@ -85,6 +85,9 @@ class EffectList {
   /**
    * @param {Effect} effect
    * @fires Effect#effectAdded
+   * @fires Effect#effectStackAdded
+   * @fires Effect#effectRefreshed
+   * @fires Character#effectAdded
    */
   add(effect) {
     if (effect.target) {
@@ -138,6 +141,7 @@ class EffectList {
    * Deactivate and remove an effect
    * @param {Effect} effect
    * @throws ReferenceError
+   * @fires Character#effectRemoved
    */
   remove(effect) {
     if (!this.effects.has(effect)) {

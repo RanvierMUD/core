@@ -46,9 +46,14 @@ class AreaManager {
   /**
    * Apply `updateTick` to all areas in the game
    * @param {GameState} state
+   * @fires Area#updateTick
    */
   tickAll(state) {
     for (const [ name, area ] of this.areas) {
+      /**
+       * @see Area#update
+       * @event Area#updateTick
+       */
       area.emit('updateTick', state);
     }
   }

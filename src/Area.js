@@ -66,6 +66,7 @@ class Area extends GameEntity {
 
   /**
    * @param {Room} room
+   * @fires Area#roomAdded
    */
   addRoom(room) {
     this.rooms.set(room.id, room);
@@ -74,16 +75,25 @@ class Area extends GameEntity {
       this.addRoomToMap(room);
     }
 
+    /**
+     * @event Area#roomAdded
+     * @param {Room} room
+     */
     this.emit('roomAdded', room);
   }
 
   /**
    * @param {Room} room
+   * @fires Area#roomRemoved
    */
   removeRoom(room) {
     this.rooms.delete(room.id);
 
-    this.emit('roomRemoved', room.id);
+    /**
+     * @event Area#roomRemoved
+     * @param {Room} room
+     */
+    this.emit('roomRemoved', room);
   }
 
   /**
@@ -135,16 +145,26 @@ class Area extends GameEntity {
   /**
    * This method is automatically called every N milliseconds where N is defined in the
    * `setInterval` call to `GameState.AreaMAnager.tickAll` in the `ranvier` executable. It, in turn,
-   * will fire the `updateTick` event on all its rooms.
+   * will fire the `updateTick` event on all its rooms and npcs
    * 
    * @param {GameState} state
+   * @fires Room#updateTick
+   * @fires Npc#updateTick
    */
   update(state) {
     for(const [id, room] of this.rooms) {
+      /**
+       * @see Area#update
+       * @event Room#updateTick
+       */
       room.emit('updateTick');
     }
 
     for (const npc of this.npcs) {
+      /**
+       * @see Area#update
+       * @event Npc#updateTick
+       */
       npc.emit('updateTick');
     }
   }
