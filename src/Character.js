@@ -124,8 +124,16 @@ class Character extends Metadatable(EventEmitter) {
   }
 
   /**
+   * Fired when a Character's attribute is set, raised, or lowered
+   * @event Character#attributeUpdate
+   * @param {string} attributeName
+   * @param {Attribute} attribute
+   */
+
+  /**
    * Clears any changes to the attribute, setting it to its base value.
    * @param {string} attr
+   * @fires Character#attributeUpdate
   */
   setAttributeToMax(attr) {
     if (!this.hasAttribute(attr)) {
@@ -141,6 +149,7 @@ class Character extends Metadatable(EventEmitter) {
    * @param {string} attr
    * @param {number} amount
    * @see {@link Attributes#raise}
+   * @fires Character#attributeUpdate
   */
   raiseAttribute(attr, amount) {
     if (!this.hasAttribute(attr)) {
@@ -156,6 +165,7 @@ class Character extends Metadatable(EventEmitter) {
    * @param {string} attr
    * @param {number} amount
    * @see {@link Attributes#lower}
+   * @fires Character#attributeUpdate
   */
   lowerAttribute(attr, amount) {
     if (!this.hasAttribute(attr)) {
@@ -177,6 +187,7 @@ class Character extends Metadatable(EventEmitter) {
    *
    * @param {string} attr Attribute name
    * @param {number} newBase New base value
+   * @fires Character#attributeUpdate
    */
   setAttributeBase(attr, newBase) {
     if (!this.hasAttribute(attr)) {
@@ -216,11 +227,16 @@ class Character extends Metadatable(EventEmitter) {
    * Start combat with a given target.
    * @param {Character} target
    * @param {?number}   lag    Optional milliseconds of lag to apply before the first attack
+   * @fires Character#combatStart
    */
   initiateCombat(target, lag = 0) {
     if (!this.isInCombat()) {
       this.combatData.lag = lag;
       this.combatData.roundStarted = Date.now();
+      /**
+       * Fired when Character#initiateCombat is called
+       * @event Character#combatStart
+       */
       this.emit('combatStart');
     }
 
@@ -237,7 +253,6 @@ class Character extends Metadatable(EventEmitter) {
     }
 
     target.addCombatant(this);
-    this.emit('combatantAdded', target);
   }
 
   /**
@@ -252,6 +267,7 @@ class Character extends Metadatable(EventEmitter) {
 
   /**
    * @param {Character} target
+   * @fires Character#combatantAdded
    */
   addCombatant(target) {
     if (this.isInCombat(target)) {
@@ -260,10 +276,17 @@ class Character extends Metadatable(EventEmitter) {
 
     this.combatants.add(target);
     target.addCombatant(this);
+    /**
+     * @event Character#combatantAdded
+     * @param {Character} target
+     */
+    this.emit('combatantAdded', target);
   }
 
   /**
    * @param {Character} target
+   * @fires Character#combatantRemoved
+   * @fires Character#combatEnd
    */
   removeCombatant(target) {
     if (!this.combatants.has(target)) {
@@ -273,9 +296,16 @@ class Character extends Metadatable(EventEmitter) {
     this.combatants.delete(target);
     target.removeCombatant(this);
 
-    this.emit('combatantRemoved');
+    /**
+     * @event Character#combatantRemoved
+     * @param {Character} target
+     */
+    this.emit('combatantRemoved', target);
 
     if (!this.combatants.size) {
+      /**
+       * @event Character#combatEnd
+       */
       this.emit('combatEnd');
     }
 
@@ -319,6 +349,9 @@ class Character extends Metadatable(EventEmitter) {
    * @param {string} slot Slot to equip the item in
    *
    * @throws EquipSlotTakenError
+   * @throws EquipAlreadyEquippedError
+   * @fires Character#equip
+   * @fires Item#equip
    */
   equip(item, slot) {
     if (this.equipment.has(slot)) {
@@ -336,7 +369,16 @@ class Character extends Metadatable(EventEmitter) {
     this.equipment.set(slot, item);
     item.isEquipped = true;
     item.equippedBy = this;
+    /**
+     * @event Item#equip
+     * @param {Character} equipper
+     */
     item.emit('equip', this);
+    /**
+     * @event Character#equip
+     * @param {string} slot
+     * @param {Item} item
+     */
     this.emit('equip', slot, item);
   }
 
@@ -345,6 +387,8 @@ class Character extends Metadatable(EventEmitter) {
    * @param {string} slot
    *
    * @throws InventoryFullError
+   * @fires Item#unequip
+   * @fires Character#unequip
    */
   unequip(slot) {
     if (this.isInventoryFull()) {
@@ -355,7 +399,16 @@ class Character extends Metadatable(EventEmitter) {
     item.isEquipped = false;
     item.equippedBy = null;
     this.equipment.delete(slot);
+    /**
+     * @event Item#unequip
+     * @param {Character} equipper
+     */
     item.emit('unequip', this);
+    /**
+     * @event Character#unequip
+     * @param {string} slot
+     * @param {Item} item
+     */
     this.emit('unequip', slot, item);
     this.addItem(item);
   }
@@ -435,30 +488,53 @@ class Character extends Metadatable(EventEmitter) {
 
     this.following = target;
     target.addFollower(this);
+    /**
+     * @event Character#followed
+     * @param {Character} target
+     */
+    this.emit('followed', target);
   }
 
   /**
    * Stop following whoever the character was following
+   * @fires Character#unfollowed
    */
   unfollow() {
     this.following.removeFollower(this);
+    /**
+     * @event Character#unfollowed
+     * @param {Character} following
+     */
+    this.emit('unfollowed', this.following);
     this.following = null;
   }
 
   /**
    * @param {Character} follower
+   * @fires Character#gainedFollower
    */
   addFollower(follower) {
     this.followers.add(follower);
     follower.following = this;
+    /**
+     * @event Character#gainedFollower
+     * @param {Character} follower
+     */
+    this.emit('gainedFollower', follower);
   }
 
   /**
    * @param {Character} target
+   * @fires Character#lostFollower
    */
   removeFollower(target) {
     this.followers.delete(target);
     target.following = null;
+    /**
+     * @event Character#lostFollower
+     * @param {Character} follower
+     */
+    this.emit('lostFollower', follower);
   }
 
   /**
