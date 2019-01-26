@@ -61,8 +61,7 @@ class Player extends Character {
    * @param {...*}   args
    */
   emit(event, ...args) {
-    if (this.__pruned) {
-      // pruned by PlayerManager, squelch events
+    if (this.__pruned || !this.__hydrated) {
       return;
     }
 
@@ -163,26 +162,19 @@ class Player extends Character {
   }
 
   save(callback) {
+    if (!this.__hydrated) {
+      return;
+    }
+
     this.emit('save', callback);
   }
 
   hydrate(state) {
+    super.hydrate(state);
+
     // QuestTracker has to be hydrated before the rest otherwise events fired by the subsequent
     // hydration will be emitted onto unhydrated quest objects and error
     this.questTracker.hydrate(state);
-
-    super.hydrate(state);
-
-    if (typeof this.room === 'string') {
-      let room = state.RoomManager.getRoom(this.room);
-      if (!room) {
-        Logger.error(`ERROR: Player ${this.name} was saved to invalid room ${this.room}.`);
-        room = state.AreaManager.getPlaceholderArea().getRoomById('placeholder');
-      }
-
-      this.room = room;
-      this.moveTo(room);
-    }
 
     if (typeof this.account === 'string') {
       this.account = state.AccountManager.getAccount(this.account);
@@ -216,6 +208,16 @@ class Player extends Character {
       this.equipment = new Map();
     }
 
+    if (typeof this.room === 'string') {
+      let room = state.RoomManager.getRoom(this.room);
+      if (!room) {
+        Logger.error(`ERROR: Player ${this.name} was saved to invalid room ${this.room}.`);
+        room = state.AreaManager.getPlaceholderArea().getRoomById('placeholder');
+      }
+
+      this.room = room;
+      this.moveTo(room);
+    }
   }
 
   serialize() {
