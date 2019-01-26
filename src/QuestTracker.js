@@ -68,21 +68,6 @@ class QuestTracker {
   }
 
   /**
-   * @param {Quest} quest
-   * @return {boolean}
-   */
-  canStart(quest) {
-    const qid = quest.entityReference;
-    if (this.completedQuests.has(qid) && !quest.config.repeatable) {
-      return false;
-    }
-
-    return !this.isActive(qid) && quest.config.requires.every(requiresRef => {
-      return this.isComplete(requiresRef);
-    });
-  }
-
-  /**
    * @param {Quest} queset
    */
   start(quest) {

@@ -31,8 +31,37 @@ class QuestFactory {
   }
 
   /**
+   * Check to see if a player can start a given quest based on the quest's
+   * prerequisite quests
+   * @param {entityReference} questRef
+   * @return {boolean}
+   */
+  canStart(player, questRef) {
+    const quest = this.get(questRef);
+    if (!quest) {
+      throw new Error(`Invalid quest id [${questRef}]`);
+    }
+
+    const tracker = player.questTracker;
+
+    if (tracker.completedQuests.has(questRef) && !quest.config.repeatable) {
+      return false;
+    }
+
+    if (tracker.isActive(questRef)) {
+      return false;
+    }
+
+    if (!quest.config.requires) {
+      return true;
+    }
+
+    return quest.config.requires.every(requiresRef => tracker.isComplete(requiresRef));
+  }
+
+  /**
    * @param {GameState} GameState
-   * @param {string}    qid
+   * @param {entityReference} qid
    * @param {Player}    player
    * @param {Array}     state     current quest state
    * @return {Quest}
