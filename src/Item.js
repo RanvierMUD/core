@@ -212,6 +212,10 @@ class Item extends GameEntity {
 
     this.setupBehaviors(state.ItemBehaviorManager);
 
+    this.description = serialized.description || this.description;
+    this.keywords    = serialized.keywords || this.keywords;
+    this.name        = serialized.name || this.name;
+    this.roomDesc    = serialized.roomDesc || this.roomDesc;
     this.metadata = JSON.parse(JSON.stringify(serialized.metadata || this.metadata));
     this.closed = 'closed' in serialized ? serialized.closed : this.closed;
     this.locked = 'locked' in serialized ? serialized.locked : this.locked;
@@ -250,6 +254,11 @@ class Item extends GameEntity {
       // metadata is serialized/hydrated to save the state of the item during gameplay
       // example: the players a food that is poisoned, or a sword that is enchanted
       metadata: this.metadata,
+
+      description: this.description,
+      keywords: this.keywords,
+      name: this.name,
+      roomDesc: this.roomDesc,
 
       closed: this.closed,
       locked: this.locked,
