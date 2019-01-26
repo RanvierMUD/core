@@ -101,6 +101,7 @@ class Inventory extends Map {
       let newItem = state.ItemFactory.create(area, def.entityReference);
       newItem.uuid = uuid;
       newItem.belongsTo = belongsTo;
+      newItem.initializeInventory(def.inventory);
       newItem.hydrate(state, def);
       this.set(uuid, newItem);
       state.ItemManager.add(newItem);
