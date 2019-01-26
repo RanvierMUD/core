@@ -130,9 +130,17 @@ class Player extends Character {
    * Move the player to the given room, emitting events appropriately
    * @param {Room} nextRoom
    * @param {function} onMoved Function to run after the player is moved to the next room but before enter events are fired
+   * @fires Room#playerLeave
+   * @fires Room#playerEnter
+   * @fires Player#enterRoom
    */
   moveTo(nextRoom, onMoved = _ => _) {
     if (this.room && this.room !== nextRoom) {
+      /**
+       * @event Room#playerLeave
+       * @param {Player} player
+       * @param {Room} nextRoom
+       */
       this.room.emit('playerLeave', this, nextRoom);
       this.room.removePlayer(this);
     }
@@ -142,7 +150,15 @@ class Player extends Character {
 
     onMoved();
 
+    /**
+     * @event Room#playerEnter
+     * @param {Player} player
+     */
     nextRoom.emit('playerEnter', this);
+    /**
+     * @event Player#enterRoom
+     * @param {Room} room
+     */
     this.emit('enterRoom', nextRoom);
   }
 

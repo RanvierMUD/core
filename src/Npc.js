@@ -43,9 +43,17 @@ class Npc extends Scriptable(Character) {
    * Move the npc to the given room, emitting events appropriately
    * @param {Room} nextRoom
    * @param {function} onMoved Function to run after the npc is moved to the next room but before enter events are fired
+   * @fires Room#npcLeave
+   * @fires Room#npcEnter
+   * @fires Npc#enterRoom
    */
   moveTo(nextRoom, onMoved = _ => _) {
     if (this.room) {
+      /**
+       * @event Room#npcLeave
+       * @param {Npc} npc
+       * @param {Room} nextRoom
+       */
       this.room.emit('npcLeave', this, nextRoom);
       this.room.removeNpc(this);
     }
@@ -55,7 +63,15 @@ class Npc extends Scriptable(Character) {
 
     onMoved();
 
+    /**
+     * @event Room#npcEnter
+     * @param {Npc} npc
+     */
     nextRoom.emit('npcEnter', this);
+    /**
+     * @event Npc#enterRoom
+     * @param {Room} room
+     */
     this.emit('enterRoom', nextRoom);
   }
 
