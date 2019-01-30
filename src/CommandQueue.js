@@ -80,7 +80,7 @@ class CommandQueue {
       const command = this.commands[i];
       lagTotal += command.lag;
       if (i === commandIndex) {
-        return Math.max(0, this.lastRun + lagTotal - Date.now()) / 1000;
+        return Math.max((lagTotal - command.lag), this.lastRun + lagTotal - Date.now()) / 1000;
       }
     }
   }
