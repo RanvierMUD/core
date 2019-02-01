@@ -171,13 +171,7 @@ class Skill {
       return;
     }
 
-    const effect = this.state.EffectFactory.create(
-      'cooldown',
-      { name: "Cooldown: " + this.name, duration: this.cooldownLength * 1000 },
-      { cooldownId: this.getCooldownId() }
-    );
-    effect.skill = this;
-
+    const cooldownEffect = this.createCooldownEffect();
     character.addEffect(effect);
   }
 
