@@ -35,6 +35,10 @@ class EffectFactory {
     this.effects.set(id, { definition, eventManager });
   }
 
+  has(id) {
+    return this.effects.has(id);
+  }
+
   /**
    * Get a effect definition. Use `create` if you want an instance of a effect
    * @param {string} id
