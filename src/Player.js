@@ -29,7 +29,6 @@ class Player extends Character {
     this.experience = data.experience || 0;
     this.extraPrompts = new Map();
     this.password  = data.password;
-    this.playerClass = null;
     this.prompt = data.prompt || '> ';
     this.socket = data.socket || null;
     const questData = Object.assign({
@@ -180,10 +179,6 @@ class Player extends Character {
       this.account = state.AccountManager.getAccount(this.account);
     }
 
-    if (this.getMeta('class')) {
-      this.playerClass = state.ClassManager.get(this.getMeta('class'));
-    }
-
     // Hydrate inventory
     this.inventory.hydrate(state, this);
 
@@ -227,7 +222,6 @@ class Player extends Character {
       inventory: this.inventory && this.inventory.serialize(),
       metadata: this.metadata,
       password: this.password,
-      playerClass: this.playerClass && this.playerClass.id,
       prompt: this.prompt,
       quests: this.questTracker.serialize(),
       role: this.role,
