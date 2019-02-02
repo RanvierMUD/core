@@ -81,15 +81,15 @@ class Inventory extends Map {
 
   /**
    * @param {GameState} state
-   * @param {Character|Item} belongsTo
+   * @param {Character|Item} carriedBy
    */
-  hydrate(state, belongsTo) {
+  hydrate(state, carriedBy) {
     // Item is imported here to prevent circular dependency with Item having an Inventory
     const Item = require('./Item');
 
     for (const [uuid, def] of this) {
       if (def instanceof Item) {
-        def.belongsTo = belongsTo;
+        def.carriedBy = carriedBy;
         continue;
       }
 
@@ -100,7 +100,7 @@ class Inventory extends Map {
       const area = state.AreaManager.getAreaByReference(def.entityReference);
       let newItem = state.ItemFactory.create(area, def.entityReference);
       newItem.uuid = uuid;
-      newItem.belongsTo = belongsTo;
+      newItem.carriedBy = carriedBy;
       newItem.initializeInventory(def.inventory);
       newItem.hydrate(state, def);
       this.set(uuid, newItem);

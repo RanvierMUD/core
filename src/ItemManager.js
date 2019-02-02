@@ -19,8 +19,8 @@ class ItemManager {
       item.room.removeItem(item);
     }
 
-    if (item.belongsTo) {
-      item.belongsTo.removeItem(item);
+    if (item.carriedBy) {
+      item.carriedBy.removeItem(item);
     }
 
     if (item.type === ItemType.CONTAINER && item.inventory) {
