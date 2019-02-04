@@ -152,7 +152,7 @@ class Player extends Character {
      * @event Room#playerEnter
      * @param {Player} player
      */
-    nextRoom.emit('playerEnter', this);
+    nextRoom.emit('playerEnter', this, thisRoom);
     /**
      * @event Player#enterRoom
      * @param {Room} room

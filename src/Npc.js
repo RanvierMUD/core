@@ -67,7 +67,7 @@ class Npc extends Scriptable(Character) {
      * @event Room#npcEnter
      * @param {Npc} npc
      */
-    nextRoom.emit('npcEnter', this);
+    nextRoom.emit('npcEnter', this, thisRoom);
     /**
      * @event Npc#enterRoom
      * @param {Room} room
