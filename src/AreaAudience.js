@@ -18,7 +18,7 @@ class AreaAudience extends ChannelAudience {
       (player !== this.sender)
     );
 
-    return players.concat(area.npcs);
+    return players.concat(this.sender.room.area.npcs);
   }
 }
 
