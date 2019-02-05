@@ -133,7 +133,7 @@ class Player extends Character {
    * @fires Player#enterRoom
    */
   moveTo(nextRoom, onMoved = _ => _) {
-    let prevRoom = this.room;
+    const prevRoom = this.room;
     if (this.room && this.room !== nextRoom) {
       /**
        * @event Room#playerLeave
@@ -152,6 +152,7 @@ class Player extends Character {
     /**
      * @event Room#playerEnter
      * @param {Player} player
+     * @param {Room} prevRoom
      */
     nextRoom.emit('playerEnter', this, prevRoom);
     /**
