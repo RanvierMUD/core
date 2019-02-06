@@ -569,7 +569,7 @@ class BundleManager {
       const loader = require(effectPath);
 
       Logger.verbose(`\t\t${effectName}`);
-      this.state.EffectFactory.add(effectName, this._getLoader(loader, srcPath));
+      this.state.EffectFactory.add(effectName, this._getLoader(loader, srcPath), this.state);
     }
 
     Logger.verbose(`\tENDLOAD: Effects...`);
