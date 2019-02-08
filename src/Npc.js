@@ -48,6 +48,7 @@ class Npc extends Scriptable(Character) {
    * @fires Npc#enterRoom
    */
   moveTo(nextRoom, onMoved = _ => _) {
+    const prevRoom = this.room;
     if (this.room) {
       /**
        * @event Room#npcLeave
@@ -66,8 +67,9 @@ class Npc extends Scriptable(Character) {
     /**
      * @event Room#npcEnter
      * @param {Npc} npc
+     * @param {Room} prevRoom
      */
-    nextRoom.emit('npcEnter', this);
+    nextRoom.emit('npcEnter', this, prevRoom);
     /**
      * @event Npc#enterRoom
      * @param {Room} room
