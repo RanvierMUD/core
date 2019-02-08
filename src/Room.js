@@ -74,9 +74,7 @@ class Room extends GameEntity {
 
     const proxiedEvents = [
       'playerEnter',
-      'playerLeave',
-      'npcEnter',
-      'npcLeave'
+      'playerLeave'
     ];
 
     if (proxiedEvents.includes(eventName)) {

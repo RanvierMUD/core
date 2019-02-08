@@ -9,6 +9,10 @@ const ChannelAudience = require('./ChannelAudience');
  */
 class AreaAudience extends ChannelAudience {
   getBroadcastTargets() {
+    if (!this.sender.room) {
+      return [];
+    }
+
     // It would be more elegant to just pass the area but that could be very
     // inefficient as it's much more likely that there are fewer players than
     // there are rooms in the area
