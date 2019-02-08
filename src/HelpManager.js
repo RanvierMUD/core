@@ -28,7 +28,7 @@ class HelpManager {
    */
   find(search) {
     const results = new Map();
-    for (const [ name, help ] of this.helps.entries()) {
+    for (const [name, help] of this.helps.entries()) {
       if (name.indexOf(search) === 0) {
         results.set(name, help);
         continue;
@@ -38,6 +38,25 @@ class HelpManager {
       }
     }
     return results;
+  }
+
+  /**
+   * Returns first help matching keywords
+   * @param {string} help Helpfile name
+   */
+  getFirst(help) {
+    const results = this.find(help);
+
+    if (!results.size) {
+      /**
+       * No results found
+       */
+      return;
+    }
+
+    const [_, hfile] = [...results][0];
+
+    return hfile;
   }
 }
 
