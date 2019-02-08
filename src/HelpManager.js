@@ -42,7 +42,8 @@ class HelpManager {
 
   /**
    * Returns first help matching keywords
-   * @param {?string} help Helpfile name
+   * @param {string} search
+   * @return {?string}
    */
   getFirst(help) {
     const results = this.find(help);
