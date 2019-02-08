@@ -2,13 +2,13 @@
 
 /**
  * @module ItemType
- * @enum {Symbol}
+ * @enum {number}
  */
 module.exports = {
-  ARMOR: Symbol("ARMOR"),
-  CONTAINER: Symbol("CONTAINER"),
-  OBJECT: Symbol("OBJECT"),
-  POTION: Symbol("POTION"),
-  WEAPON: Symbol("WEAPON"),
-  RESOURCE: Symbol("RESOURCE"),
+  OBJECT: 1,
+  CONTAINER: 2,
+  ARMOR: 3,
+  WEAPON: 4,
+  POTION: 5,
+  RESOURCE: 6,
 };
