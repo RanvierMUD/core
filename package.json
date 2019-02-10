@@ -5,7 +5,7 @@
   "bugs": "https://github.com/ranviermud/core/issues",
   "license": "MIT",
   "author": "Shawn Biddle (http://shawnbiddle.com)",
-  "version": "3.0.5",
+  "version": "3.0.6",
   "repository": "github:ranviermud/core",
   "engines": {
     "node": ">= 10.12.0"
