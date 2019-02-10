@@ -14,6 +14,16 @@ class CommandQueue {
   }
 
   /**
+   * Safely add lag to the current queue. This method will not let you add a
+   * negative amount as a safety measure. If you want to subtract lag you can
+   * directly manipulate the `lag` property.
+   * @param {number} amount milliseconds of lag
+   */
+  addLag(amount) {
+    this.lag += Math.max(0, amount);
+  }
+
+  /**
    * @param {CommandExecutable} executable Thing to run with an execute and a queue label
    * @param {number} lag Amount of lag to apply to the queue after the command is run
    */

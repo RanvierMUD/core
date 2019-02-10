@@ -100,6 +100,8 @@ describe('Command Queue',  function () {
       assert.equal(queue.execute(), true);
 
       assert.equal(queue.msTilNextRun, lag);
+      queue.addLag(200);
+      assert.equal(queue.msTilNextRun, lag + 200);
 
       queue.reset();
       assert.equal(queue.msTilNextRun, 0);
