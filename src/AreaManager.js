@@ -1,5 +1,6 @@
 'use strict';
 
+const Area = require('./Area');
 const BehaviorManager = require('./BehaviorManager');
 
 /**
