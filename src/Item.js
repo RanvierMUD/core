@@ -61,7 +61,13 @@ class Item extends GameEntity {
     this.room        = item.room || null;
     this.roomDesc    = item.roomDesc || '';
     this.script      = item.script || null;
-    this.type        = typeof item.type === 'string' ? ItemType[item.type] : (item.type || ItemType.OBJECT);
+
+    if (typeof item.type === 'string') {
+      this.type = ItemType[item.type] || item.type;
+    } else {
+      this.type = item.type || ItemType.OBJECT;
+    }
+
     this.uuid        = item.uuid || uuid();
     this.closeable   = item.closeable || item.closed || item.locked || false;
     this.closed      = item.closed || false;

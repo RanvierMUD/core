@@ -17,15 +17,19 @@ class EffectFactory {
   /**
    * @param {string} id
    * @param {EffectConfig} config
+   * @param {GameState} state
    */
-  add(id, config) {
+  add(id, config, state) {
     if (this.effects.has(id)) {
       return;
     }
 
     let definition = Object.assign({}, config);
     delete definition.listeners;
-    const listeners = config.listeners || {};
+    let listeners = config.listeners || {};
+    if (typeof listeners === 'function') {
+      listeners = listeners(state);
+    }
 
     const eventManager = new EventManager();
     for (const event in listeners) {
@@ -33,6 +37,10 @@ class EffectFactory {
     }
 
     this.effects.set(id, { definition, eventManager });
+  }
+
+  has(id) {
+    return this.effects.has(id);
   }
 
   /**

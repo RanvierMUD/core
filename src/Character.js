@@ -524,12 +524,12 @@ class Character extends Metadatable(EventEmitter) {
   }
 
   /**
-   * @param {Character} target
+   * @param {Character} follower
    * @fires Character#lostFollower
    */
-  removeFollower(target) {
-    this.followers.delete(target);
-    target.following = null;
+  removeFollower(follower) {
+    this.followers.delete(follower);
+    follower.following = null;
     /**
      * @event Character#lostFollower
      * @param {Character} follower

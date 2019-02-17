@@ -74,7 +74,9 @@ class Room extends GameEntity {
 
     const proxiedEvents = [
       'playerEnter',
-      'playerLeave'
+      'playerLeave',
+      'npcEnter',
+      'npcLeave'
     ];
 
     if (proxiedEvents.includes(eventName)) {
@@ -194,6 +196,23 @@ class Room extends GameEntity {
     }
 
     const roomExit = exits.find(ex => ex.direction.indexOf(exitName) === 0);
+
+    return roomExit || false;
+  }
+
+  /**
+   * Get the exit definition of a room's exit to a given room
+   * @param {Room} nextRoom
+   * @return {false|Object}
+   */
+  getExitToRoom(nextRoom) {
+    const exits = this.getExits();
+
+    if (!exits.length) {
+      return false;
+    }
+
+    const roomExit = exits.find(ex => ex.roomId === nextRoom.entityReference);
 
     return roomExit || false;
   }

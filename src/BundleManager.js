@@ -9,7 +9,6 @@ const fs = require('fs'),
     CommandType = require('./CommandType'),
     Item = require('./Item'),
     Npc = require('./Npc'),
-    PlayerClass = require('./PlayerClass'),
     QuestGoal = require('./QuestGoal'),
     QuestReward = require('./QuestReward'),
     Room = require('./Room'),
@@ -103,7 +102,6 @@ class BundleManager {
       { path: 'behaviors/', fn: 'loadBehaviors' },
 
       { path: 'channels.js', fn: 'loadChannels' },
-      { path: 'classes/', fn: 'loadClasses' },
       { path: 'commands/', fn: 'loadCommands' },
       { path: 'effects/', fn: 'loadEffects' },
       { path: 'input-events/', fn: 'loadInputEvents' },
@@ -571,7 +569,7 @@ class BundleManager {
       const loader = require(effectPath);
 
       Logger.verbose(`\t\t${effectName}`);
-      this.state.EffectFactory.add(effectName, this._getLoader(loader, srcPath));
+      this.state.EffectFactory.add(effectName, this._getLoader(loader, srcPath), this.state);
     }
 
     Logger.verbose(`\tENDLOAD: Effects...`);
@@ -609,31 +607,6 @@ class BundleManager {
     }
 
     Logger.verbose(`\tENDLOAD: Skills...`);
-  }
-
-  /**
-   * @param {string} bundle
-   * @param {string} classesDir
-   */
-  loadClasses(bundle, classesDir) {
-    Logger.verbose(`\tLOAD: Classes...`);
-    const files = fs.readdirSync(classesDir);
-
-    for (const classFile of files) {
-      const classPath = classesDir + classFile;
-      if (!Data.isScriptFile(classPath, classFile)) {
-        continue;
-      }
-
-      const className = path.basename(classFile, path.extname(classFile));
-      const loader = require(classPath);
-      let classImport = this._getLoader(loader, srcPath);
-
-      Logger.verbose(`\t\t${className}`);
-      this.state.ClassManager.set(className, new PlayerClass(className, classImport));
-    }
-
-    Logger.verbose(`\tENDLOAD: Classes...`);
   }
 
   /**

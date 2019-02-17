@@ -171,20 +171,19 @@ class Skill {
       return;
     }
 
-    const effect = this.state.EffectFactory.create(
-      'cooldown',
-      { name: "Cooldown: " + this.name, duration: this.cooldownLength * 1000 },
-      { cooldownId: this.getCooldownId() }
-    );
-    effect.skill = this;
-
-    character.addEffect(effect);
+    character.addEffect(this.createCooldownEffect());
   }
 
   getCooldownId() {
     return this.cooldownGroup ? "skillgroup:" + this.cooldownGroup : "skill:" + this.id;
   }
 
+  /**
+   * Create an instance of the cooldown effect for use by cooldown()
+   *
+   * @private
+   * @return {Effect}
+   */
   createCooldownEffect() {
     if (!this.state.EffectFactory.has('cooldown')) {
       this.state.EffectFactory.add('cooldown', this.getDefaultCooldownConfig());

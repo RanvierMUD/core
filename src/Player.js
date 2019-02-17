@@ -29,7 +29,6 @@ class Player extends Character {
     this.experience = data.experience || 0;
     this.extraPrompts = new Map();
     this.password  = data.password;
-    this.playerClass = null;
     this.prompt = data.prompt || '> ';
     this.socket = data.socket || null;
     const questData = Object.assign({
@@ -134,6 +133,7 @@ class Player extends Character {
    * @fires Player#enterRoom
    */
   moveTo(nextRoom, onMoved = _ => _) {
+    const prevRoom = this.room;
     if (this.room && this.room !== nextRoom) {
       /**
        * @event Room#playerLeave
@@ -152,8 +152,9 @@ class Player extends Character {
     /**
      * @event Room#playerEnter
      * @param {Player} player
+     * @param {Room} prevRoom
      */
-    nextRoom.emit('playerEnter', this);
+    nextRoom.emit('playerEnter', this, prevRoom);
     /**
      * @event Player#enterRoom
      * @param {Room} room
@@ -178,10 +179,6 @@ class Player extends Character {
 
     if (typeof this.account === 'string') {
       this.account = state.AccountManager.getAccount(this.account);
-    }
-
-    if (this.getMeta('class')) {
-      this.playerClass = state.ClassManager.get(this.getMeta('class'));
     }
 
     // Hydrate inventory
@@ -227,7 +224,6 @@ class Player extends Character {
       inventory: this.inventory && this.inventory.serialize(),
       metadata: this.metadata,
       password: this.password,
-      playerClass: this.playerClass && this.playerClass.id,
       prompt: this.prompt,
       quests: this.questTracker.serialize(),
       role: this.role,
