@@ -404,6 +404,11 @@ class BundleManager {
       }
 
       const commandName = path.basename(commandFile, path.extname(commandFile));
+
+      if (this.state.CommandManager.get(commandName)) {
+        Logger.warn(`Command '${commandName}' already exists and will be discarded`);
+      }
+
       const command = this.createCommand(commandPath, commandName, bundle);
       this.state.CommandManager.add(command);
     }
