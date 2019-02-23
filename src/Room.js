@@ -303,6 +303,7 @@ class Room extends GameEntity {
   /**
    * @param {GameState} state
    * @param {string} entityRef
+   * @return {Item} The newly created item
    */
   spawnItem(state, entityRef) {
     Logger.verbose(`\tSPAWN: Adding item [${entityRef}] to room [${this.title}]`);
