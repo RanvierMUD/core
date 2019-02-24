@@ -17,7 +17,7 @@ class Damage {
    */
   constructor(attribute, amount, attacker = null, source = null, metadata = {}) {
     if (!Number.isFinite(amount)) {
-      throw new TypeError("Damage amount must be a finite Number");
+      throw new TypeError(`Damage amount must be a finite Number, got ${amount}.`);
     }
 
     if (typeof attribute !== 'string') {

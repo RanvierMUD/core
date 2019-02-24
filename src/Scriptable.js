@@ -51,7 +51,7 @@ class extends parentClass {
     for (let [behaviorName, config] of this.behaviors) {
       let behavior = manager.get(behaviorName);
       if (!behavior) {
-        Logger.warn(`No script found for item behavior ${behaviorName}`);
+        Logger.warn(`No script found for [${this.constructor.name}] behavior '${behaviorName}'`);
         continue;
       }
 

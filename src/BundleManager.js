@@ -503,6 +503,10 @@ class BundleManager {
       const loader = require(eventPath);
       const eventImport = this._getLoader(loader, srcPath);
 
+      if (typeof eventImport.event !== 'function') {
+        throw new Error(`Bundle ${bundle} has an invalid input event '${eventName}'. Expected a function, got: `, eventImport.event);
+      }
+
       this.state.InputEventManager.add(eventName, eventImport.event(this.state));
     }
 

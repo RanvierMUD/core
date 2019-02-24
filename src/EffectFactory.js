@@ -60,6 +60,9 @@ class EffectFactory {
    */
   create(id, config = {}, state = {}) {
     const entry = this.effects.get(id);
+    if (!entry || !entry.definition) {
+      throw new Error(`No valid entry definition found for effect ${id}.`);
+    }
     let def = Object.assign({}, entry.definition);
     def.config = Object.assign(def.config, config);
     def.state = Object.assign(def.state || {}, state);
