@@ -26,7 +26,7 @@ class AreaFactory extends EntityFactory {
     const area = new Area(definition.bundle, entityRef, definition.manifest);
 
     if (this.scripts.has(entityRef)) {
-      this.scripts.get(entityRef).attach(entity);
+      this.scripts.get(entityRef).attach(area);
     }
 
     return area;

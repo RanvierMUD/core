@@ -270,13 +270,13 @@ class BundleManager {
     const scriptPath = this._getAreaScriptPath(bundle, areaName);
 
     if (manifest.script) {
-      const scriptPath = `${scriptPath}/${area.script}.js`;
-      if (!fs.existsSync(scriptPath)) {
-        Logger.warn(`\t\t\t[${areaName}] has non-existent script "${area.script}"`);
+      const areaScriptPath = `${scriptPath}/${manifest.script}.js`;
+      if (!fs.existsSync(areaScriptPath)) {
+        Logger.warn(`\t\t\t[${areaName}] has non-existent script "${manifest.script}"`);
       }
 
-      Logger.verbose(`\t\t\tLoading Item Script [${entityRef}] ${item.script}`);
-      this.loadEntityScript(this.state.AreaFactory, entityRef, scriptPath);
+      Logger.verbose(`\t\t\tLoading Area Script for [${areaName}]: ${manifest.script}`);
+      this.loadEntityScript(this.state.AreaFactory, areaName, areaScriptPath);
     }
 
     Logger.verbose(`\t\tLOAD: Quests...`);

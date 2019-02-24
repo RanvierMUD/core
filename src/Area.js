@@ -179,6 +179,16 @@ class Area extends GameEntity {
       room.hydrate(state);
     }
   }
+
+  /**
+   * Get all possible broadcast targets within an area. This includes all npcs,
+   * players, rooms, and the area itself
+   * @return {Array<Broadcastable>}
+   */
+  getBroadcastTargets() {
+    const roomTargets = [...this.rooms].reduce((acc, [, room]) => acc.concat(room.getBroadcastTargets()), []);
+    return [this, ...roomTargets];
+  }
 }
 
 module.exports = Area;
