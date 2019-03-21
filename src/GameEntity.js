@@ -1,6 +1,6 @@
 'use strict';
 
-const EventEmitter = require('events');
+const EffectableEntity = require('./EffectableEntity');
 const Metadatable = require('./Metadatable');
 const Scriptable = require('./Scriptable');
 
@@ -9,6 +9,6 @@ const Scriptable = require('./Scriptable');
  * @mixes Metadatable
  * @mixes Scriptable
  */
-class GameEntity extends Scriptable(Metadatable(EventEmitter)) {}
+class GameEntity extends Scriptable(Metadatable(EffectableEntity)) {}
 
 module.exports = GameEntity;
