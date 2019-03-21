@@ -341,6 +341,8 @@ class Room extends GameEntity {
   }
 
   hydrate(state) {
+    super.hydrate(state);
+
     this.setupBehaviors(state.RoomBehaviorManager);
 
     /**
