@@ -23,7 +23,7 @@ const AreaFloor = require('./AreaFloor');
  */
 class Area extends GameEntity {
   constructor(bundle, name, manifest) {
-    super();
+    super(manifest);
     this.bundle = bundle;
     this.name = name;
     this.title = manifest.title;

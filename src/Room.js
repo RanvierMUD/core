@@ -22,7 +22,7 @@ const Logger = require('./Logger');
  */
 class Room extends GameEntity {
   constructor(area, def) {
-    super();
+    super(def);
     const required = ['title', 'description', 'id'];
     for (const prop of required) {
       if (!(prop in def)) {
