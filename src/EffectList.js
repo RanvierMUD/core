@@ -197,6 +197,24 @@ class EffectList {
   }
 
   /**
+   * Gets the effective value of property doing all effect modifications.
+   * @param {string} propertyName
+   * @return {number}
+   */
+  evaluateProperty(propertyName, propertyValue) {
+    this.validateEffects();
+
+    for (const effect of this.effects) {
+      if (effect.paused) {
+        continue;
+      }
+      propertyValue = effect.modifyProperty(propertyName, propertyValue);
+    }
+
+    return propertyValue;
+  }
+
+  /**
    * @param {Damage} damage
    * @param {number} currentAmount
    * @return {number}

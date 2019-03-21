@@ -85,6 +85,27 @@ class EffectableEntity extends EventEmitter
   }
 
   /**
+   * Get the effected value of a given property
+   * @param {string} propertyName
+   * @return {*}
+   */
+  getProperty(propertyName) {
+    if (!(propertyName in this)) {
+      throw new RangeError(`Cannot evaluate uninitialized property [${propertyName}]`);
+    }
+
+    let propertyValue = this[propertyName];
+
+    // deep copy non-scalar property values to prevent modifiers from actually
+    // changing the original value
+    if (typeof propertyValue === 'function' || typeof propertyValue === 'object') {
+      propertyValue = JSON.parse(JSON.stringify(propertyValue));
+    }
+
+    return this.effects.evaluateProperty(propertyName, propertyValue);
+  }
+
+  /**
    * Get the base value for a given attribute
    * @param {string} attr Attribute name
    * @return {number}
