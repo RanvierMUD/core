@@ -41,6 +41,13 @@ class extends parentClass {
 
     const oldValue = base[property];
     base[property] = value;
+    
+    /**
+    * @event Metadatable#metadataUpdate
+    * @param {string} key
+    * @param {*} newValue
+    * @param {*} oldValue
+    */
     this.emit('metadataUpdated', key, value, oldValue);
   }
 
