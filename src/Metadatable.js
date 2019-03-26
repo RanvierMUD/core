@@ -39,7 +39,9 @@ class extends parentClass {
       base = base[part];
     }
 
+    const oldValue = base[property];
     base[property] = value;
+    this.emit('metadataUpdated', key, oldValue, value);
   }
 
   /**
