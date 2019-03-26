@@ -177,6 +177,11 @@ class Area extends GameEntity {
       this.addRoom(room);
       state.RoomManager.addRoom(room);
       room.hydrate(state);
+      /**
+       * Fires after the room is hydrated and added to its area
+       * @event Room#ready
+       */
+      room.emit('ready');
     }
   }
 

@@ -343,6 +343,13 @@ class Room extends GameEntity {
   hydrate(state) {
     this.setupBehaviors(state.RoomBehaviorManager);
 
+    /**
+     * Fires when the room is created but before it has hydrated its default
+     * contents. Use the `ready` event if you need default items to be there.
+     * @event Room#spawn
+     */
+    this.emit('spawn');
+
     this.items = new Set();
 
     // NOTE: This method effectively defines the fact that items/npcs do not
