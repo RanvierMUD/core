@@ -21,6 +21,7 @@ class extends parentClass {
    * @param {*}      value Value must be JSON.stringify-able
    * @throws Error
    * @throws RangeError
+   * @fires Metadatable#metadataUpdate
    */
   setMeta(key, value) {
     if (!this.metadata) {
