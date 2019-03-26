@@ -21,6 +21,7 @@ class extends parentClass {
    * @param {*}      value Value must be JSON.stringify-able
    * @throws Error
    * @throws RangeError
+   * @fires Metadatable#metadataUpdate
    */
   setMeta(key, value) {
     if (!this.metadata) {
@@ -39,7 +40,16 @@ class extends parentClass {
       base = base[part];
     }
 
+    const oldValue = base[property];
     base[property] = value;
+    
+    /**
+    * @event Metadatable#metadataUpdate
+    * @param {string} key
+    * @param {*} newValue
+    * @param {*} oldValue
+    */
+    this.emit('metadataUpdated', key, value, oldValue);
   }
 
   /**
