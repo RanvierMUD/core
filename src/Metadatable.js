@@ -43,7 +43,7 @@ class extends parentClass {
     const oldValue = base[property];
     base[property] = value;
     
-    if(oldValue === value) {
+    if(value === oldValue) {
       return;
     }
     
