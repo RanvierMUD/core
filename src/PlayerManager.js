@@ -155,14 +155,15 @@ class PlayerManager extends EventEmitter {
 
   /**
    * @fires Player#saved
+   * @param {Function} playerCallback Optional callback to call on player 'saved' event
    */
-  async saveAll() {
+  async saveAll(playerCallback = () => {}) {
     for (const [ name, player ] of this.players.entries()) {
       await this.save(player);
       /**
        * @event Player#save
        */
-      player.emit('saved', playerCallback);
+      player.emit('saved', playerCallback(name, playe));
     }
   }
 
