@@ -163,7 +163,7 @@ class PlayerManager extends EventEmitter {
       /**
        * @event Player#save
        */
-      player.emit('saved', playerCallback(name, playe));
+      player.emit('saved', playerCallback(name, player));
     }
   }
 
