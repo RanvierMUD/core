@@ -32,7 +32,7 @@ class Npc extends Scriptable(Character) {
     this.defaultEquipment = data.equipment || {};
     this.defaultItems = data.items || [];
     this.description = data.description;
-    this.entityReference = data.entityReference; 
+    this.entityReference = data.entityReference;
     this.id = data.id;
     this.keywords = data.keywords;
     this.quests = data.quests || [];
@@ -89,6 +89,10 @@ class Npc extends Scriptable(Character) {
       newItem.hydrate(state);
       state.ItemManager.add(newItem);
       this.addItem(newItem);
+      /**
+       * @event Item#spawn
+       */
+      newItem.emit('spawn');
     }
 
     for (let [slot, defaultEqId] of Object.entries(this.defaultEquipment)) {
@@ -97,6 +101,10 @@ class Npc extends Scriptable(Character) {
       newItem.hydrate(state);
       state.ItemManager.add(newItem);
       this.equip(newItem, slot);
+      /**
+       * @event Item#spawn
+       */
+      newItem.emit('spawn');
     }
   }
 

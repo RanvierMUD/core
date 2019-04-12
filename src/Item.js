@@ -241,6 +241,10 @@ class Item extends GameEntity {
         newItem.hydrate(state);
         state.ItemManager.add(newItem);
         this.addItem(newItem);
+        /**
+         * @event Item#spawn
+         */
+        newItem.emit('spawn');
       });
     }
 
