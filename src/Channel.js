@@ -48,6 +48,7 @@ class Channel {
    * @param {Player}    sender
    * @param {string}    message
    * @fires GameEntity#channelReceive
+   * @fires GameEntity#channelSend
    */
   send(state, sender, message) {
 
@@ -87,6 +88,15 @@ class Channel {
 
     // strip color tags
     const rawMessage = message.replace(/\<\/?\w+?\>/gm, '');
+
+    // Emit channel events
+
+    /**
+     * @event GameEntity#channelSend
+     * @param {Channel} channel
+     * @param {string} rawMessage
+     */
+    sender.emit('channelSend', this, rawMessage);
 
     for (const target of targets) {
       /**
