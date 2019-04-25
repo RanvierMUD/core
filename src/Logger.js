@@ -59,7 +59,7 @@ class Logger {
       path += logExt;
     }
     console.log("Adding file logging at " + path);
-    winston.add(winston.transports.File, { path, timestamp: true });
+    winston.add(winston.transports.File, { filename: path, timestamp: true });
   }
 
   static deactivateFileLogging() {
