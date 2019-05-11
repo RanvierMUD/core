@@ -159,10 +159,6 @@ class PlayerManager extends EventEmitter {
   async saveAll() {
     for (const [ name, player ] of this.players.entries()) {
       await this.save(player);
-      /**
-       * @event Player#save
-       */
-      player.emit('saved', playerCallback);
     }
   }
 
