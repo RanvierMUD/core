@@ -97,6 +97,11 @@ class QuestFactory {
       player.emit('questComplete', instance);
       player.questTracker.complete(instance.entityReference);
 
+      if (!quest.config.rewards) {
+        player.save();
+        return;
+      }
+
       for (const reward of quest.config.rewards) {
         try {
           const rewardClass = GameState.QuestRewardManager.get(reward.type);
