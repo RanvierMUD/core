@@ -6,6 +6,7 @@ const Character = require('./Character');
 const Config = require('./Config');
 const Logger = require('./Logger');
 const Scriptable = require('./Scriptable');
+const CommandQueue = require('./CommandQueue');
 
 /**
  * @property {number} id   Area-relative id (vnum)
@@ -37,6 +38,7 @@ class Npc extends Scriptable(Character) {
     this.keywords = data.keywords;
     this.quests = data.quests || [];
     this.uuid = data.uuid || uuid();
+    this.commandQueue = new CommandQueue();
   }
 
   /**
