@@ -86,7 +86,7 @@ class Account {
    * @param {function} callback after-save callback
    */
   save(callback) {
-    Data.save('account', this.username, this, callback);
+    Data.save('account', this.username, this.serialize(), callback);
   }
 
   /**
