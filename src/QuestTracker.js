@@ -68,7 +68,7 @@ class QuestTracker {
   }
 
   /**
-   * @param {Quest} queset
+   * @param {Quest} quest
    */
   start(quest) {
     const qid = quest.entityReference;
