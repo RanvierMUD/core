@@ -1,6 +1,8 @@
 'use strict';
 
 const BehaviorManager = require('./BehaviorManager');
+const Area = require('./Area');
+const Room = require('./Room');
 
 /**
  * Stores references to, and handles distribution of, active areas
