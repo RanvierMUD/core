@@ -65,7 +65,6 @@ class EntityFactory {
     if (!definition) {
       throw new Error('No Entity definition found for ' + entityRef)
     }
-    
     const entity = new Type(area, definition);
 
     if (this.scripts.has(entityRef)) {
