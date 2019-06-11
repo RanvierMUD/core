@@ -33,7 +33,7 @@ class extends parentClass {
     let base = this.metadata;
 
     while (parts.length) {
-      let part = parts.pop();
+      let part = parts.shift();
       if (!(part in base)) {
         throw new RangeError(`Metadata path invalid: ${key}`);
       }
