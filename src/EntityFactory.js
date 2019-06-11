@@ -66,10 +66,6 @@ class EntityFactory {
       throw new Error('No Entity definition found for ' + entityRef)
     }
     
-    if (Type.name == 'Npc') {
-      definition.metadata = Object.assign(new Object, definition.metadata);
-    }
-    
     const entity = new Type(area, definition);
 
     if (this.scripts.has(entityRef)) {
