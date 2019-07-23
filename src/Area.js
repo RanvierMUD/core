@@ -87,6 +87,7 @@ class Area extends GameEntity {
    * @fires Area#roomRemoved
    */
   removeRoom(room) {
+    this.removeRoomFromMap(room);
     this.rooms.delete(room.id);
 
     /**
@@ -113,6 +114,21 @@ class Area extends GameEntity {
 
     const floor = this.map.get(z);
     floor.addRoom(x, y, room);
+  }
+
+  removeRoomFromMap(room) {
+    if (!room.coordinates) {
+      throw new Error('Room does not have coordinates');
+    }
+
+    const {x, y, z} = room.coordinates;
+
+    if (!this.map.has(z)) {
+      throw new Error(`That floor doesn't exist`);
+    }
+
+    const floor = this.map.get(z);
+    floor.removeRoom(x, y);
   }
 
   /**
