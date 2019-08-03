@@ -17,7 +17,7 @@ const Logger = require('./Logger');
  * @property {string}        script       Name of custom script attached to this room
  * @property {string}        title        Title shown on look/scan
  * @property {object}        doors        Doors restricting access to this room. See documentation for format
- * @property {object}        walls        Walls permanently restricting access from this room.
+ * @property {Array<object>} walls        Walls permanently restricting access from this room { direction: string }
  *
  * @extends GameEntity
  */
