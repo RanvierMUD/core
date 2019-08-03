@@ -222,11 +222,11 @@ class Room extends GameEntity {
 
   /**
    * Check to see if this room has a wall preventing movement in this direction
-   * @param {String} direciton
+   * @param {String} direction
    * @return {boolean}
    */
-  hasWall(direciton) {
-    if(this.walls.find(ex => ex.direction === direciton) ){
+  hasWall(direction) {
+    if(this.walls.find(ex => ex.direction === direction) ){
       return true;
     }
     return false;
