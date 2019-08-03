@@ -17,6 +17,7 @@ const Logger = require('./Logger');
  * @property {string}        script       Name of custom script attached to this room
  * @property {string}        title        Title shown on look/scan
  * @property {object}        doors        Doors restricting access to this room. See documentation for format
+ * @property {object}        walls        Walls permanently restricting access from this room.
  *
  * @extends GameEntity
  */
@@ -50,6 +51,7 @@ class Room extends GameEntity {
     // create by-val copies of the doors config so the lock/unlock don't accidentally modify the original definition
     this.doors = new Map(Object.entries(JSON.parse(JSON.stringify(def.doors || {}))));
     this.defaultDoors = def.doors;
+    this.walls = def.walls || [];
 
     this.items = new Set();
     this.npcs = new Set();
@@ -175,7 +177,8 @@ class Room extends GameEntity {
         this.coordinates.z + z
       );
 
-      if (room && !exits.find(ex => ex.direction === adj.dir)) {
+      //Generate exits based on coordinates and walls
+      if (room && !exits.find(ex => ex.direction === adj.dir) && !this.hasWall(adj.dir)) {
         exits.push({ roomId: room.entityReference, direction: adj.dir, inferred: true });
       }
     }
@@ -215,6 +218,18 @@ class Room extends GameEntity {
     const roomExit = exits.find(ex => ex.roomId === nextRoom.entityReference);
 
     return roomExit || false;
+  }
+
+  /**
+   * Check to see if this room has a wall preventing movement in this direction
+   * @param {String} direciton
+   * @return {boolean}
+   */
+  hasWall(direciton) {
+    if(this.walls.find(ex => ex.direction === direciton) ){
+      return true;
+    }
+    return false;
   }
 
   /**
