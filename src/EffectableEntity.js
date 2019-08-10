@@ -5,10 +5,8 @@ const EffectList = require('./EffectList');
 const Attributes = require('./Attributes');
 
 /**
- * @ignore
- * @exports MetadatableFn
- * @param {*} parentClass
- * @return {module:MetadatableFn~Metadatable}
+ * Base class for game entities that can have effects/attributes
+ * @extends EventEmitter
  */
 class EffectableEntity extends EventEmitter
 {
@@ -111,7 +109,7 @@ class EffectableEntity extends EventEmitter
    * @return {number}
    */
   getBaseAttribute(attr) {
-    var attr = this.attributes.get(attr);
+    const attr = this.attributes.get(attr);
     return attr && attr.base;
   }
 
