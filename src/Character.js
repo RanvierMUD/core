@@ -45,7 +45,11 @@ class Character extends Metadatable(EventEmitter) {
 
     // Arbitrary data bundles are free to shove whatever they want in
     // WARNING: values must be JSON.stringify-able
-    this.metadata = data.metadata || {};
+    if (data.metadata) {
+      this.metadata = JSON.parse(JSON.stringify(data.metadata));
+    } else {
+      this.metadata = {};
+    }
   }
 
   /**
