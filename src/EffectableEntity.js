@@ -105,11 +105,11 @@ class EffectableEntity extends EventEmitter
 
   /**
    * Get the base value for a given attribute
-   * @param {string} attr Attribute name
+   * @param {string} attrName Attribute name
    * @return {number}
    */
-  getBaseAttribute(attr) {
-    const attr = this.attributes.get(attr);
+  getBaseAttribute(attrName) {
+    const attr = this.attributes.get(attrName);
     return attr && attr.base;
   }
 
