@@ -12,6 +12,8 @@ const PartyAudience = require('./PartyAudience');
  * @property {PlayerRoles} minRequiredRole If set only players with the given role or greater can use the channel
  * @property {string} description
  * @property {{sender: function, target: function}} [formatter]
+ * @property {boolean} eventOnly If true, only channel events will be fired in response to a message, without
+ * explicitly sending the message to players
  */
 class Channel {
   /**
@@ -22,6 +24,7 @@ class Channel {
    * @param {PlayerRoles} [config.minRequiredRole]
    * @param {string} [config.color]
    * @param {{sender: function, target: function}} [config.formatter]
+   * @param {boolean} [config.eventOnly]
    */
   constructor(config) {
     if (!config.name) {
@@ -41,6 +44,7 @@ class Channel {
       sender: this.formatToSender.bind(this),
       target: this.formatToReceipient.bind(this),
     };
+    this.eventOnly = config.eventOnly || false;
   }
 
   /**
@@ -48,6 +52,7 @@ class Channel {
    * @param {Player}    sender
    * @param {string}    message
    * @fires GameEntity#channelReceive
+   * @fires GameEntity#channelSend
    */
   send(state, sender, message) {
 
@@ -67,26 +72,39 @@ class Channel {
       throw new NoPartyError();
     }
 
+    if (this.audience instanceof PrivateAudience && !targets.length) {
+      throw new NoRecipientError();
+    }
+
     // Allow audience to change message e.g., strip target name.
     message = this.audience.alterMessage(message);
 
-    // Private channels also send the target player to the formatter
-    if (this.audience instanceof PrivateAudience) {
-      if (!targets.length) {
-        throw new NoRecipientError();
+    // Send messages with Broadcast unless the channel is eventOnly.
+    if (!this.eventOnly) {
+      // Private channels also send the target player to the formatter
+      if (this.audience instanceof PrivateAudience) {
+        Broadcast.sayAt(sender, this.formatter.sender(sender, targets[0], message, this.colorify.bind(this)));
+      } else {
+        Broadcast.sayAt(sender, this.formatter.sender(sender, null, message, this.colorify.bind(this)));
       }
-      Broadcast.sayAt(sender, this.formatter.sender(sender, targets[0], message, this.colorify.bind(this)));
-    } else {
-      Broadcast.sayAt(sender, this.formatter.sender(sender, null, message, this.colorify.bind(this)));
+  
+      // send to audience targets
+      Broadcast.sayAtFormatted(this.audience, message, (target, message) => {
+        return this.formatter.target(sender, target, message, this.colorify.bind(this));
+      });
     }
-
-    // send to audience targets
-    Broadcast.sayAtFormatted(this.audience, message, (target, message) => {
-      return this.formatter.target(sender, target, message, this.colorify.bind(this));
-    });
 
     // strip color tags
     const rawMessage = message.replace(/\<\/?\w+?\>/gm, '');
+
+    // Emit channel events
+
+    /**
+     * @event GameEntity#channelSend
+     * @param {Channel} channel
+     * @param {string} rawMessage
+     */
+    sender.emit('channelSend', this, rawMessage);
 
     for (const target of targets) {
       /**
