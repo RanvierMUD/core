@@ -245,8 +245,12 @@ class BundleManager {
 
     for (const name in areas) {
       const manifest = areas[name];
-      this.areas.push(name);
       await this.loadArea(bundle, name, manifest);
+
+      // instanced areas get loaded but not initialized by the bundle manager
+      if (!manifest.instanced) {
+        this.areas.push(name);
+      }
     }
 
     Logger.verbose(`\tENDLOAD: Areas`);

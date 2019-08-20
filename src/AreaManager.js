@@ -16,33 +16,49 @@ class AreaManager {
 
   /**
    * @param {string} name
+   * @param {?string} instanceId
    * @return Area
    */
-  getArea(name) {
-    return this.areas.get(name);
+  getArea(name, instanceId = null) {
+    return this.areas.get(this.getInstanceRef(name, instanceId));
   }
 
   /**
    * @param {string} entityRef
+   * @param {?string} instanceId
    * @return Area
    */
-  getAreaByReference(entityRef) {
-    const [ name ] = entityRef.split(':');
-    return this.getArea(name);
+  getAreaByReference(entityRef, instanceId = null) {
+    const name = entityRef.split(':')[0];
+    return this.getArea(this.getInstanceRef(name, instanceId));
   }
 
   /**
    * @param {Area} area
+   * @param {?string} instanceId
    */
-  addArea(area) {
-    this.areas.set(area.name, area);
+  addArea(area, instanceId = null) {
+    this.areas.set(this.getInstanceRef(area.name, instanceId), area);
   }
 
   /**
+   * WARNING: This does not do any cleanup of the instance area, it simply removes
+   * it from the AreaManager's list. You will need to remove any players or other
+   * entities from the instance manually
    * @param {Area} area
+   * @param {?string} instanceId
    */
-  removeArea(area) {
-    this.areas.delete(area.name);
+  removeArea(area, instanceId = null) {
+    this.areas.delete(this.getInstanceRef(area.name, instanceId));
+  }
+
+  /**
+   * @param {string} areaName
+   * @param {?string} instanceId
+   * @return string
+   */
+  getInstanceRef(areaName, instanceId = null) {
+    return areaName + (instanceId ? '__' + instanceId : '');
   }
 
   /**

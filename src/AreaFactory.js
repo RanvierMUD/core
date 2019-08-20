@@ -38,6 +38,49 @@ class AreaFactory extends EntityFactory {
   clone(area) {
     return this.create(area.name);
   }
+
+  /**
+   * @param {string} entityRef
+   * @return string
+   */
+  getNameByEntityReference(entityRef) {
+    return entityRef.split(':')[0];
+  }
+
+  /**
+   * @param {string} areaName
+   * @return boolean
+   */
+  isInstanced(areaName) {
+    return this.getInstanceType(areaName) !== null;
+  }
+
+  /**
+   * @param {string} areaName
+   * @return ?string
+   */
+  getInstanceType(areaName) {
+    const def = this.getDefinition(areaName);
+    return def.manifest.instanced || null;
+  }
+
+  /**
+   * Create and hydrate a new instanced version of a given area. Note that the
+   * given area does not need to be defined as instanced in the first place
+   *
+   * @param {GameState} gameState
+   * @param {string} areaName
+   * @param {string} instanceId
+   * @return Area
+   */
+  createInstance(gameState, areaName, instanceId) {
+    const area = gameState.AreaFactory.create(areaName);
+    area.instanceId = instanceId;
+    gameState.AreaManager.addArea(area, instanceId);
+    area.hydrate(gameState);
+
+    return area;
+  }
 }
 
 module.exports = AreaFactory;

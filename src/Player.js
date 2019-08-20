@@ -208,8 +208,8 @@ class Player extends Character {
     if (typeof this.room === 'string') {
       let room = state.RoomManager.getRoom(this.room);
       if (!room) {
-        Logger.error(`ERROR: Player ${this.name} was saved to invalid room ${this.room}.`);
-        room = state.AreaManager.getPlaceholderArea().getRoomById('placeholder');
+        this.emit('unknownRoom', this.room);
+        return;
       }
 
       this.room = room;
