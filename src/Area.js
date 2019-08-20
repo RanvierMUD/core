@@ -134,6 +134,7 @@ class Area extends GameEntity {
    */
   addNpc(npc) {
     this.npcs.add(npc);
+    this.emit('npcAdded', npc);
   }
 
   /**
@@ -141,6 +142,7 @@ class Area extends GameEntity {
    * @param {Npc} npc
    */
   removeNpc(npc) {
+    this.emit('npcRemoved', npc);
     this.npcs.delete(npc);
   }
 
