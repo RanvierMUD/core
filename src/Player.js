@@ -197,6 +197,10 @@ class Player extends Character {
           newItem.hydrate(state, itemDef);
           state.ItemManager.add(newItem);
           this.equip(newItem, slot);
+          /**
+           * @event Item#spawn
+           */
+          newItem.emit('spawn');
         } catch (e) {
           Logger.error(e.message);
         }
