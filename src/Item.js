@@ -229,6 +229,8 @@ class Item extends GameEntity {
     if (typeof this.area === 'string') {
       this.area = state.AreaManager.getArea(this.area);
     }
+    
+    state.ItemManager.add(this);
 
     // if the item was saved with a custom inventory hydrate it
     if (this.inventory) {
