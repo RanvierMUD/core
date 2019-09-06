@@ -100,7 +100,6 @@ class CommandQueue {
   /**
    * For a given command index find how many seconds until it will run
    * @param {number} commandIndex
-   * @param {boolean} milliseconds
    * @return {number}
    */
   getTimeTilRun(commandIndex) {
