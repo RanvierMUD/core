@@ -144,29 +144,30 @@ class Effect extends EventEmitter {
     if (this.active) {
       return;
     }
-
+    
     this.startedAt = Date.now() - this.elapsed;
+    this.active = true;
+
     /**
      * @event Effect#effectActivated
      */
     this.emit('effectActivated');
-    this.active = true;
   }
 
   /**
-   * Set this effect active
+   * Set this effect inactive
    * @fires Effect#effectDeactivated
    */
   deactivate() {
     if (!this.active) {
       return;
     }
+    this.active = false;
 
     /**
      * @event Effect#effectDeactivated
      */
     this.emit('effectDeactivated');
-    this.active = false;
   }
 
   /**
