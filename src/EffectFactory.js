@@ -39,6 +39,9 @@ class EffectFactory {
     this.effects.set(id, { definition, eventManager });
   }
 
+  /**
+   * @see Map#has
+   */
   has(id) {
     return this.effects.has(id);
   }
@@ -49,7 +52,8 @@ class EffectFactory {
    * @return {object}
    */
   get(id) {
-    return this.get(id);
+    const entry = this.effects.get(id);
+    if (entry) return entry.definition;
   }
 
   /**
