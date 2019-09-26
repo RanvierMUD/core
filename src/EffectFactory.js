@@ -49,7 +49,7 @@ class EffectFactory {
    * @return {object}
    */
   get(id) {
-    return this.get(id);
+    return this.effects.get(id);
   }
 
   /**
