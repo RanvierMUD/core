@@ -52,7 +52,8 @@ class EffectFactory {
    * @return {object}
    */
   get(id) {
-    return this.effects.get(id);
+    const entry = this.effects.get(id);
+    if (entry) return entry.definition;
   }
 
   /**
