@@ -39,6 +39,9 @@ class EffectFactory {
     this.effects.set(id, { definition, eventManager });
   }
 
+  /**
+   * @see Map#has
+   */
   has(id) {
     return this.effects.has(id);
   }
