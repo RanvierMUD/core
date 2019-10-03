@@ -18,7 +18,7 @@ class Account extends Metadatable(EventEmitter) {
    * @param {Object} data Account save data
    */
   constructor(data) {
-    super(data);
+    super();
     this.username   = data.username;
     this.characters = data.characters || [];
     this.password   = data.password;
