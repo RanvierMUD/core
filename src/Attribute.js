@@ -5,7 +5,7 @@
  * safely. Where safely means without being destructive to the base value.
  *
  * An attribute on its own cannot be raised above its base value. To raise attributes above their
- * base temporarily see the {@link http://ranviermud.com/extending/effects|Effect guide}.
+ * base temporarily see the {@link https://ranviermud.com/coding/effects/|Effect guide}.
  *
  * @property {string} name
  * @property {number} base
