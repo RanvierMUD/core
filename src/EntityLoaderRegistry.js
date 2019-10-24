@@ -25,10 +25,15 @@ class EntityLoaderRegistry extends Map {
 
       const sourceConfig = settings.config || {};
 
-      this.set(name, new EntityLoader(sourceRegistry.get(settings.source), sourceConfig));
+      // use an extended loader, if one is set.
+      const loader = source._loader || EntityLoader;
+
+      this.set(
+        name,
+        new loader(sourceRegistry.get(settings.source), sourceConfig)
+      );
     }
   }
 }
 
 module.exports = EntityLoaderRegistry;
-
