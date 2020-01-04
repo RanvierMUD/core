@@ -42,6 +42,7 @@ class Room extends GameEntity {
       y: def.coordinates[1],
       z: def.coordinates[2],
     } : null;
+    this.walls = new Set(def.walls || []);
     this.description = def.description;
     this.entityReference = this.area.name + ':' + def.id;
     this.exits = def.exits || [];
@@ -112,7 +113,7 @@ class Room extends GameEntity {
 
   /**
    * @param {Npc} npc
-   * @param {boolean} removeSpawn 
+   * @param {boolean} removeSpawn
    */
   removeNpc(npc, removeSpawn = false) {
     this.npcs.delete(npc);
@@ -142,9 +143,11 @@ class Room extends GameEntity {
    * Get exits for a room. Both inferred from coordinates and  defined in the
    * 'exits' property.
    *
+   * @param {Object} options
+   *
    * @return {Array<{ id: string, direction: string, inferred: boolean, room: Room= }>}
    */
-  getExits() {
+  getExits({ignoreWalls = false} = {}) {
     const exits = JSON.parse(JSON.stringify(this.exits)).map(exit => {
       exit.inferred = false;
       return exit;
@@ -175,7 +178,9 @@ class Room extends GameEntity {
         this.coordinates.z + z
       );
 
-      if (room && !exits.find(ex => ex.direction === adj.dir)) {
+      if (room && !exits.find(ex => ex.direction === adj.dir) &&
+        (ignoreWalls || !this.walls.has(adj.dir)))
+      {
         exits.push({ roomId: room.entityReference, direction: adj.dir, inferred: true });
       }
     }
