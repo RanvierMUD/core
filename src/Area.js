@@ -146,7 +146,7 @@ class Area extends GameEntity {
    * This method is automatically called every N milliseconds where N is defined in the
    * `setInterval` call to `GameState.AreaMAnager.tickAll` in the `ranvier` executable. It, in turn,
    * will fire the `updateTick` event on all its rooms and npcs
-   * 
+   *
    * @param {GameState} state
    * @fires Room#updateTick
    * @fires Npc#updateTick
