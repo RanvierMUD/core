@@ -1,6 +1,6 @@
-export namespace EntityLoader {
-    import { DataSource } from './DataSource';
+// import { DataSource } from '../src/DataSource'; FIXME
 
+export namespace EntityLoader {
     /**
      * @param {DataSource}
      * @param {object} config

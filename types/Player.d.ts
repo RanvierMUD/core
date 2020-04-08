@@ -1,6 +1,6 @@
-export namespace Player {
-    import { Room } from './Room';
+import { Room } from '../src/Room';
 
+export namespace Player {
     function constructor(data);
 
     /**

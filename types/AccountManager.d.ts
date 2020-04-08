@@ -1,9 +1,9 @@
-export namespace AccountManager {
-    import { Account } from './Account';
-    import { EntityLoader } from './EntityLoader';
+import { Account } from '../src/Account';
+import { EntityLoader} from '../src/EntityLoader';
 
+export namespace AccountManager {
     let accounts: Map<string,Account>;
-    let loader: EntityLoader;
+    let loader: prova;
 
     function constructor();
 
@@ -28,5 +28,5 @@ export namespace AccountManager {
      * @param {string} username
      * @param {boolean} force Force reload data from disk
      */
-    async function loadAccount(username: string, force: boolean): void;
+    function loadAccount(username: string, force: boolean): void;
 }

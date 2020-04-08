@@ -1,6 +1,6 @@
-export namespace Room {
-    import { Player } from './Player';
+import { Player } from '../src/Player';
 
+export namespace Room {
     /**
      * @property Area room is in
      */
