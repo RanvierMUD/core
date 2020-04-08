@@ -1,8 +1,8 @@
-import { Player } from './Player';
-
 export declare type Broadcastable = { getBroadcastTargets: Array<any> }
 
 export namespace Broadcast {
+    import { Player } from './Player';
+
     /**
      * @param {Broadcastable} source Target to send the broadcast to
      * @param {string} message
