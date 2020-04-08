@@ -11,7 +11,7 @@ export namespace Broadcast {
      * @param {?function(target, message): string} formatter=null Function to call to format the
      *   message to each target
      */
-    static function at(source: Broadcastable, message: string, wrapWidth: boolean, useColor: boolean, formatter: Function);
+    function at(source: Broadcastable, message: string, wrapWidth: boolean, useColor: boolean, formatter: Function): void;
 
     /**
      * Broadcast.at for all except given list of players
@@ -23,7 +23,7 @@ export namespace Broadcast {
      * @param {boolean} useColor
      * @param {function} formatter
      */
-    static function atExcept(source: Broadcastable, message: string, excludes: Array<Player>, wrapWidth: number|boolean, useColor: boolean, formatter: Function);
+    function atExcept(source: Broadcastable, message: string, excludes: Array<Player>, wrapWidth: number|boolean, useColor: boolean, formatter: Function): void;
 
     /**
      * Helper wrapper around Broadcast.at to be used when you're using a formatter
@@ -34,11 +34,81 @@ export namespace Broadcast {
      * @param {number|boolean} wrapWidth
      * @param {boolean} useColor
      */
-    static function atFormatted(source: Broadcastable, message, formatter, wrapWidth, useColor);
+    function atFormatted(source: Broadcastable, message: string, formatter: Function, wrapWidth: number|boolean, useColor: boolean): void;
 
     /**
      * `Broadcast.at` with a newline
      * @see {@link Broadcast#at}
      */
-    static function sayAt(source: Broadcastable, message, wrapWidth, useColor, formatter);
+    function sayAt(source: Broadcastable, message: string, wrapWidth: number|boolean, useColor: boolean, formatter: Function): void;
+
+    /**
+     * `Broadcast.atExcept` with a newline
+     * @see {@link Broadcast#atExcept}
+     */
+    function sayAtExcept(source: Broadcastable, message: string, excludes, wrapWidth: number|boolean, useColor: boolean, formatter: Function): void;
+
+    /**
+     * `Broadcast.atFormatted` with a newline
+     * @see {@link Broadcast#atFormatted}
+     */
+    function sayAtFormatted(source: Broadcastable, message: string, formatter: Function, wrapWidth: number|boolean, useColor: boolean): void;
+
+    /**
+     * Render the player's prompt including any extra prompts
+     * @param {Player} player
+     * @param {object} extra     extra data to avail to the prompt string interpolator
+     * @param {number} wrapWidth
+     * @param {boolean} useColor
+     */
+    function prompt(player: Player, extra: Object, wrapWidth: number, useColor: boolean): void;
+
+    /**
+     * Generate an ASCII art progress bar
+     * @param {number} width Max width
+     * @param {number} percent Current percent
+     * @param {string} color
+     * @param {string} barChar Character to use for the current progress
+     * @param {string} fillChar Character to use for the rest
+     * @param {string} delimiters Characters to wrap the bar in
+     * @return {string}
+     */
+    function progress(width: number, percent: number, color: string, barChar: string, fillChar: string, delimiters: string): string;
+
+    /**
+     * Center a string in the middle of a given width
+     * @param {number} width
+     * @param {string} message
+     * @param {string} color
+     * @param {?string} fillChar Character to pad with, defaults to ' '
+     * @return {string}
+     */
+    function center(width: number, message: string, color: string, fillChar: string): string;
+
+    /**
+     * Render a line of a specific width/color
+     * @param {number} width
+     * @param {string} fillChar
+     * @param {?string} color
+     * @return {string}
+     */
+    function line(width: number, fillChar: string, color: string): string;
+
+    /**
+     * Wrap a message to a given width. Note: Evaluates color tags
+     * @param {string}  message
+     * @param {?number} width   Defaults to 80
+     * @return {string}
+     */
+    function wrap(message: string, width: number): string;
+
+    /**
+     * Indent all lines of a given string by a given amount
+     * @param {string} message
+     * @param {number} indent
+     * @return {string}
+     */
+    function indent(message: string, indent: number): string;
+
+    function isBroadcastable(source: Broadcastable): boolean;
 }
