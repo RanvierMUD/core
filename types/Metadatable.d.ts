@@ -1,4 +1,4 @@
-export declare function Metadatable(parentClass): any {
+export declare class MetadatableClass {
     /**
      * Set a metadata value.
      * Warning: Does _not_ autovivify, you will need to create the parent objects if they don't exist
@@ -8,7 +8,7 @@ export declare function Metadatable(parentClass): any {
      * @throws RangeError
      * @fires Metadatable#metadataUpdate
      */
-    function setMeta(key: string, value: any): void;
+    setMeta(key: string, value: any): void;
 
     /**
      * Get metadata by dot notation
@@ -17,5 +17,7 @@ export declare function Metadatable(parentClass): any {
      * @return {*}
      * @throws Error
      */
-    function getMeta(key: string): any;
+    getMeta(key: string): any;
 }
+
+export declare function Metadatable(parentClass: any): any & MetadatableClass;
