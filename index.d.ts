@@ -1,8 +1,20 @@
 export { Account } from './types/Account';
 export { AccountManager } from './types/AccountManager';
 export { Area } from './types/Area';
+export { BehaviorManager } from './types/BehaviorManager';
 export { Broadcast, Broadcastable } from './types/Broadcast';
+export { Character } from './types/Character';
+export { DataSource } from './types/DataSource';
+export { EffectableEntity } from './types/EffectableEntity';
 export { EntityLoader } from './types/EntityLoader';
+export { EntityReference } from './types/EntityReference';
+export { GameEntity } from './types/GameEntity';
+export { GameState } from './types/GameState';
+export { Item } from './types/Item';
 export { Logger } from './types/Logger';
+export { Metadatable, MetadatableClass } from './types/Metadatable';
+export { Npc } from './types/Npc';
 export { Player } from './types/Player';
 export { Room } from './types/Room';
+export { Scriptable, ScriptableClass } from './types/Scriptable';
+
