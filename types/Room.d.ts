@@ -1,12 +1,19 @@
-import { Player } from '../src/Player';
+import { Area } from './Area';
+import { Character } from './Character';
+import { GameEntity } from './GameEntity';
+import { EntityReference } from './EntityReference';
+import { GameState } from './GameState';
+import { Item } from './Item';
+import { Npc } from './Npc';
+import { Player } from './Player';
 
-export namespace Room {
+export declare class Room extends GameEntity {
     /**
      * @property Area room is in
      */
-    let area: Area;
+    area: Area;
 
-    function constructor(area: Area, def);
+    constructor(area: Area, def);
 
     /**
      * Emits event on self and proxies certain events to other entities in the room.
@@ -14,38 +21,38 @@ export namespace Room {
      * @param {...*} args
      * @return {void}
      */
-    function emit(eventName: string, ...args): void;
+    emit(eventName: string, ...args): void;
 
     /**
      * @param {Player} player
      */
-    function addPlayer(player: Player): void;
+    addPlayer(player: Player): void;
 
     /**
      * @param {Player} player
      */
-    function removePlayer(player: Player): void;
+    removePlayer(player: Player): void;
 
     /**
      * @param {Npc} npc
      */
-    function addNpc(npc: Npc): void;
+    addNpc(npc: Npc): void;
 
     /**
      * @param {Npc} npc
      * @param {boolean} removeSpawn
      */
-    function removeNpc(npc: Npc, removeSpawn: boolean): void;
+    removeNpc(npc: Npc, removeSpawn: boolean): void;
 
     /**
      * @param {Item} item
      */
-    function addItem(item: Item): void;
+    addItem(item: Item): void;
 
     /**
      * @param {Item} item
      */
-    function removeItem(item: Item): void;
+    removeItem(item: Item): void;
 
     /**
      * Get exits for a room. Both inferred from coordinates and  defined in the
@@ -53,68 +60,68 @@ export namespace Room {
      *
      * @return {Array<{ id: string, direction: string, inferred: boolean, room: Room= }>}
      */
-    function getExits(): Array<{ id: string, direction: string, inferred: boolean, room: Room }>;
+    getExits(): Array<{ id: string, direction: string, inferred: boolean, room: Room }>;
 
     /**
      * Get the exit definition of a room's exit by searching the exit name
      * @param {string} exitName exit name search
      * @return {false|Object}
      */
-    function findExit(exitName: string): false|Object;
+    findExit(exitName: string): false|Object;
 
     /**
      * Get the exit definition of a room's exit to a given room
      * @param {Room} nextRoom
      * @return {false|Object}
      */
-    function getExitToRoom(nextRoom: Room): false|Object;
+    getExitToRoom(nextRoom: Room): false|Object;
 
     /**
      * Check to see if this room has a door preventing movement from `fromRoom` to here
      * @param {Room} fromRoom
      * @return {boolean}
      */
-    function hasDoor(fromRoom: Room): boolean;
+    hasDoor(fromRoom: Room): boolean;
 
     /**
      * @param {Room} fromRoom
      * @return {{lockedBy: EntityReference, locked: boolean, closed: boolean}}
      */
-    function getDoor(fromRoom: Room): Object<{lockedBy: EntityReference, locked: boolean, closed: boolean}>
+    getDoor(fromRoom: Room): Object;
 
     /**
      * Check to see of the door for `fromRoom` is locked
      * @param {Room} fromRoom
      * @return {boolean}
      */
-    function isDoorLocked(fromRoom: Room): boolean;
+    isDoorLocked(fromRoom: Room): boolean;
 
     /**
      * @param {Room} fromRoom
      */
-    function openDoor(fromRoom: Room): void;
+    openDoor(fromRoom: Room): void;
 
     /**
      * @param {Room} fromRoom
      */
-    function closeDoor(fromRoom: Room): void;
+    closeDoor(fromRoom: Room): void;
 
     /**
      * @param {Room} fromRoom
      */
-    function unlockDoor(fromRoom: Room): void;
+    unlockDoor(fromRoom: Room): void;
 
     /**
      * @param {Room} fromRoom
      */
-    function lockDoor(fromRoom: Room): void;
+    lockDoor(fromRoom: Room): void;
 
     /**
      * @param {GameState} state
      * @param {string} entityRef
      * @return {Item} The newly created item
      */
-    function spawnItem(state: GameState, entityRef: string): Item;
+    spawnItem(state: GameState, entityRef: string): Item;
 
     /**
      * @param {GameState} state
@@ -122,13 +129,13 @@ export namespace Room {
      * @fires Npc#spawn
      * @return {Npc}
      */
-    function spawnNpc(state: GameState, entityRef: string): Npc;
+    spawnNpc(state: GameState, entityRef: string): Npc;
 
-    function hydrate(state: GameState): void;
+    hydrate(state: GameState): void;
 
     /**
      * Used by Broadcaster
      * @return {Array<Character>}
      */
-    function getBroadcastTargets(): Array<Character>
+    getBroadcastTargets(): Array<Character>
 }

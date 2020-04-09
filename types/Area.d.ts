@@ -1,61 +1,64 @@
-import { Npc } from '../src/Npc';
-import { Room } from '../src/Room';
+import { Broadcastable } from './Broadcast';
+import { GameEntity } from './GameEntity';
+import { GameState } from './GameState';
+import { Npc } from './Npc';
+import { Room } from './Room';
 
-export namespace Area {
+export declare class Area extends GameEntity {
     /** Bundle this area comes from */
-    let bundle: string;
-    let name: string
-    let title: string;
+    bundle: string;
+    name: string
+    title: string;
     /** A custom script for this item */
-    let script: string;
+    script: string;
     /** a Map object keyed by the floor z-index, each floor is an array with [x][y] indexes for coordinates. */
-    let map: Map;
+    map: Map<number, number>;
     /** Map of room id to Room */
-    let rooms: Map<string, Room>;
+    rooms: Map<string, Room>;
     /** Active NPCs that originate from this area. Note: this is NPCs that */
-    let npcs: Set<Npc>;
+    npcs: Set<Npc>;
     /** Area configuration */
-    let info: Object
+    info: Object
     /** milliseconds since last respawn tick. See {@link Area#update} */
-    let lastRespawnTick: number;
+    lastRespawnTick: number;
 
-    function constructor(bundle, name, manifest);
+    constructor(bundle, name, manifest);
 
     /**
      * Get ranvier-root-relative path to this area
      * @return {string}
      */
-    function areaPath(): string;
+    areaPath(): string;
 
     /**
      * Get an ordered list of floors in this area's map
      * @return {Array<number>}
      */
-    function floors(): Array<number>;
+    floors(): Array<number>;
 
     /**
      * @param {string} id Room id
      * @return {Room|undefined}
      */
-    function getRoomById(id: string): Room|undefined;
+    getRoomById(id: string): Room|undefined;
 
     /**
      * @param {Room} room
      * @fires Area#roomAdded
      */
-    function addRoom(room: Room): void;
+    addRoom(room: Room): void;
 
     /**
      * @param {Room} room
      * @fires Area#roomRemoved
      */
-    function removeRoom(room: Room): void
+    removeRoom(room: Room): void
 
     /**
      * @param {Room} room
      * @throws Error
      */
-    function addRoomToMap(room: Room): void;
+    addRoomToMap(room: Room): void;
 
     /**
      * find a room at the given coordinates for this area
@@ -64,18 +67,18 @@ export namespace Area {
      * @param {number} z
      * @return {Room|boolean}
      */
-    function getRoomAtCoordinates(x: number, y: number, z: number): Room|boolean;
+    getRoomAtCoordinates(x: number, y: number, z: number): Room|boolean;
 
     /**
      * @param {Npc} npc
      */
-    function addNpc(npc: Npc): void;
+    addNpc(npc: Npc): void;
 
     /**
      * Removes an NPC from the area. NOTE: This must manually remove the NPC from its room as well
      * @param {Npc} npc
      */
-    function removeNpc(npc: Npc): void;
+    removeNpc(npc: Npc): void;
 
     /**
      * This method is automatically called every N milliseconds where N is defined in the
@@ -86,14 +89,14 @@ export namespace Area {
      * @fires Room#updateTick
      * @fires Npc#updateTick
      */
-    function update(state: GameState): void;
+    update(state: GameState): void;
 
-    function hydrate(state): void;
+    hydrate(state): void;
 
     /**
      * Get all possible broadcast targets within an area. This includes all npcs,
      * players, rooms, and the area itself
      * @return {Array<Broadcastable>}
      */
-    function getBroadcastTargets(): Array<Broadcastable>;
+    getBroadcastTargets(): Array<Broadcastable>;
 }

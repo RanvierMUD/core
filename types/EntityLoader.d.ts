@@ -1,21 +1,21 @@
-// import { DataSource } from '../src/DataSource'; FIXME
+import { DataSource } from './DataSource';
 
-export namespace EntityLoader {
+export declare class EntityLoader {
     /**
      * @param {DataSource}
      * @param {object} config
      */
-    function constructor(dataSource: DataSource, config: Object);
+    constructor(dataSource: DataSource, config: Object);
 
-    function setArea(name: string): void;
+    setArea(name: string): void;
 
-    function setBundle(name: string): void;
+    setBundle(name: string): void;
 
-    function hasData(): boolean;
+    hasData(): boolean;
 
-    function fetchAll();
+    fetchAll();
 
-    function fetch(id);
+    fetch(id);
 
-    function replace(data);
+    replace(data);
 }
