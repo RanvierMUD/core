@@ -8,6 +8,7 @@ export { DataSource } from './types/DataSource';
 export { EffectableEntity } from './types/EffectableEntity';
 export { EntityLoader } from './types/EntityLoader';
 export { EntityReference } from './types/EntityReference';
+export { EventManager } from './types/EventManager';
 export { GameEntity } from './types/GameEntity';
 export { GameState } from './types/GameState';
 export { Item } from './types/Item';
