@@ -11,11 +11,13 @@ export declare class EntityLoader {
 
     setBundle(name: string): void;
 
-    hasData(): boolean;
+    hasData(): Promise;
 
-    fetchAll();
+    fetchAll(): Promise;
 
-    fetch(id);
+    fetch(id: string|number);
 
-    replace(data);
+    replace(data: any): void;
+
+    update(id: string|number, data: any): void;
 }
