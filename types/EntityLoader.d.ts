@@ -2,7 +2,7 @@ import { DataSource } from './DataSource';
 
 export declare class EntityLoader {
     /**
-     * @param {DataSource}
+     * @param {DataSource} dataSource A class that implements DataSource interface
      * @param {object} config
      */
     constructor(dataSource: DataSource, config: Object);
