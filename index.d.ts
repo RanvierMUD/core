@@ -13,6 +13,7 @@ export { Attributes } from './types/Attributes';
 export { BehaviorManager } from './types/BehaviorManager';
 export { Broadcast, Broadcastable } from './types/Broadcast';
 export { BundleManager} from './types/BundleManager';
+export { ChannelConfig, Channel} from './types/Channel';
 export { AudienceOptions, ChannelAudience } from './types/ChannelAudience';
 export { ChannelManager } from './types/ChannelManager';
 export { Character } from './types/Character';
