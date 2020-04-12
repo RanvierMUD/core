@@ -1,6 +1,6 @@
-export declare class CommandType {
-    COMMAND: Symbol<'COMMAND'>;
-    SKILL: Symbol<'SKILL'>;
-    CHANNEL: Symbol<'CHANNEL'>;
-    MOVEMENT: Symbol<'MOVEMENT'>;
+export declare enum CommandType {
+    COMMAND = 'COMMAND',
+    SKILL = 'SKILL',
+    CHANNEL = 'CHANNEL',
+    MOVEMENT = 'MOVEMENT',
 }
