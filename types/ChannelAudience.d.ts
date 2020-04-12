@@ -1,7 +1,7 @@
 import { GameState } from "./GameState"
 import { Player } from "./Player";
 
-export declare interface ChannelOptions {
+export declare interface AudienceOptions {
    /** @param {GameState} state */
    state: GameState;
    /** @param {Player} sender */
@@ -13,9 +13,9 @@ export declare interface ChannelOptions {
 export declare class ChannelAudience {
     /**
      * Configure the current state for the audience. Called by {@link Channel#send}
-     * @param {object} options
+     * @param {AudienceOptions} options
      */
-    configure(options: ChannelOptions): void;
+    configure(options: AudienceOptions): void;
 
     /**
      * Find targets for this audience
