@@ -1,7 +1,7 @@
 export declare interface DataSource {
-    hasData(config: object): Promise;
+    hasData(config: object): Promise<any>;
 
-    fetchAll(config: object): Promise;
+    fetchAll(config: object): Promise<any>;
 
     fetch(config: object, id: string|number): any;
 

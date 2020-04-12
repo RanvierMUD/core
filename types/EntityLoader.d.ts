@@ -11,9 +11,9 @@ export declare class EntityLoader {
 
     setBundle(name: string): void;
 
-    hasData(): Promise;
+    hasData(): Promise<any>;
 
-    fetchAll(): Promise;
+    fetchAll(): Promise<any>;
 
     fetch(id: string|number);
 
