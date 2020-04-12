@@ -26,6 +26,7 @@ const srcPath = __dirname + '/';
  */
 class BundleManager {
   /**
+   * @param {string} path
    * @param {GameState} state
    */
   constructor(path, state) {
@@ -41,6 +42,7 @@ class BundleManager {
 
   /**
    * Load in all bundles
+   * @param {boolean} distribute
    */
   async loadBundles(distribute = true) {
     Logger.verbose('LOAD: BUNDLES');
@@ -317,7 +319,7 @@ class BundleManager {
    * @param {string} areaName
    * @param {string} type
    * @param {EntityFactory} factory
-   * @return {Array<entityReference>}
+   * @return {Array<string>}
    */
   async loadEntities(bundle, areaName, type, factory) {
     const loader = this.loaderRegistry.get(type);
@@ -355,7 +357,7 @@ class BundleManager {
 
   /**
    * @param {EntityFactory} factory Instance of EntityFactory that the item/npc will be loaded into
-   * @param {EntityReference} entityRef
+   * @param {string} entityRef
    * @param {string} scriptPath
    */
   loadEntityScript(factory, entityRef, scriptPath) {
@@ -369,9 +371,9 @@ class BundleManager {
   }
 
   /**
+   * @param {string} bundle
    * @param {string} areaName
-   * @param {string} questsFile
-   * @return {Promise<Array<entityReference>>}
+   * @return {Promise<Array<string>>}
    */
   async loadQuests(bundle, areaName) {
     const loader = this.loaderRegistry.get('quests');
@@ -455,7 +457,6 @@ class BundleManager {
 
   /**
    * @param {string} bundle
-   * @param {string} helpDir
    */
   async loadHelp(bundle) {
     Logger.verbose(`\tLOAD: Help...`);

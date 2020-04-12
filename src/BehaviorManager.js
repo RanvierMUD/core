@@ -31,7 +31,7 @@ class BehaviorManager {
 
   /**
    * @param {string}   behaviorName
-   * @param {string}   behaviorName
+   * @param {string}   event
    * @param {Function} listener
    */
   addListener(behaviorName, event, listener) {
