@@ -2,7 +2,9 @@ import { Account } from './Account';
 import { EntityLoader} from './EntityLoader';
 
 export declare class AccountManager {
+    /** @property {Map<string,Account>} accounts */
     accounts: Map<string,Account>;
+    /** @property {EntityLoader} loader */
     loader: EntityLoader;
 
     constructor();

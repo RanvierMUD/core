@@ -1,5 +1,6 @@
 import { Player } from './Player';
 
+/** @typedef {{getBroadcastTargets: function(): Array}} */
 export type Broadcastable = { getBroadcastTargets: Array<any> }
 
 export declare class Broadcast {

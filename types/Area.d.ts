@@ -7,11 +7,13 @@ import { Room } from './Room';
 export declare class Area extends GameEntity {
     /** Bundle this area comes from */
     bundle: string;
+    /** @property {string} name */
     name: string
+    /** @property {string} title */
     title: string;
-    /** A custom script for this item */
+    /** @property {string} script A custom script for this item */
     script: string;
-    /** a Map object keyed by the floor z-index, each floor is an array with [x][y] indexes for coordinates. */
+    /** @property {Map<number, number>} map a Map object keyed by the floor z-index, each floor is an array with [x][y] indexes for coordinates. */
     map: Map<number, number>;
     /** Map of room id to Room */
     rooms: Map<string, Room>;

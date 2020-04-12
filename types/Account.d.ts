@@ -65,7 +65,7 @@ export declare class Account {
      * Set this account to deleted
      There is no undelete because this can just be done by manually editing the account file
     */
-    deleteAccount()
+    deleteAccount(): void;
 
     /**
      * Gather data from account object that will be persisted to disk
