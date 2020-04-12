@@ -1,7 +1,11 @@
 export declare class Account {
+    /** @property {string} username */
     username: string;
+    /** @property {Array<string>} characters List of character names in this account */
     characters: Array<string>;
+    /** @property {string} password Hashed password */
     password: string;
+    /** @property {boolean} banned Whether this account is banned or not */
     banned: boolean;
 
     /**
