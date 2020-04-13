@@ -109,7 +109,7 @@ class Effect extends EventEmitter {
    * Elapsed time in milliseconds since event was activated
    * @type {number}
    */
-  get elapsed () {
+  get elapsed() {
     if (!this.startedAt) {
       return null;
     }
