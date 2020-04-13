@@ -30,13 +30,13 @@ export declare class Area extends GameEntity {
      * Get ranvier-root-relative path to this area
      * @return {string}
      */
-    areaPath(): string;
+    get areaPath(): string;
 
     /**
      * Get an ordered list of floors in this area's map
      * @return {Array<number>}
      */
-    floors(): Array<number>;
+    get floors(): Array<number>;
 
     /**
      * @param {string} id Room id

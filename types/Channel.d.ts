@@ -70,3 +70,7 @@ export declare class Channel {
 
     colorify(message: string): string;
 }
+
+export declare class NoPartyError extends Error {}
+export declare class NoRecipientError extends Error {}
+export declare class NoMessageError extends Error {}

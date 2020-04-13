@@ -12,8 +12,14 @@ export { AttributeFactory } from './types/AttributeFactory';
 export { Attributes } from './types/Attributes';
 export { BehaviorManager } from './types/BehaviorManager';
 export { Broadcast, Broadcastable } from './types/Broadcast';
-export { BundleManager} from './types/BundleManager';
-export { ChannelConfig, Channel} from './types/Channel';
+export { BundleManager } from './types/BundleManager';
+export {
+  ChannelConfig,
+  Channel,
+  NoMessageError,
+  NoPartyError,
+  NoRecipientError,
+} from './types/Channel';
 export { AudienceOptions, ChannelAudience } from './types/ChannelAudience';
 export { ChannelManager } from './types/ChannelManager';
 export { Character } from './types/Character';
@@ -24,6 +30,7 @@ export { Command } from './types/Command';
 export { Damage } from './types/Damage';
 export { Data } from './types/Data';
 export { DataSource } from './types/DataSource';
+export { Effect, EffectConfig, EffectModifiers } from './types/Effect';
 export { EffectableEntity } from './types/EffectableEntity';
 export { EntityFactory } from './types/EntityFactory';
 export { EntityLoader } from './types/EntityLoader';
@@ -40,5 +47,9 @@ export { Player } from './types/Player';
 export { PlayerRoles } from './types/PlayerRoles';
 export { Room } from './types/Room';
 export { Scriptable, ScriptableClass } from './types/Scriptable';
+export {
+  CooldownError,
+  NotEnoughResourcesError,
+  PassiveError,
+} from './types/SkillErrors';
 export { SkillType } from './types/SkillType';
-

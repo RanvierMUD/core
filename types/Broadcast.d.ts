@@ -1,7 +1,7 @@
 import { Player } from './Player';
 
 /** @typedef {{getBroadcastTargets: function(): Array}} */
-export type Broadcastable = { getBroadcastTargets: Array<any> }
+export declare type Broadcastable = { getBroadcastTargets: Array<any> }
 
 export declare class Broadcast {
     /**
@@ -12,7 +12,7 @@ export declare class Broadcast {
      * @param {?function(target, message): string} formatter=null Function to call to format the
      *   message to each target
      */
-    at(source: Broadcastable, message: string, wrapWidth: boolean, useColor: boolean, formatter: Function): void;
+    static at(source: Broadcastable, message: string, wrapWidth: boolean, useColor: boolean, formatter: Function): void;
 
     /**
      * Broadcast.at for all except given list of players
@@ -24,7 +24,7 @@ export declare class Broadcast {
      * @param {boolean} useColor
      * @param {function} formatter
      */
-    atExcept(source: Broadcastable, message: string, excludes: Array<Player>, wrapWidth: number|boolean, useColor: boolean, formatter: Function): void;
+    static atExcept(source: Broadcastable, message: string, excludes: Array<Player>, wrapWidth: number|boolean, useColor: boolean, formatter: Function): void;
 
     /**
      * Helper wrapper around Broadcast.at to be used when you're using a formatter
@@ -35,25 +35,25 @@ export declare class Broadcast {
      * @param {number|boolean} wrapWidth
      * @param {boolean} useColor
      */
-    atFormatted(source: Broadcastable, message: string, formatter: Function, wrapWidth: number|boolean, useColor: boolean): void;
+    static atFormatted(source: Broadcastable, message: string, formatter: Function, wrapWidth: number|boolean, useColor: boolean): void;
 
     /**
      * `Broadcast.at` with a newline
      * @see {@link Broadcast#at}
      */
-    sayAt(source: Broadcastable, message: string, wrapWidth: number|boolean, useColor: boolean, formatter: Function): void;
+    static sayAt(source: Broadcastable, message: string, wrapWidth: number|boolean, useColor: boolean, formatter: Function): void;
 
     /**
      * `Broadcast.atExcept` with a newline
      * @see {@link Broadcast#atExcept}
      */
-    sayAtExcept(source: Broadcastable, message: string, excludes, wrapWidth: number|boolean, useColor: boolean, formatter: Function): void;
+    static sayAtExcept(source: Broadcastable, message: string, excludes, wrapWidth: number|boolean, useColor: boolean, formatter: Function): void;
 
     /**
      * `Broadcast.atFormatted` with a newline
      * @see {@link Broadcast#atFormatted}
      */
-    sayAtFormatted(source: Broadcastable, message: string, formatter: Function, wrapWidth: number|boolean, useColor: boolean): void;
+    static sayAtFormatted(source: Broadcastable, message: string, formatter: Function, wrapWidth: number|boolean, useColor: boolean): void;
 
     /**
      * Render the player's prompt including any extra prompts
@@ -62,7 +62,7 @@ export declare class Broadcast {
      * @param {number} wrapWidth
      * @param {boolean} useColor
      */
-    prompt(player: Player, extra: Object, wrapWidth: number, useColor: boolean): void;
+    static prompt(player: Player, extra: Object, wrapWidth: number, useColor: boolean): void;
 
     /**
      * Generate an ASCII art progress bar
@@ -74,7 +74,7 @@ export declare class Broadcast {
      * @param {string} delimiters Characters to wrap the bar in
      * @return {string}
      */
-    progress(width: number, percent: number, color: string, barChar: string, fillChar: string, delimiters: string): string;
+    static progress(width: number, percent: number, color: string, barChar: string, fillChar: string, delimiters: string): string;
 
     /**
      * Center a string in the middle of a given width
@@ -84,7 +84,7 @@ export declare class Broadcast {
      * @param {?string} fillChar Character to pad with, defaults to ' '
      * @return {string}
      */
-    center(width: number, message: string, color: string, fillChar: string): string;
+    static center(width: number, message: string, color: string, fillChar: string): string;
 
     /**
      * Render a line of a specific width/color
@@ -93,7 +93,7 @@ export declare class Broadcast {
      * @param {?string} color
      * @return {string}
      */
-    line(width: number, fillChar: string, color: string): string;
+    static line(width: number, fillChar: string, color: string): string;
 
     /**
      * Wrap a message to a given width. Note: Evaluates color tags
@@ -101,7 +101,7 @@ export declare class Broadcast {
      * @param {?number} width   Defaults to 80
      * @return {string}
      */
-    wrap(message: string, width: number): string;
+    static wrap(message: string, width: number): string;
 
     /**
      * Indent all lines of a given string by a given amount
@@ -109,7 +109,7 @@ export declare class Broadcast {
      * @param {number} indent
      * @return {string}
      */
-    indent(message: string, indent: number): string;
+    static indent(message: string, indent: number): string;
 
-    isBroadcastable(source: Broadcastable): boolean;
+    static isBroadcastable(source: Broadcastable): boolean;
 }

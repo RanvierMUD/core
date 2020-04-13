@@ -11,13 +11,13 @@ export declare class BundleManager {
     /**
      * Load in all bundles
      */
-    loadBundles(distribute: boolean): void;
+    async loadBundles(distribute: boolean): void;
 
     /**
      * @param {string} bundle Bundle name
      * @param {string} bundlePath Path to bundle directory
      */
-    loadBundle(bundle: string, bundlePath: string): void;
+    async loadBundle(bundle: string, bundlePath: string): void;
 
     loadQuestGoals(bundle: string, goalsDir: string): void;
 
@@ -40,14 +40,14 @@ export declare class BundleManager {
     /**
      * @param {string} bundle
      */
-    loadAreas(bundle: string): void;
+    async loadAreas(bundle: string): void;
 
     /**
      * @param {string} bundle
      * @param {string} areaName
      * @param {string} areaPath
      */
-    loadArea(bundle: string, areaName: string, manifest: string): void;
+    async loadArea(bundle: string, areaName: string, manifest: string): void;
 
     /**
      * Load an entity (item/npc/room) from file
@@ -57,7 +57,7 @@ export declare class BundleManager {
      * @param {EntityFactory} factory
      * @return {Array<string>}
      */
-    loadEntities(bundle: string, areaName: string, type: string, factory: EntityFactory): Array<string>;
+    async loadEntities(bundle: string, areaName: string, type: string, factory: EntityFactory): Array<string>;
 
     /**
      * @param {EntityFactory} factory Instance of EntityFactory that the item/npc will be loaded into
@@ -71,7 +71,7 @@ export declare class BundleManager {
      * @param {string} areaName
      * @return {Promise<Array<string>>}
      */
-    loadQuests(bundle: string, areaName: string): Promise<Array<string>>
+    async loadQuests(bundle: string, areaName: string): Promise<Array<string>>
 
     /**
      * @param {string} bundle
@@ -96,7 +96,7 @@ export declare class BundleManager {
     /**
      * @param {string} bundle
      */
-    loadHelp(bundle: string): void;
+    async loadHelp(bundle: string): void;
 
     /**
      * @param {string} bundle

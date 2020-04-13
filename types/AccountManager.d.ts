@@ -30,5 +30,5 @@ export declare class AccountManager {
      * @param {string} username
      * @param {boolean} force Force reload data from disk
      */
-    loadAccount(username: string, force: boolean): void;
+    async loadAccount(username: string, force: boolean): void;
 }
