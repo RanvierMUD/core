@@ -7,6 +7,11 @@ export declare interface AccountConfig {
   password: string;
   /** @property {boolean} banned Whether this account is banned or not */
   banned: boolean;
+  /** @property {boolean} deleted Whether this account is deleted or not */
+  deleted: boolean;
+  // Arbitrary data bundles are free to shove whatever they want in
+  // WARNING: values must be JSON.stringify-able
+  metadata: object;
 }
 
 export declare class Account {
