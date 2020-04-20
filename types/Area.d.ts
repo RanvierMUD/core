@@ -1,3 +1,4 @@
+import { AreaFloor } from './AreaFloor';
 import { Broadcastable } from './Broadcast';
 import { GameEntity } from './GameEntity';
 import { GameState } from './GameState';
@@ -13,8 +14,8 @@ export declare class Area extends GameEntity {
     title: string;
     /** @property {string} script A custom script for this item */
     script: string;
-    /** @property {Map<number, number>} map a Map object keyed by the floor z-index, each floor is an array with [x][y] indexes for coordinates. */
-    map: Map<number, number>;
+    /** @property {Map<number, AreaFloor>} map a Map object keyed by the floor z-index, each floor is an array with [x][y] indexes for coordinates. */
+    map: Map<number, AreaFloor>;
     /** Map of room id to Room */
     rooms: Map<string, Room>;
     /** Active NPCs that originate from this area. Note: this is NPCs that */
