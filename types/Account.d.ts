@@ -1,3 +1,14 @@
+export declare interface AccountConfig {
+    /** @property {string} username */
+    username: string;
+    /** @property {Array<string>} characters List of character names in this account */
+    characters: Array<string>;
+    /** @property {string} password Hashed password */
+    password: string;
+    /** @property {boolean} banned Whether this account is banned or not */
+    banned: boolean;
+}
+
 export declare class Account {
     /** @property {string} username */
     username: string;
@@ -9,9 +20,9 @@ export declare class Account {
     banned: boolean;
 
     /**
-     * @param {Object} data Account save data
+     * @param {AccountConfig} data Account save data
      */
-    constructor(data: Object);
+    constructor(data: AccountConfig);
 
     /**
      * @return {string}

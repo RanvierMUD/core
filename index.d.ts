@@ -1,4 +1,4 @@
-export { Account } from './types/Account';
+export { Account, AccountConfig } from './types/Account';
 export { AccountManager } from './types/AccountManager';
 export { Area } from './types/Area';
 export { AreaAudience } from './types/AreaAudience';
