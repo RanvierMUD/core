@@ -4,6 +4,7 @@ import { Inventory } from './Inventory';
 import { Metadatable } from './Metadatable';
 import { Room } from './Room';
 import { EntityReference } from './EntityReference';
+import { Item } from './Item';
 
 export declare interface CharacterConfig {
   /** @property {string}     name       Name shown on look/who/login */
