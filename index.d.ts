@@ -22,7 +22,7 @@ export {
 } from './types/Channel';
 export { AudienceOptions, ChannelAudience } from './types/ChannelAudience';
 export { ChannelManager } from './types/ChannelManager';
-export { Character } from './types/Character';
+export { Character, CharacterConfig } from './types/Character';
 export { CommandQueue } from './types/CommandQueue';
 export { CommandType } from './types/CommandType';
 export { Config } from './types/Config';
