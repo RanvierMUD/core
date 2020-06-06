@@ -504,6 +504,10 @@ class Character extends Metadatable(EventEmitter) {
    * @fires Character#unfollowed
    */
   unfollow() {
+    if (!this.following) {
+      return
+    }
+    
     this.following.removeFollower(this);
     /**
      * @event Character#unfollowed
