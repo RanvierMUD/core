@@ -35,7 +35,7 @@ class Npc extends Scriptable(Character) {
     this.description = data.description;
     this.entityReference = data.entityReference; 
     this.id = data.id;
-    this.keywords = data.keywords;
+    this.keywords = new Array(...data.keywords);
     this.quests = data.quests || [];
     this.uuid = data.uuid || uuid();
     this.commandQueue = new CommandQueue();
