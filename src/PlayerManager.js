@@ -154,7 +154,7 @@ class PlayerManager extends EventEmitter {
   }
 
   /**
-   * @fires Player#saved
+   * Save all players
    */
   async saveAll() {
     for (const [ name, player ] of this.players.entries()) {
