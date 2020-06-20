@@ -2,6 +2,7 @@
 
 const GameEntity = require('./GameEntity');
 const Logger = require('./Logger');
+const Config = require('./Config');
 
 /**
  * @property {Area}          area         Area room is in
@@ -139,6 +140,21 @@ class Room extends GameEntity {
   }
 
   /**
+   * Check if diagonal directions are enabled
+   *
+   * @return {boolean}
+   */
+  checkDiagonalDirections() {
+    if (this.metadata.diagonalDirections !== undefined) {
+      return this.metadata.diagonalDirections;
+    }
+    if (Config.get('diagonalDirections') !== undefined) {
+      return Config.get('diagonalDirections')
+    }
+    else return true
+  }
+
+  /**
    * Get exits for a room. Both inferred from coordinates and  defined in the
    * 'exits' property.
    *
@@ -154,18 +170,24 @@ class Room extends GameEntity {
       return exits;
     }
 
-    const adjacents = [
+    let adjacents = [
       { dir: 'west', coord: [-1, 0, 0] },
       { dir: 'east', coord: [1, 0, 0] },
       { dir: 'north', coord: [0, 1, 0] },
       { dir: 'south', coord: [0, -1, 0] },
       { dir: 'up', coord: [0, 0, 1] },
-      { dir: 'down', coord: [0, 0, -1] },
-      { dir: 'northeast', coord: [1, 1, 0] },
-      { dir: 'northwest', coord: [-1, 1, 0] },
-      { dir: 'southeast', coord: [1, -1, 0] },
-      { dir: 'southwest', coord: [-1, -1, 0] },
+      { dir: 'down', coord: [0, 0, -1] }
     ];
+
+    if (this.checkDiagonalDirections()) {
+      adjacents = [
+        ...adjacents,
+        { dir: 'northeast', coord: [1, 1, 0] },
+        { dir: 'northwest', coord: [-1, 1, 0] },
+        { dir: 'southeast', coord: [1, -1, 0] },
+        { dir: 'southwest', coord: [-1, -1, 0] }
+      ];
+    }
 
     for (const adj of adjacents) {
       const [x, y, z] = adj.coord;
