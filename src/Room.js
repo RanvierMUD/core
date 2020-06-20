@@ -140,6 +140,21 @@ class Room extends GameEntity {
   }
 
   /**
+   * Check if diagonal directions are enabled
+   *
+   * @return {boolean}
+   */
+  checkDiagonalDirections() {
+    if (this.metadata.diagonalDirections !== undefined) {
+      return this.metadata.diagonalDirections;
+    }
+    if (Config.get('diagonalDirections') !== undefined) {
+      return Config.get('diagonalDirections')
+    }
+    else return true
+  }
+
+  /**
    * Get exits for a room. Both inferred from coordinates and  defined in the
    * 'exits' property.
    *
@@ -164,14 +179,14 @@ class Room extends GameEntity {
       { dir: 'down', coord: [0, 0, -1] }
     ];
 
-    if (Config.get('diagonalDirections') === undefined || Config.get('diagonalDirections')) {
+    if (this.checkDiagonalDirections()) {
       adjacents = [
         ...adjacents,
         { dir: 'northeast', coord: [1, 1, 0] },
         { dir: 'northwest', coord: [-1, 1, 0] },
         { dir: 'southeast', coord: [1, -1, 0] },
         { dir: 'southwest', coord: [-1, -1, 0] }
-      ]
+      ];
     }
 
     for (const adj of adjacents) {
