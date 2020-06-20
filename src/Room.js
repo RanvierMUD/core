@@ -2,6 +2,7 @@
 
 const GameEntity = require('./GameEntity');
 const Logger = require('./Logger');
+const Config = require('./Config');
 
 /**
  * @property {Area}          area         Area room is in
@@ -154,18 +155,24 @@ class Room extends GameEntity {
       return exits;
     }
 
-    const adjacents = [
+    let adjacents = [
       { dir: 'west', coord: [-1, 0, 0] },
       { dir: 'east', coord: [1, 0, 0] },
       { dir: 'north', coord: [0, 1, 0] },
       { dir: 'south', coord: [0, -1, 0] },
       { dir: 'up', coord: [0, 0, 1] },
-      { dir: 'down', coord: [0, 0, -1] },
-      { dir: 'northeast', coord: [1, 1, 0] },
-      { dir: 'northwest', coord: [-1, 1, 0] },
-      { dir: 'southeast', coord: [1, -1, 0] },
-      { dir: 'southwest', coord: [-1, -1, 0] },
+      { dir: 'down', coord: [0, 0, -1] }
     ];
+
+    if (Config.get('diagonalDirections') === undefined || Config.get('diagonalDirections')) {
+      adjacents = [
+        ...adjacents,
+        { dir: 'northeast', coord: [1, 1, 0] },
+        { dir: 'northwest', coord: [-1, 1, 0] },
+        { dir: 'southeast', coord: [1, -1, 0] },
+        { dir: 'southwest', coord: [-1, -1, 0] }
+      ]
+    }
 
     for (const adj of adjacents) {
       const [x, y, z] = adj.coord;
