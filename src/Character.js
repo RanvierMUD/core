@@ -50,8 +50,6 @@ class Character extends Metadatable(EventEmitter) {
     } else {
       this.metadata = {};
     }
-
-    this._setupInventory();
   }
 
   /**
@@ -424,6 +422,7 @@ class Character extends Metadatable(EventEmitter) {
    * @param {Item} item
    */
   addItem(item) {
+    this._setupInventory();
     this.inventory.addItem(item);
     item.carriedBy = this;
   }
@@ -458,6 +457,7 @@ class Character extends Metadatable(EventEmitter) {
    * @return {boolean}
    */
   isInventoryFull() {
+    this._setupInventory();
     return this.inventory.isFull;
   }
 
