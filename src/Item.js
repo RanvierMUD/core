@@ -76,8 +76,6 @@ class Item extends GameEntity {
 
     this.carriedBy = null;
     this.equippedBy = null;
-
-    this._setupInventory();
   }
 
   /**
