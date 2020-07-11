@@ -435,14 +435,6 @@ class Character extends Metadatable(EventEmitter) {
    */
   removeItem(item) {
     this.inventory.removeItem(item);
-
-    // if we removed the last item unset the inventory
-    // This ensures that when it's reloaded it won't try to set
-    // its default inventory. Instead it will persist the fact
-    // that all the items were removed from it
-    if (!this.inventory.size) {
-      this.inventory = null;
-    }
     item.carriedBy = null;
   }
 
@@ -504,6 +496,10 @@ class Character extends Metadatable(EventEmitter) {
    * @fires Character#unfollowed
    */
   unfollow() {
+    if (!this.following) {
+      return
+    }
+
     this.following.removeFollower(this);
     /**
      * @event Character#unfollowed

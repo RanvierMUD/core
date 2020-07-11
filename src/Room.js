@@ -9,7 +9,7 @@ const Logger = require('./Logger');
  * @property {Array<number>} defaultItems Default list of item ids that should load in this room
  * @property {Array<number>} defaultNpcs  Default list of npc ids that should load in this room
  * @property {string}        description  Room description seen on 'look'
- * @property {Array<object>} exits        Exits out of this room { id: number, direction: string }
+ * @property {Array<object>} exits        Exits out of this room { roomId: string, direction: string, inferred: boolean }
  * @property {number}        id           Area-relative id (vnum)
  * @property {Set}           items        Items currently in the room
  * @property {Set}           npcs         Npcs currently in the room
