@@ -181,12 +181,16 @@ class BundleManager {
       return;
     }
 
-    this.addAttributesList(attributes);
+    this.addAttributes(attributes);
 
     Logger.verbose(`\tENDLOAD: Attributes...`);
   }
 
-  addAttributesList(attributes) {
+  /**
+   * Adds each attribute in the array if it fits the correct format.
+   * @param {Array<Attribute>} attributes 
+   */
+  addAttributes(attributes) {
     for (const attribute of attributes) {
       if (typeof attribute !== 'object') {
         Logger.error(`${error} not an object`);
