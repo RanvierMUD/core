@@ -175,12 +175,18 @@ class BundleManager {
     Logger.verbose(`\tLOAD: Attributes...`);
 
     const attributes = require(attributesFile);
-    let error = `\tAttributes file [${attributesFile}] from bundle [${bundle}]`;
     if (!Array.isArray(attributes)) {
+      let error = `\tAttributes file [${attributesFile}] from bundle [${bundle}]`;
       Logger.error(`${error} does not define an array of attributes`);
       return;
     }
 
+    this.addAttributesList(attributes);
+
+    Logger.verbose(`\tENDLOAD: Attributes...`);
+  }
+
+  addAttributesList(attributes) {
     for (const attribute of attributes) {
       if (typeof attribute !== 'object') {
         Logger.error(`${error} not an object`);
@@ -188,6 +194,7 @@ class BundleManager {
       }
 
       if (!('name' in attribute) || !('base' in attribute)) {
+        let error = `\tAttributes file [${attributesFile}] from bundle [${bundle}]`;
         Logger.error(`${error} does not include required properties name and base`);
         continue;
       }
@@ -204,8 +211,6 @@ class BundleManager {
 
       this.state.AttributeFactory.add(attribute.name, attribute.base, formula, attribute.metadata);
     }
-
-    Logger.verbose(`\tENDLOAD: Attributes...`);
   }
 
   /**
