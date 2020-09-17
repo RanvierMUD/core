@@ -251,6 +251,7 @@ class Character extends Metadatable(EventEmitter) {
     // this doesn't use `addCombatant` because `addCombatant` automatically
     // adds this to the target's combatants list as well
     this.combatants.add(target);
+    this.emit('combatantAdded', target);
     if (!target.isInCombat()) {
       // TODO: This hardcoded 2.5 second lag on the target needs to be refactored
       target.initiateCombat(this, 2500);
