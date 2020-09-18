@@ -55,3 +55,24 @@ export {
   PassiveError,
 } from './types/SkillErrors';
 export { SkillType } from './types/SkillType';
+
+
+// Placeholders for types yet to be defined.
+export type CommandManager = any;
+export type DataSourceRegistry = any;
+export type EffectFactory = any;
+export type EntityLoaderRegistry = any;
+export type GameServer = any;
+export type HelpManager = any;
+export type ItemFactory = any;
+export type ItemManager = any;
+export type MobFactory = any;
+export type MobManager = any;
+export type PartyManager = any;
+export type PlayerManager = any;
+export type QuestFactory = any;
+export type QuestGoalManager = any;
+export type QuestRewardManager = any;
+export type RoomFactory = any;
+export type RoomManager = any;
+export type SkillManager = any;
