@@ -20,6 +20,6 @@ export declare class Logger {
     */
     static verbose(...messages): void;
     static setFileLogging(path): void;
-    static deactivateFileLogging(): void;static 
+    static deactivateFileLogging(): void;
     static enablePrettyErrors(): void;
 }

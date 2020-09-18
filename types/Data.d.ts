@@ -55,7 +55,7 @@ export declare class Data {
      * @param {string} [file]
      * @return {boolean}
      */
-    static isScriptFile(path: string, file: string): booleanM
+    static isScriptFile(path: string, file: string): boolean;
 
     /**
      * load the MOTD for the intro screen
