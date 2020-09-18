@@ -4,4 +4,6 @@
 !LICENSE.txt
 !src/*
 !index.js
+!index.d.ts
+!types/*
 !package*
