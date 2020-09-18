@@ -1,3 +1,5 @@
+import EventEmitter from 'events';
+
 export declare class EventManager {
     constructor();
 
@@ -19,7 +21,7 @@ export declare class EventManager {
      * @param {EventEmitter} emitter
      * @param {Object} config
      */
-    attach(emitter: EventEmitter, config: Object);
+    attach(emitter: typeof EventEmitter, config?: Object);
 
     /**
      * Remove all listeners for a given emitter or only those for the given events
@@ -32,5 +34,5 @@ export declare class EventManager {
      * @param {EventEmitter}  emitter
      * @param {?string|iterable} events Optional name or list of event names to remove listeners from
      */
-    detach(emitter: EventEmitter, events: ?string|iterable): void;
+    detach(emitter: typeof EventEmitter, events?: string | string[]): void;
 }
