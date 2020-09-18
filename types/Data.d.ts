@@ -1,5 +1,5 @@
 export declare class Data {
-    setDataPath(path: string): void;
+    static setDataPath(path: string): void;
 
     /**
      * Read in and parse a file. Current supports yaml and json
