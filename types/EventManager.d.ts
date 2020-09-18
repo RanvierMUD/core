@@ -8,7 +8,7 @@ export declare class EventManager {
      * @param {string} name
      * @return {Set}
      */
-    get(name: string): Set;
+    get(name: string): Set<Function>;
 
     /**
      * @param {string}   eventName
