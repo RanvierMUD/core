@@ -12,14 +12,14 @@ export declare class EventManager {
      * @param {string}   eventName
      * @param {Function} listener
      */
-    add(eventName: string, listener: Function): void;
+    add(eventName: string, listener: function): void;
 
     /**
      * Attach all currently added events to the given emitter
      * @param {EventEmitter} emitter
      * @param {Object} config
      */
-    attach(emitter: EventEmitter, config: Object);
+    attach(emitter: typeof EventEmitter, config?: Record<string, any>): void;
 
     /**
      * Remove all listeners for a given emitter or only those for the given events
