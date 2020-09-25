@@ -47,7 +47,7 @@ export { Metadatable, MetadatableClass } from './types/Metadatable';
 export { Npc } from './types/Npc';
 export { Player } from './types/Player';
 export { PlayerRoles } from './types/PlayerRoles';
-export { Room } from './types/Room';
+export { Room, IDoor, IExit } from './types/Room';
 export { Scriptable, ScriptableClass } from './types/Scriptable';
 export {
   CooldownError,
