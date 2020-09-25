@@ -49,7 +49,7 @@ export { Npc } from './types/Npc';
 export { Player } from './types/Player';
 export { PlayerManager } from './types/PlayerManager';
 export { PlayerRoles } from './types/PlayerRoles';
-export { Room, IDoor, IExit } from './types/Room';
+export { Room, Door, Exit } from './types/Room';
 export { Scriptable, ScriptableClass } from './types/Scriptable';
 export {
   CooldownError,

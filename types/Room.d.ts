@@ -7,19 +7,19 @@ import { Item } from './Item';
 import { Npc } from './Npc';
 import { Player } from './Player';
 
-export interface IDoor {
+export interface Door {
     lockedBy?: EntityReference;
     locked?: boolean;
     closed?: boolean;
 }
 
-export interface IExit {
+export interface Exit {
     roomId: string;
     direction: string;
     inferred?: boolean,
 }
 
-export interface IRoomDef {
+export interface RoomDef {
     title: string;
     description: string;
     id: string;
