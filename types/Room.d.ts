@@ -14,10 +14,9 @@ export interface IDoor {
 }
 
 export interface IExit {
-    id: string;
+    roomId: string;
     direction: string;
     inferred?: boolean,
-    room: Room;
 }
 
 export interface IRoomDef {
