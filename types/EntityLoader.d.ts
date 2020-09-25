@@ -26,7 +26,7 @@ export declare class EntityLoader {
 
     fetchAll(): Promise<any>;
 
-    fetch(id: string|number);
+    fetch(id: string|number): any;
 
     replace(data: any): void;
 
