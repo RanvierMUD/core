@@ -7,13 +7,38 @@ import { Item } from './Item';
 import { Npc } from './Npc';
 import { Player } from './Player';
 
+export interface IDoor {
+    lockedBy?: EntityReference;
+    locked?: boolean;
+    closed?: boolean;
+}
+
+export interface IExit {
+    id: string;
+    direction: string;
+    inferred?: boolean,
+    room: Room;
+}
+
+export interface IRoomDef {
+    title: string;
+    description: string;
+    id: string;
+    defaultItems?: Items[];
+    defaultNpcs?: Npcs[];
+    script?: string;
+    behaviors?: Record<string, any>;
+    coordinates?: [number, number, number];
+    doors?: Record<string, IDoor>;
+}
+
 export declare class Room extends GameEntity {
     /**
      * @property Area room is in
      */
     area: Area;
 
-    constructor(area: Area, def);
+    constructor(area: Area, def: IRoomDef);
 
     /**
      * Emits event on self and proxies certain events to other entities in the room.
@@ -60,21 +85,21 @@ export declare class Room extends GameEntity {
      *
      * @return {Array<{ id: string, direction: string, inferred: boolean, room: Room= }>}
      */
-    getExits(): Array<{ id: string, direction: string, inferred: boolean, room: Room }>;
+    getExits(): IExit[];
 
     /**
      * Get the exit definition of a room's exit by searching the exit name
      * @param {string} exitName exit name search
      * @return {false|Object}
      */
-    findExit(exitName: string): false|Object;
+    findExit(exitName: string): false | IExit;
 
     /**
      * Get the exit definition of a room's exit to a given room
      * @param {Room} nextRoom
      * @return {false|Object}
      */
-    getExitToRoom(nextRoom: Room): false|Object;
+    getExitToRoom(nextRoom: Room): false | IExit;
 
     /**
      * Check to see if this room has a door preventing movement from `fromRoom` to here
@@ -87,7 +112,7 @@ export declare class Room extends GameEntity {
      * @param {Room} fromRoom
      * @return {{lockedBy: EntityReference, locked: boolean, closed: boolean}}
      */
-    getDoor(fromRoom: Room): Object;
+    getDoor(fromRoom: Room): IDoor;
 
     /**
      * Check to see of the door for `fromRoom` is locked
@@ -137,5 +162,5 @@ export declare class Room extends GameEntity {
      * Used by Broadcaster
      * @return {Array<Character>}
      */
-    getBroadcastTargets(): Array<Character>
+    getBroadcastTargets(): Character[]
 }
