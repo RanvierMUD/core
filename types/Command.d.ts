@@ -25,5 +25,5 @@ export declare class Command {
 
   constructor(bundle: string, name: string, def: CommandDef, file: string);
 
-  execute(args: string, player: Player, arg0: string): any;
+  execute(args: string, player: Player, arg0?: string): any;
 }
