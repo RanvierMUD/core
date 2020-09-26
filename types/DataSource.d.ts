@@ -1,11 +1,13 @@
+import { EntityLoaderConfig } from './EntityLoader';
+
 export declare interface DataSource {
-    hasData(config: object): Promise<any>;
+    hasData(config: EntityLoaderConfig): Promise<any>;
 
-    fetchAll(config: object): Promise<any>;
+    fetchAll(config: EntityLoaderConfig): Promise<any>;
 
-    fetch(config: object, id: string|number): any;
+    fetch(config: EntityLoaderConfig, id: string|number): any;
 
-    replace(config: object, data: any): void;
+    replace(config: EntityLoaderConfig, data: any): void;
 
-    update(config: object, id: string|number, data: any): void;
+    update(config: EntityLoaderConfig, id: string|number, data: any): void;
 }

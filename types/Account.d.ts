@@ -2,23 +2,30 @@ export declare interface AccountConfig {
   /** @property {string} username */
   username: string;
   /** @property {Array<string>} characters List of character names in this account */
-  characters: Array<string>;
+  characters?: string[];
   /** @property {string} password Hashed password */
   password: string;
   /** @property {boolean} banned Whether this account is banned or not */
-  banned: boolean;
+  banned?: boolean;
   /** @property {boolean} deleted Whether this account is deleted or not */
-  deleted: boolean;
+  deleted?: boolean;
   // Arbitrary data bundles are free to shove whatever they want in
   // WARNING: values must be JSON.stringify-able
-  metadata: object;
+  metadata?: Record<string, any>;
+}
+
+export declare interface SerializedAccount {
+  username: string;
+  characters: string[];
+  password: string;
+  metadata: Record<string, any>;
 }
 
 export declare class Account {
   /** @property {string} username */
   username: string;
   /** @property {Array<string>} characters List of character names in this account */
-  characters: Array<string>;
+  characters: string[];
   /** @property {string} password Hashed password */
   password: string;
   /** @property {boolean} banned Whether this account is banned or not */
@@ -69,7 +76,7 @@ export declare class Account {
   /**
    * @param {function} callback after-save callback
    */
-  save(callback: Function): void;
+  save(callback: function): void;
 
   /**
      * Set this account to banned
@@ -88,5 +95,5 @@ export declare class Account {
    *
    * @return {Object}
    */
-  serialize(): Object;
+  serialize(): SerializedAccount;
 }

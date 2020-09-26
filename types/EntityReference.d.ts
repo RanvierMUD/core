@@ -1,3 +1,1 @@
-export declare class EntityReference {
-
-}
+export declare type EntityReference = string;

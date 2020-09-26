@@ -23,6 +23,7 @@ export {
 export { AudienceOptions, ChannelAudience } from './types/ChannelAudience';
 export { ChannelManager } from './types/ChannelManager';
 export { Character, CharacterConfig } from './types/Character';
+export { CommandManager } from './types/CommandManager';
 export { CommandQueue } from './types/CommandQueue';
 export { CommandType } from './types/CommandType';
 export { Config } from './types/Config';
@@ -46,8 +47,9 @@ export { Logger } from './types/Logger';
 export { Metadatable, MetadatableClass } from './types/Metadatable';
 export { Npc } from './types/Npc';
 export { Player } from './types/Player';
+export { PlayerManager } from './types/PlayerManager';
 export { PlayerRoles } from './types/PlayerRoles';
-export { Room } from './types/Room';
+export { Room, Door, Exit } from './types/Room';
 export { Scriptable, ScriptableClass } from './types/Scriptable';
 export {
   CooldownError,
@@ -56,9 +58,7 @@ export {
 } from './types/SkillErrors';
 export { SkillType } from './types/SkillType';
 
-
 // Placeholders for types yet to be defined.
-export declare class CommandManager { [key: string]: any };
 export declare class DataSourceRegistry { [key: string]: any };
 export declare class EffectFactory { [key: string]: any };
 export declare class EntityLoaderRegistry { [key: string]: any };
@@ -69,7 +69,6 @@ export declare class ItemManager { [key: string]: any };
 export declare class MobFactory { [key: string]: any };
 export declare class MobManager { [key: string]: any };
 export declare class PartyManager { [key: string]: any };
-export declare class PlayerManager { [key: string]: any };
 export declare class QuestFactory { [key: string]: any };
 export declare class QuestGoalManager { [key: string]: any };
 export declare class QuestRewardManager { [key: string]: any };

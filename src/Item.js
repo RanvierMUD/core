@@ -5,8 +5,7 @@ const uuid = require('uuid/v4');
 const GameEntity = require('./GameEntity');
 const ItemType = require('./ItemType');
 const Logger = require('./Logger');
-const Metadatable = require('./Metadatable');
-const Player = require('./Player');
+
 const { Inventory, InventoryFullError } = require('./Inventory');
 
 /**

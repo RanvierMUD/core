@@ -1,11 +1,22 @@
 import { DataSource } from './DataSource';
 
+export declare interface EntityLoaderConfig {
+    area?: string;
+    bundle?: string;
+}
+
+/**
+ * Used to CRUD an entity from a configured DataSource
+ */
 export declare class EntityLoader {
+    dataSource: DataSource;
+    config: EntityLoaderConfig;
+
     /**
      * @param {DataSource} dataSource A class that implements DataSource interface
      * @param {object} config
      */
-    constructor(dataSource: DataSource, config: Object);
+    constructor(dataSource: DataSource, config: EntityLoaderConfig);
 
     setArea(name: string): void;
 
@@ -15,7 +26,7 @@ export declare class EntityLoader {
 
     fetchAll(): Promise<any>;
 
-    fetch(id: string|number);
+    fetch(id: string|number): any;
 
     replace(data: any): void;
 
