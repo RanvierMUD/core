@@ -1,12 +1,12 @@
 export declare class Data {
-    setDataPath(path: string): void;
+    static setDataPath(path: string): void;
 
     /**
      * Read in and parse a file. Current supports yaml and json
      * @param {string} filepath
      * @return {*} parsed contents of file
      */
-    parseFile(filepath: string): any;
+    static parseFile(filepath: string): any;
 
     /**
      * Write data to a file
@@ -14,7 +14,7 @@ export declare class Data {
      * @param {*} data
      * @param {function} callback
      */
-    saveFile(filepath: string, data: any, callback: Function): void;
+    static saveFile(filepath: string, data: any, callback: Function): void;
 
     /**
      * load/parse a data file (player/account)
@@ -22,7 +22,7 @@ export declare class Data {
      * @param {string} id
      * @return {*}
      */
-    load(type: string, id: string): any;
+    static load(type: string, id: string): any;
 
     /**
      * Save data file (player/account) data to disk
@@ -31,7 +31,7 @@ export declare class Data {
      * @param {*} data
      * @param {function} callback
      */
-    save(type: string, id: string, data: any, callback: Function): void;
+    static save(type: string, id: string, data: any, callback: Function): void;
 
     /**
      * Check if a data file exists
@@ -39,7 +39,7 @@ export declare class Data {
      * @param {string} id
      * @return {boolean}
      */
-    exists(type: string, id: string): boolean;
+    static exists(type: string, id: string): boolean;
 
     /**
      * get the file path for a given data file by type (player/account)
@@ -47,7 +47,7 @@ export declare class Data {
      * @param {string} id
      * @return {string}
      */
-    getDataFilePath(type: string, id: string): string;
+    static getDataFilePath(type: string, id: string): string;
 
     /**
      * Determine whether or not a path leads to a legitimate JS file or not.
@@ -55,11 +55,11 @@ export declare class Data {
      * @param {string} [file]
      * @return {boolean}
      */
-    isScriptFile(path: string, file: string): booleanM
+    static isScriptFile(path: string, file: string): boolean;
 
     /**
      * load the MOTD for the intro screen
      * @return string
      */
-    loadMotd(): string;
+    static loadMotd(): string;
 }

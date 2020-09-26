@@ -1,3 +1,5 @@
+import EventEmitter from 'events';
+
 export declare class EventManager {
     constructor();
 
@@ -6,7 +8,7 @@ export declare class EventManager {
      * @param {string} name
      * @return {Set}
      */
-    get(name: string): Set;
+    get(name: string): Set<Function>;
 
     /**
      * @param {string}   eventName
@@ -32,5 +34,5 @@ export declare class EventManager {
      * @param {EventEmitter}  emitter
      * @param {?string|iterable} events Optional name or list of event names to remove listeners from
      */
-    detach(emitter: EventEmitter, events: ?string|iterable): void;
+    detach(emitter: typeof EventEmitter, events?: string | string[]): void;
 }

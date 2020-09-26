@@ -11,13 +11,13 @@ export declare class BundleManager {
     /**
      * Load in all bundles
      */
-    async loadBundles(distribute: boolean): void;
+    loadBundles(distribute?: boolean): Promise<any>;
 
     /**
      * @param {string} bundle Bundle name
      * @param {string} bundlePath Path to bundle directory
      */
-    async loadBundle(bundle: string, bundlePath: string): void;
+    loadBundle(bundle: string, bundlePath: string): Promise<any>;
 
     loadQuestGoals(bundle: string, goalsDir: string): void;
 
@@ -40,14 +40,14 @@ export declare class BundleManager {
     /**
      * @param {string} bundle
      */
-    async loadAreas(bundle: string): void;
+    loadAreas(bundle: string): Promise<any>;
 
     /**
      * @param {string} bundle
      * @param {string} areaName
      * @param {string} areaPath
      */
-    async loadArea(bundle: string, areaName: string, manifest: string): void;
+    loadArea(bundle: string, areaName: string, manifest: string): Promise<any>;
 
     /**
      * Load an entity (item/npc/room) from file
@@ -57,7 +57,7 @@ export declare class BundleManager {
      * @param {EntityFactory} factory
      * @return {Array<string>}
      */
-    async loadEntities(bundle: string, areaName: string, type: string, factory: EntityFactory): Array<string>;
+    loadEntities(bundle: string, areaName: string, type: string, factory: EntityFactory): Promise<string[]>;
 
     /**
      * @param {EntityFactory} factory Instance of EntityFactory that the item/npc will be loaded into
@@ -71,7 +71,7 @@ export declare class BundleManager {
      * @param {string} areaName
      * @return {Promise<Array<string>>}
      */
-    async loadQuests(bundle: string, areaName: string): Promise<Array<string>>
+    loadQuests(bundle: string, areaName: string): Promise<string[]>
 
     /**
      * @param {string} bundle
@@ -96,7 +96,7 @@ export declare class BundleManager {
     /**
      * @param {string} bundle
      */
-    async loadHelp(bundle: string): void;
+    loadHelp(bundle: string): Promise<any>;
 
     /**
      * @param {string} bundle
