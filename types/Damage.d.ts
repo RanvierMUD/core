@@ -1,5 +1,4 @@
 import { Attribute } from "./Attribute";
-
 import { Character } from "./Character";
 
 export declare class Damage {
