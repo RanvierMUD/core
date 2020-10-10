@@ -1,6 +1,14 @@
+import { Attribute } from "./Attribute";
+
 import { Character } from "./Character";
 
 export declare class Damage {
+    attribute: Attribute;
+    amount: number;
+    attacker?: Character;
+    source?: any;
+    metadata?: object;
+
     /**
      * @param {string} attribute Attribute the damage is going to apply to
      * @param {number} amount
