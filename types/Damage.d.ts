@@ -15,7 +15,7 @@ export declare class Damage {
      * @param {*} [source=null] Where the damage came from: skill, item, room, etc.
      * @property {Object} metadata Extra info about the damage: type, hidden, critical, etc.
      */
-    constructor(attribute: string, amount: number, attacker: Character, source: any, metadata: object);
+    constructor(attribute: string, amount: number, attacker?: Character, source?: any, metadata?: object);
 
     /**
      * Evaluate actual damage taking attacker/target's effects into account
