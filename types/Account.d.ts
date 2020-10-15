@@ -74,9 +74,9 @@ export declare class Account {
   checkPassword(pass: string): boolean;
 
   /**
-   * @param {function} callback after-save callback
+   * @param {?function} callback after-save callback
    */
-  save(callback: function): void;
+  save(callback?: () => void): void;
 
   /**
      * Set this account to banned
