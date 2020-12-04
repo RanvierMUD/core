@@ -7,5 +7,5 @@ import { ChannelAudience } from './ChannelAudience';
  * @extends ChannelAudience
  */
 export declare class AreaAudience extends ChannelAudience {
-    getBroadcastTargets(): Array<Broadcastable>;
+    getBroadcastTargets(): Array<Player>;
 }
