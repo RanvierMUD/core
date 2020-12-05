@@ -1,3 +1,10 @@
+/** @typedef {{ execute: function (), label: string, lag: number= }} */
+export declare type CommandExecutable = {
+    execute: Function;
+    label: string;
+    lag: number;
+}
+
 export declare class CommandQueue {
     constructor();
 
