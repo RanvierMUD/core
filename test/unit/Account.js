@@ -8,7 +8,7 @@ describe('Account', function () {
   const mockedAccountData = {
     username: 'testusername',
     characters: [],
-    password: null
+    password: null,
   };
   const testChar = {
     deleted: false,
