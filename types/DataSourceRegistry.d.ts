@@ -10,5 +10,5 @@ export declare class DataSourceRegistry extends Map<string, DataSource> {
      * @param {string} rootPath project root
      * @param {object} config configuration to load
      */
-    load(requireFn: Function, rootPath: string, config: object = {}): void;
+    load(requireFn: Function, rootPath: string, config: object): void;
 }
