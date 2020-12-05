@@ -5,7 +5,7 @@ import { GameState } from './GameState';
 
 /** @typedef EffectModifiers {{attributes: !Object<string,function>}} */
 export declare type EffectModifiers = {
-  attributes: !Object<string, Function>
+  attributes: { [key: string]: Function }
 };
 
 export declare interface EffectConfig {
@@ -31,20 +31,10 @@ export declare interface EffectConfig {
 export declare class Effect extends EventEmitter {
   /** @property {EffectConfig}  config Effect configuration (name/desc/duration/etc.) */
   config: EffectConfig;
-  /** @property {string}    description */
-  description: string;
-  /** @property {number}    duration    Total duration of effect in _milliseconds_ */
-  duration: number;
-  /** @property {number}    elapsed     Get elapsed time in _milliseconds_ */
-  elapsed: number;
   /** @property {string}    id     filename minus .js */
   id: string;
   /** @property {EffectModifiers} modifiers Attribute modifier functions */
   modifier: EffectModifiers;
-  /** @property {string}    name */
-  name: string;
-  /** @property {number}    remaining Number of seconds remaining */
-  remaining: number;
   /** @property {number}    startedAt Date.now() time this effect became active */
   startedAt: number;
   /** @property {object}    state  Configuration of this _type_ of effect (magnitude, element, stat, etc.) */
@@ -65,21 +55,22 @@ export declare class Effect extends EventEmitter {
   get description(): string;
 
   /**
-   * @type {number}
+   * Total duration of effect in milliseconds
+   * @property {number}
    */
   get duration(): number;
 
-  set duration(dur: number): void;
+  set duration(dur: number);
 
   /**
    * Elapsed time in milliseconds since event was activated
-   * @type {number}
+   * @property {number}
    */
   get elapsed(): number;
 
   /**
    * Remaining time in seconds
-   * @type {number}
+   * @property {number}
    */
   get remaining(): number;
 
