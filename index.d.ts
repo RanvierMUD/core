@@ -34,7 +34,10 @@ export { DataSourceRegistry } from './types/DataSourceRegistry';
 export { DataSource } from './types/DataSource';
 export { Effect, EffectConfig, EffectModifiers } from './types/Effect';
 export { EffectableEntity } from './types/EffectableEntity';
-export { EffectConfig as EffectFactoryType, EffectFactory } from './types/EffectFactory';
+export {
+  EffectConfig as EffectFactoryType,
+  EffectFactory,
+} from './types/EffectFactory';
 export { EffectFlag } from './types/EffectFlag';
 export { EffectList } from './types/EffectList';
 export { EntityFactory } from './types/EntityFactory';
@@ -62,7 +65,8 @@ export {
 export { SkillType } from './types/SkillType';
 
 // Placeholders for types yet to be defined.
-/*export declare class EntityLoaderRegistry { [key: string]: any };
+/*
+export declare class EntityLoaderRegistry { [key: string]: any };
 export declare class GameServer { [key: string]: any };
 export declare class HelpManager { [key: string]: any };
 export declare class ItemFactory { [key: string]: any };
