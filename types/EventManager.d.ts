@@ -14,7 +14,7 @@ export declare class EventManager {
      * @param {string}   eventName
      * @param {Function} listener
      */
-    add(eventName: string, listener: function): void;
+    add(eventName: string, listener: Function): void;
 
     /**
      * Attach all currently added events to the given emitter

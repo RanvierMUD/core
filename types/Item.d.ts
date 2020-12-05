@@ -1,9 +1,10 @@
 import { Area } from './Area';
-
+import { Character } from './Character';
 import { GameEntity } from './GameEntity';
 import { GameState } from './GameState';
-import { SerializedInventory } from './Inventory';
 import { ItemType } from './ItemType';
+import { Room } from './Room';
+import { SerializedInventory } from './Inventory';
 
 export declare interface ItemDef {
   name: string;
@@ -33,7 +34,7 @@ export declare interface ItemDef {
 export declare class Item extends GameEntity {
   name: string;
   id: string;
-  
+
   description: string;
   metadata: Record<string, any>;
   behaviors: Map<string, any>;
@@ -50,7 +51,7 @@ export declare class Item extends GameEntity {
   closed: boolean;
   locked: boolean;
   lockedBy: string | null;
-  
+
   carriedBy: string | null;
   equippedBy: string | null;
 
@@ -78,7 +79,7 @@ export declare class Item extends GameEntity {
   close(): void;
 
   lock(): void;
-  
+
   unlock(): void;
 
   hydrate(state: GameState, serialized?: ItemDef): void;

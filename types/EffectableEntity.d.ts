@@ -4,7 +4,7 @@ import { Effect } from './Effect';
 import { GameState } from './GameState';
 
 export declare class EffectableEntity extends EventEmitter {
-    constructor(data): EffectableEntity;
+    constructor(data);
 
     /**
      * Proxy all events on the entity to effects
@@ -126,7 +126,7 @@ export declare class EffectableEntity extends EventEmitter {
      * @param {GameState} state
      * @param {object} serialized
      */
-    hydrate(state: GameState, serialized: object = {}): void;
+    hydrate(state: GameState, serialized: object): void;
 
     /**
      * Gather data to be persisted

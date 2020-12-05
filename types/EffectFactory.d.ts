@@ -34,5 +34,5 @@ export declare class EffectFactory {
      * @param {?object} state   Effect.state override
      * @return {Effect}
      */
-    create(id: string, config?: EffectConfig, state: object): Effect
+    create(id: string, config?: EffectConfig, state?: object): Effect
 }

@@ -1,4 +1,4 @@
-import EventEmitter from 'events';
+import { EventEmitter } from 'events';
 
 import { Account } from './Account';
 import { EntityLoader } from './EntityLoader';
@@ -29,7 +29,7 @@ export declare class PlayerManager extends EventEmitter {
 
   getPlayersAsArray(): Player[];
 
-  addListener(event: string, listener: function): void;
+  addListener(event: string, listener: Function): void;
 
   filter(fn: (current: Player, index: string | number, array: Player[]) => boolean): Player[];
 

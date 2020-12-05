@@ -5,8 +5,7 @@ import { Effect } from "./Effect";
 import { GameState } from "./GameState";
 
 export declare class EffectList {
-    effects: Set;
-    size: number;
+    effects: Set<Object|Effect>;
     target: Character;
 
     /**

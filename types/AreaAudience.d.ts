@@ -1,5 +1,5 @@
-import { Broadcastable } from './Broadcast';
 import { ChannelAudience } from './ChannelAudience';
+import { Player } from './Player';
 
 /**
  * Audience class representing characters in the same area as the sender

@@ -1,3 +1,4 @@
+import { Character } from './Character';
 import { Damage } from './Damage';
 export declare class Heal extends Damage {
   /**
