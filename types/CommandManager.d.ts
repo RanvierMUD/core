@@ -18,10 +18,10 @@ export declare class CommandManager {
   /**
    * Find a command from a partial name
    */
-  find(search: string): Commmand | null;
+  find(search: string): Command | null;
 
   /**
    * Find a command from a partial name
    */
-  find(search: string, returnAlias: boolean): Commmand | { command: Command, alias: string } | null;
+  find(search: string, returnAlias: boolean): Command | { command: Command, alias: string } | null;
 }
