@@ -62,8 +62,6 @@ export {
 export { SkillType } from './types/SkillType';
 
 // Placeholders for types yet to be defined.
-export declare class DataSourceRegistry { [key: string]: any };
-export declare class EffectFactory { [key: string]: any };
 export declare class EntityLoaderRegistry { [key: string]: any };
 export declare class GameServer { [key: string]: any };
 export declare class HelpManager { [key: string]: any };
