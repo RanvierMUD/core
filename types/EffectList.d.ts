@@ -12,7 +12,7 @@ export declare class EffectList {
      * @param {Character} target
      * @param {Array<Object|Effect>} effects array of serialized effects (Object) or actual Effect instances
      */
-    constructor(target: Character, effects: Array<Object|Effect>): EffectList;
+    constructor(target: Character, effects: Array<Object|Effect>);
 
     /**
      * @type {number}

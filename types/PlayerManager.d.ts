@@ -29,7 +29,7 @@ export declare class PlayerManager extends EventEmitter {
 
   getPlayersAsArray(): Player[];
 
-  addListener(event: string, listener: Function): void;
+  addListener(event: string | symbol, listener: (...args: any[]) => void): this;
 
   filter(fn: (current: Player, index: string | number, array: Player[]) => boolean): Player[];
 

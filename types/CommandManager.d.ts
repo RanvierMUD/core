@@ -1,4 +1,4 @@
-import { Command } from './Command';
+import { Command } from "./Command";
 
 export declare class CommandManager {
   commands: Map<string, Command>;

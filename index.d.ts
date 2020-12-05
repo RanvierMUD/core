@@ -62,7 +62,7 @@ export {
 export { SkillType } from './types/SkillType';
 
 // Placeholders for types yet to be defined.
-export declare class EntityLoaderRegistry { [key: string]: any };
+/*export declare class EntityLoaderRegistry { [key: string]: any };
 export declare class GameServer { [key: string]: any };
 export declare class HelpManager { [key: string]: any };
 export declare class ItemFactory { [key: string]: any };
@@ -76,3 +76,4 @@ export declare class QuestRewardManager { [key: string]: any };
 export declare class RoomFactory { [key: string]: any };
 export declare class RoomManager { [key: string]: any };
 export declare class SkillManager { [key: string]: any };
+*/

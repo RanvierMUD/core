@@ -2,12 +2,12 @@ import { Effect } from "./Effect";
 import { GameState } from "./GameState";
 
 export declare type EffectConfig = {
-    config: Object<string, any>;
-    listeners: Object<string, Function>;
+    config: { [key: string]: any }
+    listeners: { [key: string]: Function }
 }
 
 export declare class EffectFactory {
-    constructor(): EffectFactory;
+    constructor();
 
     /**
      * @param {string} id

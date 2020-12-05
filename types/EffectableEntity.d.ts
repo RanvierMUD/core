@@ -11,7 +11,7 @@ export declare class EffectableEntity extends EventEmitter {
      * @param {string} event
      * @param {...*}   args
      */
-    emit(event: string, ...args: any[]): void;
+    emit(event: string | symbol, ...args: any[]): boolean;
 
     /**
      * @param {string} attr Attribute name

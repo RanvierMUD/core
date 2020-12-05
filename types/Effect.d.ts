@@ -1,9 +1,12 @@
 import { Character } from './Character';
 import { Damage } from './Damage';
+import { EventEmitter } from 'events';
 import { GameState } from './GameState';
 
 /** @typedef EffectModifiers {{attributes: !Object<string,function>}} */
-export declare type EffectModifiers = { attributes: !Object<string, Function> };
+export declare type EffectModifiers = {
+  attributes: !Object<string, Function>
+};
 
 export declare interface EffectConfig {
   /** @property {boolean} autoActivate If this effect immediately activates itself when added to the target */
