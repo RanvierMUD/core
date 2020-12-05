@@ -30,6 +30,7 @@
   "devDependencies": {
     "coveralls": "^3.0.2",
     "mocha": "^5.2.0",
-    "nyc": "^13.1.0"
+    "nyc": "^13.1.0",
+    "@types/node": "^10.12"
   }
 }
