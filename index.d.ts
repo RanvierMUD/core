@@ -24,7 +24,7 @@ export { AudienceOptions, ChannelAudience } from './types/ChannelAudience';
 export { ChannelManager } from './types/ChannelManager';
 export { Character, CharacterConfig } from './types/Character';
 export { CommandManager } from './types/CommandManager';
-export { CommandQueue } from './types/CommandQueue';
+export { CommandExecutable, CommandQueue } from './types/CommandQueue';
 export { CommandType } from './types/CommandType';
 export { Config } from './types/Config';
 export { Command } from './types/Command';
