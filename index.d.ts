@@ -35,6 +35,7 @@ export { DataSource } from './types/DataSource';
 export { Effect, EffectConfig, EffectModifiers } from './types/Effect';
 export { EffectableEntity } from './types/EffectableEntity';
 export { EffectConfig as EffectFactoryType, EffectFactory } from './types/EffectFactory';
+export { EffectFlag } from './types/EffectFlag';
 export { EffectList } from './types/EffectList';
 export { EntityFactory } from './types/EntityFactory';
 export { EntityLoader } from './types/EntityLoader';
