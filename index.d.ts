@@ -51,6 +51,7 @@ export { GameEntity } from './types/GameEntity';
 export { GameServer } from './types/GameServer';
 export { GameState } from './types/GameState';
 export { Heal } from './types/Heal';
+export { Helpfile, HelpfileOptions } from './types/Helpfile';
 export { Item } from './types/Item';
 export { Inventory, InventoryFullError } from './types/Inventory';
 export { Logger } from './types/Logger';
@@ -70,7 +71,6 @@ export { SkillType } from './types/SkillType';
 
 // Placeholders for types yet to be defined.
 /*
-export declare class GameServer { [key: string]: any };
 export declare class HelpManager { [key: string]: any };
 export declare class ItemFactory { [key: string]: any };
 export declare class ItemManager { [key: string]: any };
