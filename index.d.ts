@@ -52,6 +52,7 @@ export { GameServer } from './types/GameServer';
 export { GameState } from './types/GameState';
 export { Heal } from './types/Heal';
 export { Helpfile, HelpfileOptions } from './types/Helpfile';
+export { HelpManager } from './types/HelpManager';
 export { Item } from './types/Item';
 export { Inventory, InventoryFullError } from './types/Inventory';
 export { Logger } from './types/Logger';
