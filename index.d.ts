@@ -68,6 +68,7 @@ export { PartyAudience } from './types/PartyAudience';
 export { Player } from './types/Player';
 export { PlayerManager } from './types/PlayerManager';
 export { PlayerRoles } from './types/PlayerRoles';
+export { PrivateAudience } from './types/PrivateAudience';
 export { Room, Door, Exit } from './types/Room';
 export { Scriptable, ScriptableClass } from './types/Scriptable';
 export {
@@ -79,7 +80,6 @@ export { SkillType } from './types/SkillType';
 
 // Placeholders for types yet to be defined.
 /*
-export declare class PartyManager { [key: string]: any };
 export declare class QuestFactory { [key: string]: any };
 export declare class QuestGoalManager { [key: string]: any };
 export declare class QuestRewardManager { [key: string]: any };
