@@ -60,6 +60,7 @@ export { ItemFactory } from './types/ItemFactory';
 export { Logger } from './types/Logger';
 export { Metadatable, MetadatableClass } from './types/Metadatable';
 export { MobFactory } from './types/MobFactory';
+export { MobManager } from './types/MobManager';
 export { Npc } from './types/Npc';
 export { Player } from './types/Player';
 export { PlayerManager } from './types/PlayerManager';
@@ -75,7 +76,6 @@ export { SkillType } from './types/SkillType';
 
 // Placeholders for types yet to be defined.
 /*
-export declare class MobManager { [key: string]: any };
 export declare class PartyManager { [key: string]: any };
 export declare class QuestFactory { [key: string]: any };
 export declare class QuestGoalManager { [key: string]: any };
