@@ -100,4 +100,5 @@ export { SkillFlag } from './types/SkillFlag';
 export { SkillManager } from './types/SkillManager';
 export { SkillType } from './types/SkillType';
 export { TransportStream } from './types/TransportStream';
+export { Util } from './types/Util';
 export { WorldAudience } from './types/WorldAudience';
