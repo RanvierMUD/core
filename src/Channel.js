@@ -122,6 +122,7 @@ class Channel {
    * How to render the message the player just sent to the channel
    * E.g., you may want "chat" to say "You chat, 'message here'"
    * @param {Player} sender
+   * @param {Player} target
    * @param {string} message
    * @param {Function} colorify
    * @return {string}

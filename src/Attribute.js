@@ -22,8 +22,8 @@ class Attribute {
    * @param {object} metadata={}
    */
   constructor(name, base, delta = 0, formula = null, metadata = {}) {
-    if (isNaN(base)) { 
-      throw new TypeError(`Base attribute must be a number, got ${base}.`); 
+    if (isNaN(base)) {
+      throw new TypeError(`Base attribute must be a number, got ${base}.`);
     }
     if (isNaN(delta)) {
       throw new TypeError(`Attribute delta must be a number, got ${delta}.`);
@@ -66,7 +66,7 @@ class Attribute {
 
   /**
    * Bypass raise/lower, directly setting the delta
-   * @param {amount}
+   * @param {number} amount
    */
   setDelta(amount) {
     this.delta = Math.min(amount, 0);
