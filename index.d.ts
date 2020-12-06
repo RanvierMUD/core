@@ -46,7 +46,10 @@ export { EntityLoaderRegistry } from './types/EntityLoaderRegistry';
 export { EntityReference } from './types/EntityReference';
 export { EventManager } from './types/EventManager';
 export { EventUtil } from './types/EventUtil';
-export { EquipAlreadyEquippedError, EquipSlotTakenError } from './types/EquipErrors';
+export {
+  EquipAlreadyEquippedError,
+  EquipSlotTakenError,
+} from './types/EquipErrors';
 export { GameEntity } from './types/GameEntity';
 export { GameServer } from './types/GameServer';
 export { GameState } from './types/GameState';
@@ -69,6 +72,15 @@ export { Player } from './types/Player';
 export { PlayerManager } from './types/PlayerManager';
 export { PlayerRoles } from './types/PlayerRoles';
 export { PrivateAudience } from './types/PrivateAudience';
+export { Quest, QuestConfig } from './types/Quest';
+export { QuestFactory } from './types/QuestFactory';
+export {
+  QuestGoal,
+  QuestGoalConfig,
+  QuestGoalProgress,
+  QuestGoalSerialized,
+} from './types/QuestGoal';
+export { QuestReward, QuestRewardConfig } from './types/QuestReward';
 export { Room, Door, Exit } from './types/Room';
 export { Scriptable, ScriptableClass } from './types/Scriptable';
 export {
@@ -80,7 +92,6 @@ export { SkillType } from './types/SkillType';
 
 // Placeholders for types yet to be defined.
 /*
-export declare class QuestFactory { [key: string]: any };
 export declare class QuestGoalManager { [key: string]: any };
 export declare class QuestRewardManager { [key: string]: any };
 export declare class RoomFactory { [key: string]: any };
