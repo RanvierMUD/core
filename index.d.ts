@@ -45,6 +45,7 @@ export { EntityLoader } from './types/EntityLoader';
 export { EntityLoaderRegistry } from './types/EntityLoaderRegistry';
 export { EntityReference } from './types/EntityReference';
 export { EventManager } from './types/EventManager';
+export { EquipAlreadyEquippedError, EquipSlotTakenError } from './types/EquipErrors';
 export { GameEntity } from './types/GameEntity';
 export { GameState } from './types/GameState';
 export { Heal } from './types/Heal';
