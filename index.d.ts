@@ -86,6 +86,7 @@ export { QuestRewardManager } from './types/QuestRewardManager';
 export { QuestTracker, SerializedQuestTracker } from './types/QuestTracker';
 export { RoleAudience} from './types/RoleAudience';
 export { Room, Door, Exit } from './types/Room';
+export { RoomAudience } from './types/RoomAudience';
 export { Scriptable, ScriptableClass } from './types/Scriptable';
 export {
   CooldownError,
@@ -96,7 +97,6 @@ export { SkillType } from './types/SkillType';
 
 // Placeholders for types yet to be defined.
 /*
-export declare class QuestRewardManager { [key: string]: any };
 export declare class RoomFactory { [key: string]: any };
 export declare class RoomManager { [key: string]: any };
 export declare class SkillManager { [key: string]: any };
