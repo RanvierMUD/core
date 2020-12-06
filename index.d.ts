@@ -80,6 +80,7 @@ export {
   QuestGoalProgress,
   QuestGoalSerialized,
 } from './types/QuestGoal';
+export { QuestGoalManager } from './types/QuestGoalManager';
 export { QuestReward, QuestRewardConfig } from './types/QuestReward';
 export { QuestTracker, SerializedQuestTracker } from './types/QuestTracker';
 export { Room, Door, Exit } from './types/Room';
@@ -93,7 +94,6 @@ export { SkillType } from './types/SkillType';
 
 // Placeholders for types yet to be defined.
 /*
-export declare class QuestGoalManager { [key: string]: any };
 export declare class QuestRewardManager { [key: string]: any };
 export declare class RoomFactory { [key: string]: any };
 export declare class RoomManager { [key: string]: any };
