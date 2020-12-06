@@ -99,8 +99,5 @@ export {
 export { SkillFlag } from './types/SkillFlag';
 export { SkillManager } from './types/SkillManager';
 export { SkillType } from './types/SkillType';
-
-// Placeholders for types yet to be defined.
-/*
-export declare class RoomManager { [key: string]: any };
-*/
+export { TransportStream } from './types/TransportStream';
+export { WorldAudience } from './types/WorldAudience';
