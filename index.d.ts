@@ -84,6 +84,7 @@ export { QuestGoalManager } from './types/QuestGoalManager';
 export { QuestReward, QuestRewardConfig } from './types/QuestReward';
 export { QuestRewardManager } from './types/QuestRewardManager';
 export { QuestTracker, SerializedQuestTracker } from './types/QuestTracker';
+export { RoleAudience} from './types/RoleAudience';
 export { Room, Door, Exit } from './types/Room';
 export { Scriptable, ScriptableClass } from './types/Scriptable';
 export {
