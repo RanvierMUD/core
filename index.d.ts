@@ -90,15 +90,17 @@ export { RoomAudience } from './types/RoomAudience';
 export { RoomFactory } from './types/RoomFactory';
 export { RoomManager } from './types/RoomManager';
 export { Scriptable, ScriptableClass } from './types/Scriptable';
+export { Skill } from './types/Skill';
 export {
   CooldownError,
   NotEnoughResourcesError,
   PassiveError,
 } from './types/SkillErrors';
+export { SkillFlag } from './types/SkillFlag';
+export { SkillManager } from './types/SkillManager';
 export { SkillType } from './types/SkillType';
 
 // Placeholders for types yet to be defined.
 /*
 export declare class RoomManager { [key: string]: any };
-export declare class SkillManager { [key: string]: any };
 */
