@@ -62,6 +62,8 @@ export { Metadatable, MetadatableClass } from './types/Metadatable';
 export { MobFactory } from './types/MobFactory';
 export { MobManager } from './types/MobManager';
 export { Npc } from './types/Npc';
+export { Party } from './types/Party';
+export { PartyManager } from './types/PartyManager';
 export { PartyAudience } from './types/PartyAudience';
 export { Player } from './types/Player';
 export { PlayerManager } from './types/PlayerManager';
