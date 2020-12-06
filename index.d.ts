@@ -55,6 +55,7 @@ export { Helpfile, HelpfileOptions } from './types/Helpfile';
 export { HelpManager } from './types/HelpManager';
 export { Item } from './types/Item';
 export { Inventory, InventoryFullError } from './types/Inventory';
+export { ItemFactory } from './types/ItemFactory';
 export { Logger } from './types/Logger';
 export { Metadatable, MetadatableClass } from './types/Metadatable';
 export { Npc } from './types/Npc';
@@ -72,8 +73,6 @@ export { SkillType } from './types/SkillType';
 
 // Placeholders for types yet to be defined.
 /*
-export declare class HelpManager { [key: string]: any };
-export declare class ItemFactory { [key: string]: any };
 export declare class ItemManager { [key: string]: any };
 export declare class MobFactory { [key: string]: any };
 export declare class MobManager { [key: string]: any };
