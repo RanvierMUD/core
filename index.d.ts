@@ -88,6 +88,7 @@ export { RoleAudience} from './types/RoleAudience';
 export { Room, Door, Exit } from './types/Room';
 export { RoomAudience } from './types/RoomAudience';
 export { RoomFactory } from './types/RoomFactory';
+export { RoomManager } from './types/RoomManager';
 export { Scriptable, ScriptableClass } from './types/Scriptable';
 export {
   CooldownError,
