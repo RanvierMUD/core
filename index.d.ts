@@ -48,6 +48,7 @@ export { EventManager } from './types/EventManager';
 export { EventUtil } from './types/EventUtil';
 export { EquipAlreadyEquippedError, EquipSlotTakenError } from './types/EquipErrors';
 export { GameEntity } from './types/GameEntity';
+export { GameServer } from './types/GameServer';
 export { GameState } from './types/GameState';
 export { Heal } from './types/Heal';
 export { Item } from './types/Item';
