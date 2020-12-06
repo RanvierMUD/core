@@ -81,6 +81,7 @@ export {
   QuestGoalSerialized,
 } from './types/QuestGoal';
 export { QuestReward, QuestRewardConfig } from './types/QuestReward';
+export { QuestTracker, SerializedQuestTracker } from './types/QuestTracker';
 export { Room, Door, Exit } from './types/Room';
 export { Scriptable, ScriptableClass } from './types/Scriptable';
 export {
