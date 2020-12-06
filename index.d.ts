@@ -59,6 +59,7 @@ export { Inventory, InventoryFullError } from './types/Inventory';
 export { ItemFactory } from './types/ItemFactory';
 export { Logger } from './types/Logger';
 export { Metadatable, MetadatableClass } from './types/Metadatable';
+export { MobFactory } from './types/MobFactory';
 export { Npc } from './types/Npc';
 export { Player } from './types/Player';
 export { PlayerManager } from './types/PlayerManager';
@@ -74,8 +75,6 @@ export { SkillType } from './types/SkillType';
 
 // Placeholders for types yet to be defined.
 /*
-export declare class ItemManager { [key: string]: any };
-export declare class MobFactory { [key: string]: any };
 export declare class MobManager { [key: string]: any };
 export declare class PartyManager { [key: string]: any };
 export declare class QuestFactory { [key: string]: any };
