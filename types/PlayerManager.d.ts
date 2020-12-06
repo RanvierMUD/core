@@ -6,10 +6,21 @@ import { EventManager } from './EventManager';
 import { GameState } from './GameState';
 import { Player } from './Player';
 
+/**
+ * Keeps track of all active players in game
+ * @extends EventEmitter
+ * @property {Map} players
+ * @property {EventManager} events Player events
+ * @property {EntityLoader} loader
+ * @listens PlayerManager#save
+ * @listens PlayerManager#updateTick
+ */
 export declare class PlayerManager extends EventEmitter {
   players: Map<string, Player>;
   events: EventManager;
   loader: EntityLoader | null;
+
+  constructor();
 
   /**
    * Set the entity loader from which players are loaded
@@ -17,8 +28,15 @@ export declare class PlayerManager extends EventEmitter {
    */
   setLoader(loader: EntityLoader): void;
 
+  /**
+   * @param {string} name
+   * @return {Player}
+   */
   getPlayer(name: string): Player;
 
+  /**
+   * @param {Player} player
+   */
   addPlayer(player: Player): void;
 
   /**
@@ -27,11 +45,24 @@ export declare class PlayerManager extends EventEmitter {
    */
   removePlayer(player: Player, killSocket?: boolean): void;
 
+  /**
+   * @return {array}
+   */
   getPlayersAsArray(): Player[];
 
+  /**
+   * @param {string}   behaviorName
+   * @param {Function} listener
+   */
   addListener(event: string | symbol, listener: (...args: any[]) => void): this;
 
-  filter(fn: (current: Player, index: string | number, array: Player[]) => boolean): Player[];
+  /**
+   * @param {Function} predicate Filter function
+   * @return {Player[]},
+   */
+  filter(
+    fn: (current: Player, index: string | number, array: Player[]) => boolean
+  ): Player[];
 
   /**
    * Load a player for an account
@@ -41,7 +72,12 @@ export declare class PlayerManager extends EventEmitter {
    * @param {boolean} force true to force reload from storage
    * @return {Player}
    */
-  loadPlayer(state: GameState, account: Account, username: string, force?: boolean): Promise<Player>;
+  loadPlayer(
+    state: GameState,
+    account: Account,
+    username: string,
+    force?: boolean
+  ): Promise<Player>;
 
   /**
    * Turn player into a key used by this class's map
@@ -50,6 +86,10 @@ export declare class PlayerManager extends EventEmitter {
    */
   keyify(player: Player): string;
 
+  /**
+   * @param {string} name
+   * @return {boolean}
+   */
   exists(name: string): boolean;
 
   /**
