@@ -54,6 +54,7 @@ export { Heal } from './types/Heal';
 export { Helpfile, HelpfileOptions } from './types/Helpfile';
 export { HelpManager } from './types/HelpManager';
 export { Item } from './types/Item';
+export { ItemManager } from './types/ItemManager';
 export { Inventory, InventoryFullError } from './types/Inventory';
 export { ItemFactory } from './types/ItemFactory';
 export { Logger } from './types/Logger';
