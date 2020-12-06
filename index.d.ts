@@ -42,6 +42,7 @@ export { EffectFlag } from './types/EffectFlag';
 export { EffectList } from './types/EffectList';
 export { EntityFactory } from './types/EntityFactory';
 export { EntityLoader } from './types/EntityLoader';
+export { EntityLoaderRegistry } from './types/EntityLoaderRegistry';
 export { EntityReference } from './types/EntityReference';
 export { EventManager } from './types/EventManager';
 export { GameEntity } from './types/GameEntity';
@@ -66,7 +67,6 @@ export { SkillType } from './types/SkillType';
 
 // Placeholders for types yet to be defined.
 /*
-export declare class EntityLoaderRegistry { [key: string]: any };
 export declare class GameServer { [key: string]: any };
 export declare class HelpManager { [key: string]: any };
 export declare class ItemFactory { [key: string]: any };
