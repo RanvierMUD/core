@@ -36,13 +36,21 @@ class Broadcast {
       }
 
       if (target.socket._prompted) {
-        target.socket.write('\r\n');
+        if (target.socket.broadcastProxy) {
+          target.socket.broadcastProxy(target, '\r\n', { wrapWidth, useColor, formatter });
+        } else {
+          target.socket.write('\r\n');
+        }
         target.socket._prompted = false;
       }
 
-      let targetMessage = formatter(target, message);
-      targetMessage = wrapWidth ? Broadcast.wrap(targetMessage, wrapWidth) : ansi.parse(targetMessage);
-      target.socket.write(targetMessage);
+      if (target.socket.broadcastProxy) {
+        target.socket.broadcastProxy(target, message, { wrapWidth, useColor, formatter } );
+      } else {
+        let targetMessage = formatter(target, message);
+        targetMessage = wrapWidth ? Broadcast.wrap(targetMessage, wrapWidth) : ansi.parse(targetMessage);
+        target.socket.write(targetMessage);
+      }
     }
   }
 
